@@ -3,18 +3,15 @@ import styled from 'styled-components';
 
 // 시계 스타일
 const BoxSideClock = styled.div`
-  background : linear-gradient(to left top, white, #E6FFFF);
-  border-radius : 10px;
-  box-shadow : 0 0 1px #44C2FF;
-  height : 80px;
-  margin : 20px;
+  border-radius: 10px;
+  height: 80px;
+  width: 280px;
   display : flex;
   align-items : center;
   justify-content : center;
-  font-size : 20pt;
+  font-size : 28pt;
   text-decoration : none; 
   font-weight : bold;
-  padding : 30px 70px;
 `;
 
 function CurrentTime() {

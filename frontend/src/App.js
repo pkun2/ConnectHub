@@ -1,6 +1,5 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import GotoTop from './components/GotoTop';
 import Navigation from './components/Navigation';
@@ -9,10 +8,8 @@ import Option from './components/Option';
 import Foot from './components/Foot';
 import Main from './components/Main';
 
-
-
 function App() {
-
+  
   return (
     <div>
       {/* 맨 위로 가기 */}

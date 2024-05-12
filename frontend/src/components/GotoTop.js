@@ -17,6 +17,7 @@ const GotoTopButton = styled.div`
   border-radius: 50%;
   text-align: center;
   font-size: 30pt;
+  z-index: 1000;
 `;
 
 function GotoTop() {

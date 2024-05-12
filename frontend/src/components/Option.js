@@ -1,15 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
+import CurrentTime from './CurrentTime';
 
 // 옵션바
 const OptionContainer = styled.div`
   position: sticky;
   top: 170px;
-  margin: 10px;
+  margin: 11px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-around;
   opacity : 80%;
   z-index: 1000;
 `;
@@ -18,8 +19,8 @@ const OptionContainer = styled.div`
 // 검색창
 const SearchWrapper = styled.div`
   position: relative;
-  width: 300px;
-  margin-right: 100px;
+  width: 500px;
+  margin-right: 50px;
 `;
 
 // 작성란
@@ -34,71 +35,61 @@ const SearchInput = styled.input`
 // 검색아이콘
 const SearchIcon = styled.img`
   position: absolute;
-  width: 17px;
+  width: 20px;
   top: 50%;
   transform: translateY(-50%);
-  right: 12px;
+  right: 0;
   margin: 0;
 `;
 
 
-// 원래대로
-const Restore = styled.div`
+// TTS on 버튼
+const TTSOn = styled.div`
+    margin-right: 20px;
     cursor: pointer;
     text-align: center;
-    width: 80px;
+    width: 250px;
     height: 80px;
     line-height: 80px;
-    background-color: #F4E0E0;
-    border-radius: 50%;
+    background-color: #ADD8E6;
+    border-radius: 10px;
+    font-size: 22pt;
     font-weight : bold;
-    box-shadow: 0 2px 15px black;
+    box-shadow: 0 3px 15px gray;
     &:hover {
         box-shadow: 0 0 10px #44C2FF;
       }
 `;
 
-// 화면 크기 조정바
-const SizeControl = styled.div`
-  display: flex;
-  font-size: 20pt;
-  flex-direction: row;
-  align-items: center;
-  margin-right: 100px;
-  margin-left: 50px;
-  font-weight: bold;
-`;
-
-// 크게 혹은 작게 조절버튼
-const UporDown = styled.div`
+// TTS off 버튼
+const TTSOff = styled.div`
     cursor: pointer;
-    font-size: 50px;
     text-align: center;
-    width: 70px;
-    height: 70px;
-    line-height: 59px;
-    background-color: #D9D9D9;
-    border-radius: 50%;
+    width: 250px;
+    height: 80px;
+    line-height: 80px;
+    background-color: #ADD8E6;
+    border-radius: 10px;
+    font-size: 22pt;
     font-weight : bold;
-    box-shadow: 0 2px 15px black;
+    box-shadow: 0 3px 15px gray;
     &:hover {
         box-shadow: 0 0 10px #44C2FF;
       }
 `;
 
 const Option = () => {
+  
   return (
     <OptionContainer>
-        <SearchWrapper>
-            <SearchInput type="text" placeholder="검색어 입력" />
-            <SearchIcon src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" alt="Search Icon" />
-        </SearchWrapper>
-        <Restore> 원래대로 </Restore>
-        <SizeControl>
-            <UporDown> - </UporDown>
-            화면 크게 하기
-            <UporDown> + </UporDown>
-        </SizeControl>
+      <CurrentTime/>
+      <div/> <div/> <div/> <div/> <div/>
+      <SearchWrapper>
+          <SearchInput type="text" placeholder="검색어 입력" />
+          <SearchIcon src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" alt="Search Icon" />
+      </SearchWrapper>
+      <TTSOn> TTS On </TTSOn>
+      <TTSOff> TTS Off </TTSOff>
     </OptionContainer>
   );
 }

@@ -12,6 +12,7 @@ const Footbar = styled.footer`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-weight: bold;
 `;
 
 function Foot() {
