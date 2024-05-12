@@ -1,5 +1,4 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
 import styled from 'styled-components';
 import GotoTop from './components/GotoTop';
 import Navigation from './components/Navigation';
@@ -7,10 +6,14 @@ import ImageView from './components/ImageView';
 import Option from './components/Option';
 import Foot from './components/Foot';
 import Main from './components/Main';
+import LoginForm from "./components/LoginForm";
+import SignUpForm from "./components/SignUpForm";
 
 function App() {
   
   return (
+
+    {/* 메인홈페이지 화면 */}
     <div>
       {/* 맨 위로 가기 */}
       <GotoTop/>
@@ -30,6 +33,14 @@ function App() {
       {/* 하단바 */}
       <Foot/>
     </div>
+
+
+    {/* 로그인 화면 */}
+    <LoginForm/>
+      
+    {/* 회원가입 화면 */}
+    <SignUpForm/>
+
   );
 }
 
