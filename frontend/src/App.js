@@ -1,8 +1,10 @@
-import logo from './logo.svg';
-import SignUpForm from './components/SignUpFrom';
+
+import LoginForm from "./components/LoginForm";
+import SignUpForm from "./components/SignUpForm";
 
 function App() {
   return (
+    <LoginForm/>
     <SignUpForm/>
   );
 }
