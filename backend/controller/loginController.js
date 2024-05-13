@@ -1,4 +1,4 @@
-import db from '../config/db.js'
+import db from '../config/db'
 
 export const getLoginController = (req, res) => {
     res.send("로그인 페이지 입니다.");
