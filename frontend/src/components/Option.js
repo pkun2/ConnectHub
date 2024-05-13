@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import CurrentTime from './CurrentTime';
 
 // 옵션바
 const OptionContainer = styled.div`
@@ -82,7 +81,6 @@ const Option = () => {
 
   return (
     <OptionContainer>
-      <CurrentTime/>
       <div/> <div/> <div/> <div/> <div/>
       <SearchWrapper>
           <SearchInput type="text" placeholder="검색어 입력" />
