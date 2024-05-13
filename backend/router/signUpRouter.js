@@ -4,6 +4,6 @@ import { getSignUpController, postSignUpController } from "../controller/signUpC
 
 const signUpRouter = express.Router();
 
-signUpRouter.route("/signup").get(getSignUpController).post(postSignUpController);
+signUpRouter.route("/").get(getSignUpController).post(postSignUpController);
 
 export default signUpRouter;

@@ -23,9 +23,10 @@ function SignUpForm() {
         try {
             // const response = await axios.post('api/signup', formData);
             const response = await axios({
-                method:"post",
-                baseURL:"http://localhost:4000/api",
-                url:"signup"
+                method: "post",
+                baseURL: "http://localhost:4000",
+                url: "/api/signup", // 수정된 부분
+                data: formData
             })
 
             console.log(response.data);

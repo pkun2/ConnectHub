@@ -1,9 +1,16 @@
 import db from '../config/db.js';
 
 class User {
-    static signUpUser(userId, nickname, email, password, callback) {
+    constructor({ userId, nickname, email, password }) {
+        this.userId = userId;
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+    }
+
+    async save(callback) {
         const sql = 'INSERT INTO users (userId, nickname, email, password) VALUES (?, ?, ?, ?)';
-        const values = [userId, nickname, email, password];
+        const values = [this.userId, this.nickname, this.email, this.password];
 
         db.query(sql, values, (err, result) => {
             if (err) {
