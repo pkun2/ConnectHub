@@ -31,15 +31,14 @@ export const postViewController = (req, res) => {
         ?Post.getPostByCategoryId(categoryId, limit) 
         :Post.getAllPosts(limit);
 
-    Post.getAllPosts() // 모든 게시글 조회
-    .then(posts => {
-        // Handle successful retrieval
-        res.status(200).send(`게시글 조회 성공: ${posts}`);
-        //posts.forEach(post => console.log(post)); // 게시글 출력
-    })
-    .catch(err => {
-        // Handle error
-        res.status(500).send(`게시글 조회중 오류 발생 ${err}`);
-    });
+    fetchPost
+        .then(posts => {
+            // 조회 성공시
+            res.status(200).send("게시글 조회 성공:", posts);
+        })
+        .catch(err => {
+            // 조회중 오류 발생시
+            res.status(500).send("게시글 조회중 오류 발생:", err);
+        });
 
 }
