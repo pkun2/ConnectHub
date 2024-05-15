@@ -6,6 +6,7 @@ const OptionContainer = styled.div`
   position: relative;
   top: 0px;
   margin: 0px;
+  height: 65px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -15,14 +16,13 @@ const OptionContainer = styled.div`
   margin: 0 200px; /* 양쪽에 20px의 공백 추가 */
   overflow-x: auto; /* 가로로 내용이 넘칠 경우 가로 스크롤 생성 */
   overflow-y: hidden; /* 세로 스크롤 숨김 */
-  border: 2px solid #000; /* 외곽선 추가 */
 `;
 
 
 // 검색창
 const SearchWrapper = styled.div`
   position: relative;
-  width: 500px;
+  width: 600px;
   margin-right: 0px;
 `;
 
@@ -38,11 +38,12 @@ const SearchInput = styled.input`
 // 검색아이콘
 const SearchIcon = styled.img`
   position: absolute;
-  width: 20px;
+  width: 30px;
   top: 50%;
   transform: translateY(-50%);
   right: 0;
   margin: 0;
+  cursor: pointer;
 `;
 
 
@@ -83,11 +84,12 @@ const Option = () => {
 
   return (
     <OptionContainer>
-      <div/> <div/> <div/> <div/> <div/>
+      <div/> <div/> 
       <SearchWrapper>
           <SearchInput type="text" placeholder="검색어 입력" />
           <SearchIcon src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" alt="Search Icon" />
       </SearchWrapper>
+      <div/> <div/> <div/>
       <TTSOn> TTS On </TTSOn>
       <TTSOff> TTS Off </TTSOff>
     </OptionContainer>

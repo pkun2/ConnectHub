@@ -13,10 +13,8 @@ const NavContainer = styled.nav`
   align-items: center;
   justify-content: space-around;
   background : linear-gradient(to left top, #ADD8E6, white);
-  background-color: #ADD8E6;
   z-index: 1000;
   opacity : 80%;
-  border: 2px solid #000; /* 외곽선 추가 */
   overflow-x: auto; /* 가로로 내용이 넘칠 경우 가로 스크롤 생성 */
   overflow-y: hidden; /* 세로 스크롤 숨김 */
   margin: 0 200px; /* 양쪽에 20px의 공백 추가 */
@@ -26,7 +24,7 @@ const NavContainer = styled.nav`
 const NavItem = styled.div`
   text-decoration : none; 
   font-weight : bold;
-  padding : 30px 35px;
+  padding : 20px 20px;
   text-align : center;
   cursor: pointer;
   &:hover {
@@ -36,15 +34,17 @@ const NavItem = styled.div`
 
 // 제목
 const NavTitle = styled(NavItem)`
+  display: flex;
+  justify-content: center;
   color: #426B1F;
   font-size: 30pt;
 `;
 
-// 로그인하러 가기
+// 로그인
 const NavGotoLogin = styled(NavItem)`
   background-color: #426B1F;
   box-shadow: 0 2px 15px black;
-  font-size : 20pt;
+  font-size : 20px;
   margin-right: 10px;
 `;
 
@@ -52,8 +52,8 @@ function Navigation() {
   return (
     <NavContainer>
       <NavTitle onClick={() => window.location.href='http://localhost:3000/'}> ConnectHub </NavTitle>
-      <div/> <div/> <div/> <div/> <div/>
-      <NavGotoLogin onClick={() => window.location.href='https://naver.com/'}> 로그인하러 가기 </NavGotoLogin>
+      <div/> <div/> <div/> <div/> <div/> <div/> <div/>
+      <NavGotoLogin onClick={() => window.location.href='https://naver.com/'}> 로그인 </NavGotoLogin>
     </NavContainer>
   );
 }
