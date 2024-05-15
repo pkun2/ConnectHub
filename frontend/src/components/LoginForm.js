@@ -4,12 +4,14 @@ import { useHistory } from 'react-router-dom'; // useHistory import 추가
 import { LoginContainer, LoginBox, Title, Subtitle, Input, Button, FindLinks, StyledLink } from './LoginStyle';
 
 function LoginForm() {
+    // 상태 초기화
     const [formData, setFormData] = useState({
         userId: '',
         password: ''
     });
     const history = useHistory(); // useHistory 사용
 
+    // 입력값 변경을 위한 핸들러 함수
     const handleChange = (event) => {
         setFormData({
             ...formData,
@@ -17,9 +19,10 @@ function LoginForm() {
         });
     };
 
+    // Form 제출 핸들러 함수
     const handleSubmit = async (event) => {
         event.preventDefault();
-        try {
+        try { // 서버에 POST 요청 보냄
             const response = await axios({
                 method: "post",
                 baseURL: "http://localhost:4000",
@@ -34,6 +37,7 @@ function LoginForm() {
         }
     };
 
+    // LoginForm 구성
     return (
         <LoginContainer>
             <Title>ConnectedHub</Title>
