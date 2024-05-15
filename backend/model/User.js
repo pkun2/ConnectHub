@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import bcrypt from 'bcrypt';
 
 class User {
     constructor({ userId, nickname, email, password }) {
@@ -8,22 +9,28 @@ class User {
         this.password = password;
     }
 
-    async save(callback) {
-        try {
-            const sql = 'INSERT INTO users (userId, nickname, email, password) VALUES (?, ?, ?, ?)';
-            const values = [this.userId, this.nickname, this.email, this.password];
-            
-            const result = await db.promise().query(sql, values);
+    async save() {
+        const hashedPassword = await bcrypt.hash(this.password, 10);
+        const sql = 'INSERT INTO users (userId, nickname, email, password) VALUES (?, ?, ?, ?)';
+        const values = [this.userId, this.nickname, this.email, hashedPassword];
 
-            console.log('회원가입이 성공적으로 처리되었습니다.');
-            if(callback) {
-                callback(null, result);
-            }
-        } catch (error) {
-            console.error('회원가입 중 오류 발생:', error);
-            if(callback) {
-                callback(error, null);
-            }
+        try {
+            const [result] = await db.promise().query(sql, values);
+            return result;
+        } catch (err) {
+            console.error('사용자 등록 중 오류 발생:', err);
+            throw err;
+        }
+    }
+
+    static async createUser(userData) {
+        try {
+            const newUser = new User(userData);
+            await newUser.save();
+            return newUser;
+        } catch (err) {
+            console.error('사용자 생성 중 오류 발생:', err);
+            throw err;
         }
     }
 }
