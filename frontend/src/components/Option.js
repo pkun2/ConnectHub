@@ -86,8 +86,8 @@ const Option = () => {
     <OptionContainer>
       <div/> <div/> 
       <SearchWrapper>
-          <SearchInput type="text" placeholder="검색어 입력" />
-          <SearchIcon src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" alt="Search Icon" />
+        <SearchInput type="text" placeholder="검색어 입력" />
+        <SearchIcon src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" alt="Search Icon" />
       </SearchWrapper>
       <div/> <div/> <div/>
       <TTSOn> TTS On </TTSOn>
