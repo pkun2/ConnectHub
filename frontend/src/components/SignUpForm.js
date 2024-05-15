@@ -1,11 +1,10 @@
-// SignUpForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { SignUpContainer, SignUpBox, Title, Subtitle, Input, Button, FindLinks, StyledLink } from './SignUpStyle';
 
 function SignUpForm() {
     const [formData, setFormData] = useState({
-        userId: '', 
+        userId: '',
         nickname: '',
         email: '',
         password: ''
@@ -21,30 +20,24 @@ function SignUpForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            // const response = await axios.post('api/signup', formData);
-            const response = await axios({
-                method: "post",
-                baseURL: "http://localhost:4000",
-                url: "/api/signup", // 수정된 부분
-                data: formData
-            })
-
+            const response = await axios.post('http://localhost:4000/api/signup', formData);
             console.log(response.data);
+            alert('회원가입이 완료되었습니다. 이메일을 확인해 주세요.');
         } catch (error) {
-            console.error('회원가입 실패:', error);
+            console.error('회원가입 중 오류 발생:', error);
         }
-    };    
+    };
 
     return (
         <SignUpContainer>
             <Title>ConnectedHub</Title>
             <SignUpBox>
                 <Subtitle>회원가입</Subtitle>
-                <form id="signup-form" onSubmit={handleSubmit}>
-                    <Input type="text" id="userId" name="userId" placeholder="아이디" value={formData.userId} onChange={handleChange} /> {/* 수정된 부분: name="username" -> name="userId" */}
-                    <Input type="text" id="nickname" name="nickname" placeholder="닉네임" value={formData.nickname} onChange={handleChange} />
-                    <Input type="email" id="email" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} />
-                    <Input type="password" id="signup-password" name="password" placeholder="비밀번호" value={formData.password} onChange={handleChange} />
+                <form onSubmit={handleSubmit}>
+                    <Input type="text" name="userId" placeholder="아이디" value={formData.userId} onChange={handleChange} required />
+                    <Input type="text" name="nickname" placeholder="닉네임" value={formData.nickname} onChange={handleChange} required />
+                    <Input type="email" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} required />
+                    <Input type="password" name="password" placeholder="비밀번호" value={formData.password} onChange={handleChange} required />
                     <Button type="submit">가입하기</Button>
                 </form>
                 <FindLinks>
