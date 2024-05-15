@@ -19,22 +19,27 @@ export const postWriteController = (req, res) => {
 }
 
 export const postViewController = (req, res) => {
-    //mysql에서 post된 글들 가져와야 함. 카테고리별 분리할 부분도 필요하고,
-    //페이지네이션도 필요함.
+    const { userId, categoryId, limit} = req.body; // Request Body에서 userId, categoryId, limit 추출
+    // 게시글 조회
     // postId
     // userId
     // categoryId
     // title
     // content
     // createdAt
-    Post.getAllPosts()
+    const fetchPost = categoryId 
+        ?Post.getPostByCategoryId(categoryId, limit) 
+        :Post.getAllPosts(limit);
+
+    Post.getAllPosts() // 모든 게시글 조회
     .then(posts => {
         // Handle successful retrieval
-        res.status(200).send('게시글 조회 성공', posts);
+        res.status(200).send(`게시글 조회 성공: ${posts}`);
+        //posts.forEach(post => console.log(post)); // 게시글 출력
     })
     .catch(err => {
         // Handle error
-        res.status(500).send('게시글 조회중 오류 발생', err);
+        res.status(500).send(`게시글 조회중 오류 발생 ${err}`);
     });
 
 }
