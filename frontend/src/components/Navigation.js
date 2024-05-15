@@ -13,7 +13,6 @@ const NavContainer = styled.nav`
   align-items: center;
   justify-content: space-around;
   background : linear-gradient(to left top, #ADD8E6, white);
-  background-color: #ADD8E6;
   z-index: 1000;
   opacity : 80%;
   border: 2px solid #000; /* 외곽선 추가 */
@@ -36,6 +35,8 @@ const NavItem = styled.div`
 
 // 제목
 const NavTitle = styled(NavItem)`
+  display: flex;
+  justify-content: center;
   color: #426B1F;
   font-size: 30pt;
 `;
@@ -52,7 +53,7 @@ function Navigation() {
   return (
     <NavContainer>
       <NavTitle onClick={() => window.location.href='http://localhost:3000/'}> ConnectHub </NavTitle>
-      <div/> <div/> <div/> <div/> <div/>
+      <div/> <div/> <div/> <div/> <div/> <div/> <div/>
       <NavGotoLogin onClick={() => window.location.href='https://naver.com/'}> 로그인하러 가기 </NavGotoLogin>
     </NavContainer>
   );
