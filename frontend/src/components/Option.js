@@ -3,15 +3,19 @@ import styled from 'styled-components';
 
 // 옵션바
 const OptionContainer = styled.div`
-  position: sticky;
-  top: 170px;
-  margin: 11px;
+  position: relative;
+  top: 0px;
+  margin: 0px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
   opacity : 80%;
   z-index: 1000;
+  margin: 0 200px; /* 양쪽에 20px의 공백 추가 */
+  overflow-x: auto; /* 가로로 내용이 넘칠 경우 가로 스크롤 생성 */
+  overflow-y: hidden; /* 세로 스크롤 숨김 */
+  border: 2px solid #000; /* 외곽선 추가 */
 `;
 
 
@@ -19,7 +23,7 @@ const OptionContainer = styled.div`
 const SearchWrapper = styled.div`
   position: relative;
   width: 500px;
-  margin-right: 50px;
+  margin-right: 0px;
 `;
 
 // 작성란
@@ -47,11 +51,10 @@ const TTSOn = styled.div`
     margin-right: 20px;
     cursor: pointer;
     text-align: center;
-    width: 250px;
-    height: 80px;
-    line-height: 80px;
+    width: 125px;
+    height: 40px;
+    line-height: 40px;
     background-color: #ADD8E6;
-    border-radius: 10px;
     font-size: 22pt;
     font-weight : bold;
     box-shadow: 0 3px 15px gray;
@@ -64,11 +67,10 @@ const TTSOn = styled.div`
 const TTSOff = styled.div`
     cursor: pointer;
     text-align: center;
-    width: 250px;
-    height: 80px;
-    line-height: 80px;
+    width: 125px;
+    height: 40px;
+    line-height: 40px;
     background-color: #ADD8E6;
-    border-radius: 10px;
     font-size: 22pt;
     font-weight : bold;
     box-shadow: 0 3px 15px gray;

@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 // 네비게이션 바
 const NavContainer = styled.nav`
-  position: sticky;
-  top: 10px;
-  margin: 10px;
+  position: relative; /* 화면 상단 설정 */
+  top: 0;
+  left: 0;
+  width: 100%
   height: 150px;
   display: flex;
   flex-direction: row;
@@ -13,9 +14,12 @@ const NavContainer = styled.nav`
   justify-content: space-around;
   background : linear-gradient(to left top, #ADD8E6, white);
   background-color: #ADD8E6;
-  border-radius: 40px;
   z-index: 1000;
   opacity : 80%;
+  border: 2px solid #000; /* 외곽선 추가 */
+  overflow-x: auto; /* 가로로 내용이 넘칠 경우 가로 스크롤 생성 */
+  overflow-y: hidden; /* 세로 스크롤 숨김 */
+  margin: 0 200px; /* 양쪽에 20px의 공백 추가 */
 `;
 
 // 네비게이션 아이템
@@ -24,7 +28,6 @@ const NavItem = styled.div`
   font-weight : bold;
   padding : 30px 35px;
   text-align : center;
-  border-radius : 15px;
   cursor: pointer;
   &:hover {
     box-shadow: 0 0 10px #44C2FF;
