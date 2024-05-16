@@ -8,6 +8,10 @@ export const getLoginController = (req, res) => {
 export const postLoginController = async (req, res) => {
     const { userId, password } = req.body;
 
+    if (!userId || !password) {
+        return res.status(400).send("로그인실패: 유저네임과 패스워드가 없음.")
+    }
+
     try {
         // 사용자 검색
         const sql = 'SELECT * FROM users WHERE userId = ?';

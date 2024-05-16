@@ -26,7 +26,8 @@ export const postSignUpController = async (req, res) => {
         }
 
         // 인증이 성공하면 사용자 등록을 진행
-        const hashedPassword = await bcrypt.hash(password, 10); // 비밀번호 해싱
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt); // 비밀번호 해싱
         const newUser = new User({ userId, nickname, phone, password:hashedPassword });
         await newUser.save();
         res.status(200).send("회원가입 성공");
