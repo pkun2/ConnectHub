@@ -55,12 +55,12 @@ const TTSOn = styled.div`
     width: 125px;
     height: 40px;
     line-height: 40px;
-    background-color: #ADD8E6;
+    background : linear-gradient(to left top, #ADD8E6, white);
     font-size: 22pt;
     font-weight : bold;
-    box-shadow: 0 3px 15px gray;
+    border-radius: 5px;
     &:hover {
-        box-shadow: 0 0 10px #44C2FF;
+        background : linear-gradient(to left top, #ADD8E6, skyblue);
       }
 `;
 
@@ -71,12 +71,12 @@ const TTSOff = styled.div`
     width: 125px;
     height: 40px;
     line-height: 40px;
-    background-color: #ADD8E6;
+    background : linear-gradient(to left top, #ADD8E6, white);
     font-size: 22pt;
     font-weight : bold;
-    box-shadow: 0 3px 15px gray;
+    border-radius: 5px;
     &:hover {
-        box-shadow: 0 0 10px #44C2FF;
+        background : linear-gradient(to left top, #ADD8E6, skyblue);
       }
 `;
 

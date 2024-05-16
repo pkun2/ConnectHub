@@ -122,32 +122,68 @@ const RightSubContainer = styled.div`
   flex-direction: column;
   align-items: center;
   height: 1500px; /* 높이 설정 */
-  border: 2px solid #000; /* 외곽선 추가 */
+  border: 1.8px solid #E4E4E4; /* 외곽선 추가 */
 `;
-
-// // 게시판 혹은 공지사항 박스
-// const BoxSectionBoard = styled.div`
-//   background: linear-gradient(to right, #F4FFFF, #CEFFFF);
-//   box-shadow: 1px 0 10px 1px #44C2FF;
-//   border-radius: 15px;
-//   height: 80%;
-//   width: 80%;
-//   margin: 20px;
-//   position: relative;
-// `;
 
 // 제목
 const SectionTitle = styled.div`
   color: #426B1F;
   background : linear-gradient(to left top, #ADD8E6, white);
-  font-size: 30pt;
+  border-radius: 5px;
+  font-size: 25pt;
   font-weight: bolder;
   text-decoration: none;
   text-align: center;
   padding-top: 13px;
   padding-bottom: 13px;
-  border-bottom: 2px double #000; /* 외곽선 추가 */
   width: inherit;
+`;
+
+// 로그인 아이디 비밀번호 찾기 회원가입 버튼 컨테이너
+const LoginRegisterContainer = styled.div`
+  flex: 0.3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+// 로그인하기 버튼
+const Login = styled.div`
+    margin-top: 15px;
+    cursor: pointer;
+    text-align: center;
+    background : linear-gradient(to left top, #ADD8E6, white);
+    font-size: 16pt;
+    font-weight : bold;
+    padding: 15px 30px;
+    width: 200px;
+    border-radius: 10px;
+    &:hover {
+        background : linear-gradient(to left top, #ADD8E6, skyblue);
+      }
+`;
+
+// 아이디 비번 찾기 회원가입 컨테이너
+const RegisterContainer = styled.div`
+  display: flex;
+  flex-direction: low;
+  justify-content: space-around;
+  width: inherit; /* 부모로부터 상속받는다 */
+`;
+
+// 회원가입 버튼 (아이디 비번 찾기 버튼)
+const Register = styled.div`
+    cursor: pointer;
+    text-align: center;
+    font-size: 10pt;
+    font-weight : 500;
+    margin: 15px 10px;
+    white-space: nowrap;
+    &:hover {
+        text-decoration: underline;
+      }
 `;
 
 // 프로필 컨테이너
@@ -191,7 +227,7 @@ const InformationSection = styled.div`
 `;
 
 
-// 메뉴 선택 컨테이너
+// 카테고리 컨테이너
 const MenuSelectContainer = styled.div`
   flex: 1;
   display: flex;
@@ -200,15 +236,15 @@ const MenuSelectContainer = styled.div`
   width: 100%; 
 `;
 
-// 메뉴 선택
+// 카테고리 선택
 const MenuSelect = styled(SectionTitle)`
   text-align: left;
-  font-size: 17pt;
+  font-size: 16pt;
   font-weight: bolder;
   text-decoration: none;
   padding: 13px 0;
   width: inherit;  
-  border-bottom: 2px dotted #000; /* 외곽선 추가 */
+  border-bottom: 2px double #E4E4E4; /* 외곽선 추가 */
   background: initial;
   cursor: pointer;
   &:hover {
@@ -251,25 +287,20 @@ const Main = () => {
 
         
       <RightSubContainer>
-      <ProfileContainer>
-          <SectionTitle>프로필</SectionTitle>
-          <Picture/>
-          <InformationContainer> 
-            <InformationTitle> &nbsp;이름 :  </InformationTitle> <InformationSection> &nbsp;~~ </InformationSection>
-          </InformationContainer>
-          <InformationContainer> 
-            <InformationTitle> &nbsp;~~ :  </InformationTitle> <InformationSection> &nbsp;~~ </InformationSection>
-          </InformationContainer>
-          <InformationContainer> 
-            <InformationTitle> &nbsp;~~ :  </InformationTitle> <InformationSection> &nbsp;~~ </InformationSection>
-          </InformationContainer>
-        </ProfileContainer>
+        <LoginRegisterContainer>
+          <Login> 로그인 </Login>
+          <RegisterContainer>
+            <Register> 아이디 찾기 </Register>
+            <Register> 비밀번호 찾기 </Register>
+            <Register> 회원가입 </Register>
+          </RegisterContainer>
+        </LoginRegisterContainer>
         <MenuSelectContainer> 
-          <SectionTitle> 메뉴 선택 </SectionTitle>
-          <MenuSelect> &nbsp;자유게시판 </MenuSelect>
-          <MenuSelect> &nbsp;공지사항 </MenuSelect>
-          <MenuSelect> &nbsp;정부 혜택 </MenuSelect>
-          <MenuSelect> &nbsp;정보 </MenuSelect>
+          <SectionTitle> 카테고리 </SectionTitle>
+          <MenuSelect> &nbsp;&nbsp;자유게시판 </MenuSelect>
+          <MenuSelect> &nbsp;&nbsp;공지사항 </MenuSelect>
+          <MenuSelect> &nbsp;&nbsp;정부 혜택 </MenuSelect>
+          <MenuSelect> &nbsp;&nbsp;정보 </MenuSelect>
         </MenuSelectContainer>
       </RightSubContainer>
     </MainContainer>
@@ -278,3 +309,21 @@ const Main = () => {
 };
 
 export default Main;
+
+
+
+
+// 로그인 완료 후 프로필 화면
+{/* <ProfileContainer>
+      <SectionTitle>프로필</SectionTitle>
+      <Picture/>
+      <InformationContainer> 
+        <InformationTitle> &nbsp;이름 :  </InformationTitle> <InformationSection> &nbsp;~~ </InformationSection>
+      </InformationContainer>
+      <InformationContainer> 
+        <InformationTitle> &nbsp;~~ :  </InformationTitle> <InformationSection> &nbsp;~~ </InformationSection>
+      </InformationContainer>
+      <InformationContainer> 
+        <InformationTitle> &nbsp;~~ :  </InformationTitle> <InformationSection> &nbsp;~~ </InformationSection>
+      </InformationContainer>
+    </ProfileContainer> */}

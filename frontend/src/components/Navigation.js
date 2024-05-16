@@ -40,20 +40,11 @@ const NavTitle = styled(NavItem)`
   font-size: 30pt;
 `;
 
-// 로그인
-const NavGotoLogin = styled(NavItem)`
-  background-color: #426B1F;
-  box-shadow: 0 2px 15px black;
-  font-size : 20px;
-  margin-right: 10px;
-`;
-
 function Navigation() {
   return (
     <NavContainer>
       <NavTitle onClick={() => window.location.href='http://localhost:3000/'}> ConnectHub </NavTitle>
       <div/> <div/> <div/> <div/> <div/> <div/> <div/>
-      <NavGotoLogin onClick={() => window.location.href='https://naver.com/'}> 로그인 </NavGotoLogin>
     </NavContainer>
   );
 }
