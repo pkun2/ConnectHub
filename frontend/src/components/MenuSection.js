@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import SectionTitle from './SectionTitle';
 
 const MenuSelectContainer = styled.div`
   flex: 1;

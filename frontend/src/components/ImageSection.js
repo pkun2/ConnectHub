@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import WelcomeText from './WelcomeText'
 
 const ImageContainer = styled.div`
   display: flex;
@@ -26,6 +27,7 @@ const Image = styled.img`
 
 const ImageSection = ({ imageUrl }) => (
   <ImageContainer>
+    <WelcomeText/>
     <PictureContainer>
       <Image src={imageUrl} alt="그림" />
     </PictureContainer>

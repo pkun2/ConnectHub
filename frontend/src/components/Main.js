@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import Navigation from './Navigation';
 import Option from './Option';
-import WelcomeText from './WelcomeText';
 import ImageSection from './ImageSection';
 import BoardSection from './BoardSection';
 import ProfileSection from './ProfileSection';

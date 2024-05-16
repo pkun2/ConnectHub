@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import SectionTitle from './SectionTitle';
 
 const ProfileContainer = styled.div`
   flex: 0.8;
@@ -32,6 +31,18 @@ const InformationTitle = styled.div`
 const InformationSection = styled.div`
   flex: 1;
   margin: 5px 0;
+`;
+
+const SectionTitle = styled.div`
+  color: #426B1F;
+  background : linear-gradient(to left top, #ADD8E6, white);
+  font-size: 25pt;
+  font-weight: bolder;
+  text-decoration: none;
+  text-align: center;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  width: inherit;
 `;
 
 const ProfileSection = () => (
