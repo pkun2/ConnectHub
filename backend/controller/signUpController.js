@@ -15,18 +15,19 @@ export const postSignUpController = async (req, res) => {
     const { userId, nickname, phone, password, verificationCode } = req.body;
 
     try {
-        // Check if the verification code is valid
+        // 인증 코드의 유효성을 확인
         const verificationCheck = await client.verify.v2.services(process.env.TWILIO_SERVICE_ID)
             .verificationChecks
             .create({ to: phone, code: verificationCode });
 
+        // 인증 코드가 승인되지 않았을 경우 오류 응답을 반환
         if (verificationCheck.status !== 'approved') {
             return res.status(401).send("유효하지 않은 인증 코드입니다.");
         }
 
-        // Verification successful, proceed with user registration
+        // 인증이 성공하면 사용자 등록을 진행
         const hashedPassword = await bcrypt.hash(password, 10); // 비밀번호 해싱
-        const newUser = new User({ userId, nickname, phone, password: hashedPassword });
+        const newUser = new User({ userId, nickname, phone, password:hashedPassword });
         await newUser.save();
         res.status(200).send("회원가입 성공");
     } catch (error) {

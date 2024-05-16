@@ -22,6 +22,7 @@ function LoginForm() {
     // Form 제출 핸들러 함수
     const handleSubmit = async (event) => {
         event.preventDefault();
+
         try { // 서버에 POST 요청 보냄
             const response = await axios({
                 method: "post",
