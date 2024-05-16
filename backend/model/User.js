@@ -16,7 +16,7 @@ class User {
         const hashedPassword = await bcrypt.hash(this.password, 10);
         
         // SQL 쿼리문 생성, 전달 
-        const sql = 'INSERT INTO users (userId, nickname, phone, password) VALUES (?, ?, ?, ?)';
+        const sql = 'INSERT INTO users3 (userId, nickname, phone, password) VALUES (?, ?, ?, ?)';
         const values = [this.userId, this.nickname, this.phone, hashedPassword];
 
         try { // 쿼리 실행 및 결과 반환

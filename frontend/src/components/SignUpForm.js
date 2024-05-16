@@ -2,11 +2,10 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom'; // useHistory import 추가
 import { SignUpContainer, SignUpBox, Title, Subtitle, Input, Button, FindLinks, StyledLink } from './SignUpStyle';
 
-
 function SignUpForm() {
-    // 상태 초기화
     const [formData, setFormData] = useState({
         userId: '', 
         nickname: '',
@@ -15,7 +14,8 @@ function SignUpForm() {
         verificationCode: ''
     });
 
-    // 입력값 변경을 위한 핸들러 함수
+    const history = useHistory(); // useHistory 사용
+
     const handleChange = (event) => {
         setFormData({
             ...formData,
@@ -23,22 +23,23 @@ function SignUpForm() {
         });
     };
 
-    // Form 제출 핸들러 함수
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            // 서버에 POST 요청 보내기
+            // 인증 코드 유효성 검사 및 회원가입 요청
             const response = await axios.post('http://localhost:4000/api/signup', formData);
             console.log(response.data);
+
+            // 회원가입 성공 시 메인 화면으로 이동
+            history.push('/');
         } catch (error) {
             console.error('회원가입 실패:', error);
+            window.alert('회원가입 도중 오류가 발생했습니다. 인증 코드를 확인해 주세요.'); // 팝업창으로 실패 메시지 표시
         }
     };
 
-    // 인증번호 전송 핸들러 함수
     const handleSendCode = async () => {
         try {
-            // 서버에 POST 요청 보내기
             const response = await axios.post('http://localhost:4000/api/sendVerificationCode', { phone: formData.phone });
             console.log(response.data);
         } catch (error) {
@@ -46,18 +47,6 @@ function SignUpForm() {
         }
     };
 
-    // 인증번호 확인 핸들러 함수
-    const handleVerifyCode = async () => {
-        try {
-            // 서버에 POST 요청 보내기
-            const response = await axios.post('http://localhost:4000/api/verifyVerificationCode', { phone: formData.phone, code: formData.verificationCode });
-            console.log(response.data);
-        } catch (error) {
-            console.error('인증번호 확인 실패:', error);
-        }
-    };
-
-    // SignUpForm 구성
     return (
         <SignUpContainer>
             <Title>ConnectedHub</Title>
@@ -70,7 +59,6 @@ function SignUpForm() {
                     <Input type="tel" id="phone" name="phone" placeholder="전화번호" value={formData.phone} onChange={handleChange} />
                     <Button type="button" onClick={handleSendCode}>인증번호 전송</Button>
                     <Input type="text" id="verificationCode" name="verificationCode" placeholder="인증번호" value={formData.verificationCode} onChange={handleChange} />
-                    <Button type="button" onClick={handleVerifyCode}>인증번호 확인</Button>
                     <Button type="submit">가입하기</Button>
                 </form>
                 <FindLinks>

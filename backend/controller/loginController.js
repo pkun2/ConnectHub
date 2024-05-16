@@ -12,7 +12,7 @@ export const postLoginController = async (req, res) => {
 
     try {
         // 데이터베이스에서 해당 userId를 가진 사용자를 찾음
-        const sql = 'SELECT * FROM users2 WHERE userId = ?';
+        const sql = 'SELECT * FROM users3 WHERE userId = ?';
         db.query(sql, [userId], async (err, result) => {
             
             if (err) { // 오류 처리
