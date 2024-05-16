@@ -1,5 +1,4 @@
 import User from "../model/User";
-import bcrypt from 'bcrypt';
 import twilio from 'twilio';
 import dotenv from 'dotenv';
 
@@ -26,8 +25,7 @@ export const postSignUpController = async (req, res) => {
         }
 
         // 인증이 성공하면 사용자 등록을 진행
-        const hashedPassword = await bcrypt.hash(password, 10); // 비밀번호 해싱
-        const newUser = new User({ userId, nickname, phone, password:hashedPassword });
+        const newUser = new User({ userId, nickname, phone, password });
         await newUser.save();
         res.status(200).send("회원가입 성공");
     } catch (error) {
