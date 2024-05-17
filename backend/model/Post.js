@@ -47,6 +47,19 @@ class Post {
                 });
         });
     }
+
+    static deletePost(postId) {
+        return new Promise((resolve, reject) => {
+            const query = 'DELETE FROM posts WHERE id = ?';
+            db.query(query, [postId], (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    }
 }
 
 export default Post;
