@@ -8,12 +8,7 @@ export const getLoginController = (req, res) => {
 export const postLoginController = async (req, res) => {
     const { userId, password } = req.body;
 
-    if (!userId || !password) {
-        return res.status(400).send("로그인실패: 유저네임과 패스워드가 없음.")
-    }
-
     try {
-        // 사용자 검색
         const sql = 'SELECT * FROM users WHERE userId = ?';
         db.query(sql, [userId], async (err, result) => {
             if (err) {
@@ -22,16 +17,14 @@ export const postLoginController = async (req, res) => {
                 return;
             }
 
-            // 아이디 검증
             if (result.length === 0) {
                 res.status(401).send("로그인 실패: 아이디가 존재하지 않습니다.");
                 return;
             }
 
-            // 비밀번호 검증
             const user = result[0];
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-            if (!isPasswordValid) {
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
                 res.status(401).send("로그인 실패: 비밀번호가 일치하지 않습니다.");
                 return;
             }
