@@ -21,12 +21,6 @@ export const postWriteController = (req, res) => {
 export const postViewController = (req, res) => {
     const { userId, categoryId, limit} = req.body; // Request Body에서 userId, categoryId, limit 추출
     // 게시글 조회
-    // postId
-    // userId
-    // categoryId
-    // title
-    // content
-    // createdAt
     const fetchPost = categoryId 
         ?Post.getPostByCategoryId(categoryId, limit) 
         :Post.getAllPosts(limit);
