@@ -1,51 +1,60 @@
-import db from '../config/db.js';
+import connectToDatabase from '../config/db.js';
 
 class Post {
-    static insertPost(userId, categoryId, title, content) {
-        return new Promise((resolve, reject) => {
-            const query = 'INSERT INTO posts (userId, categoryId, title, content) VALUES (?, ?, ?, ?)';// 게시글 삽입 쿼리
-            const values = [userId, categoryId, title, content]; // 쿼리에 전달할 값
-        
-            db.query(query, values)// 쿼리 실행 부분
-                .then(result => {
-                    resolve(result);
-                })
-                .catch(err => {
-                    reject(err);
-                });
-        });
+    static async insertPost(userId, categoryId, title, content) {
+        const connection = await connectToDatabase();
+        try {
+            const query = 'INSERT INTO posts (userId, categoryId, title, content) VALUES (?, ?, ?, ?)';
+            const [result] = await connection.query(query, [userId, categoryId, title, content]);
+            return result;
+        } catch (err) {
+            console.log("삽입중 에러발생:", err);
+            throw err;
+        } finally {
+            connection.end();
+        }
     }
 
-    // 모든 게시글 조회
-    static getAllPosts(limit) {
-        return new Promise((resolve, reject) => {
-            let query = "SELECT * FROM posts LIMIT ?"; // 제한된 개수만큼 게시글 조회
-            let params = [parseInt(limit, 10)] // limit을 param으로 사용하기 위해 정수로 변환
-
-            db.query(query, params) // 쿼리 실행 부분
-                .then(result => {
-                    resolve(result);
-                })
-                .catch(err => {
-                    reject(err);
-                })
-        });
+    static async getAllPosts(limit) {
+        const connection = await connectToDatabase();
+        try {
+            const query = "SELECT * FROM posts LIMIT ?";
+            const [result] = await connection.query(query, [parseInt(limit)]);
+            return result;
+        } catch (err) {
+            console.log("조회중 에러발생:", err);
+            throw err;
+        } finally {
+            connection.end();
+        }
     }
 
-    // 카테고리별 게시글 조회
-    static getPostByCategoryId(categoryId, limit) {
-        return new Promise((resolve, reject) => {
-            let query = "SELECT * FROM posts WHERE categoryId = ? LIMIT ?"; // categoryId에 해당하는 게시글 조회
-            let params = [categoryId, parseInt(limit, 10)]; // categoryId와 limit을 param으로 사용하기 위해 정수로 변환 이때 categoryId는 전달시 정수로 전달되어야 함
+    static async getPostByCategoryId(categoryId, limit) {
+        const connection = await connectToDatabase();
+        try {
+            const query = "SELECT * FROM posts WHERE categoryId = ? LIMIT ?";
+            const [result] = await connection.query(query, [categoryId, parseInt(limit)]);
+            return result;
+        } catch (err) {
+            console.log("조회중 에러발생:", err);
+            throw err;
+        } finally {
+            connection.end();
+        }
+    }
 
-            db.query(query, params) // 쿼리 실행 부분
-                .then(result => {
-                    resolve(result);
-                })
-                .catch(err => {
-                    reject(err);
-                });
-        });
+    static async getPostById(postId) {
+        const connection = await connectToDatabase();
+        try {
+            const query = "SELECT * FROM posts WHERE postId = ?";
+            const [result] = await connection.query(query, [postId]);
+            return result;
+        } catch (err) {
+            console.log("조회중 에러발생:", err);
+            throw err;
+        } finally {
+            connection.end();
+        }
     }
 }
 
