@@ -49,7 +49,7 @@ const SubTitle = styled.div`
 const ChangeContainer = styled.div`
   display: flex;
   flex-direction: row; 
-  margin-top: ${props => (props.first ? '150px' : '0')};
+  margin-top: ${props => (props.first ? '80px' : '0')};
   width: 700px;
   height: ${props => (props.password ? '180px' : '100px')};;
   font-size: 10pt;
@@ -71,20 +71,54 @@ const ChangeL = styled.div`
 
 // 변경(Right)컨테이너
 const ChangeRContainer = styled.div`
-  flex: 0.9;
+  flex: 1;
   display: flex;
   flex-direction: column;
 `;
 
 // 변경(Right)
-const ChangeR = styled.div`
+const ChangeR = styled.input`
   font-size: 11pt;
   white-space: nowrap;
   border: 1.8px solid #E4E4E4;
-  margin-top: 35px;
+  width: 400px;
+  margin-top: ${props => (props.end ? "40px" : "35px")};
   margin-left: 70px;
   padding-left: 3pt;
-  width: 400px;
+`;
+
+// 버튼 컨테이너
+const ButtonContainer = styled.div`
+  flex: 0.1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 30px;
+  width: 200px;
+`;
+
+// 적용 버튼
+const SubmitButton = styled.button`
+  text-align: center;
+  font-size: 11pt;
+  font-weight: 550;
+  width: 60px;
+  height: 40px;
+  background-color: white;
+  cursor: pointer;
+  border: 1.5px solid #BDBDBD;
+`;
+
+// 취소 버튼
+const ExitButton = styled.button`
+  text-align: center;
+  font-size: 11pt;
+  font-weight: 550;
+  width: 60px;
+  height: 40px;
+  background-color: white;
+  cursor: pointer;
+  border: 1.5px solid #BDBDBD;
 `;
 
 const MyPage = () => {
@@ -99,24 +133,28 @@ const MyPage = () => {
             <ChangeContainer first>
                 <ChangeL> 닉네임 </ChangeL>
                 <ChangeRContainer> 
-                    <ChangeR> test </ChangeR>
+                    <ChangeR type="text" placeholder="변경할 닉네임 입력"/>
                 </ChangeRContainer>
             </ChangeContainer>
 
             <ChangeContainer>
                 <ChangeL> 아이디 변경 </ChangeL>
                 <ChangeRContainer> 
-                    <ChangeR> test </ChangeR>
+                    <ChangeR type="text" placeholder="변경할 아이디 입력"/>
                 </ChangeRContainer>
             </ChangeContainer>
 
             <ChangeContainer end password>
                 <ChangeL> 비밀번호 변경 </ChangeL>
                 <ChangeRContainer> 
-                    현재 <ChangeR> test </ChangeR>
-                    변경 <ChangeR> test </ChangeR>
+                    <ChangeR end type="text" placeholder="현재 비밀번호 입력"/>
+                    <ChangeR end type="text" placeholder="변경할 비밀번호 입력"/>
                 </ChangeRContainer>
             </ChangeContainer>
+            <ButtonContainer>
+              <SubmitButton> 적용 </SubmitButton>
+              <ExitButton> 취소 </ExitButton>
+            </ButtonContainer>
         </MainContainer>
         <Foot/>
       </>
