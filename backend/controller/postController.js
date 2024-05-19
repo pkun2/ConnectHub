@@ -64,3 +64,16 @@ export const postReportController = async (req, res) => {
         res.status(500).send('게시글 신고 도중 오류가 발생했습니다.');
     }
 };
+
+// 게시글 변경 기능 
+export const postUpdateController = async (req, res) => {
+    const { title, content, postId } = req.body;
+
+    try {
+        const result = await Post.updatePost(title, content, postId);
+        res.status(200).json(result); // 성공적으로 업데이트되었음을 클라이언트에게 반환
+    } catch (error) {
+        console.error('게시글 업데이트 중 오류 발생:', error);
+        res.status(500).send("게시글 업데이트 도중 오류가 발생했습니다.");
+    }
+};

@@ -72,6 +72,21 @@ class Post {
         }
     }
 
+    // 게시글 변경 기능, content와 title의 내용이 수정되는 방식  
+    static async updatePost(title, content, postId) {
+        const connection = await pool.getConnection();
+        try {
+            const query = "UPDATE posts SET title = ?, content = ? WHERE id = ?";
+            const [result] = await connection.query(query, [title, content, postId]);
+            return result;
+        } catch (err) {
+            console.log("게시글 업데이트 중 에러 발생:", err);
+            throw err;
+        } finally {
+            connection.release();
+        }
+    }
+
     
 }
 
