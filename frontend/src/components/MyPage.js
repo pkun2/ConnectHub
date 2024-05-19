@@ -14,17 +14,6 @@ const MainContainer = styled.div`
   margin: 50px 400px 176px 400px; 
 `;
 
-// 내용 컨테이너
-const SectionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1.8px solid #E4E4E4; 
-  margin: 0 200px 100px 200px;
-  height: 500px;
-  width: 600px; 
-`;
-
 // 제목
 const SectionTitle = styled.div`
   color: #426B1F;
