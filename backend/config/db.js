@@ -1,22 +1,17 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
-// MySQL 데이터베이스 연결 설정
-async function connectToDatabase() {
-  try {
-      const connection = await mysql.createConnection({
-          host: process.env.DB_HOST,
-          user: process.env.DB_USER,
-          password: process.env.DB_PASSWORD,
-          database: process.env.DB_DATABASE
-      });
-      console.log('MySQL에 성공적으로 연결되었습니다.');
-      return connection;
-  } catch (err) {
-      console.error('MySQL 연결 오류:', err);
-      throw err;
-  }
-}
+// promise 모듈을 사용했기 때문에 try-catch 생략 
+const pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
 
-export default connectToDatabase
+export default pool;

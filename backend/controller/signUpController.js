@@ -1,4 +1,4 @@
-import User from "../model/User";
+import User from "../model/User.js";
 import twilio from 'twilio';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
@@ -15,7 +15,7 @@ export const postSignUpController = async (req, res) => {
     const { userId, nickname, phone, password, verificationCode } = req.body;
 
     try {
-        const verificationCheck = await client.verify.v2.services(process.env.TWILIO_SERVICE_ID)
+        const verificationCheck = await client.verify.services(process.env.TWILIO_SERVICE_ID)
             .verificationChecks
             .create({ to: phone, code: verificationCode });
 

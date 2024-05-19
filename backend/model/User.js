@@ -13,7 +13,7 @@ class User {
         const values = [this.userId, this.nickname, this.phone, this.password];
 
         try {
-            const [result] = await db.promise().query(sql, values);
+            const [result] = await db.query(sql, values);
             return result;
         } catch (err) {
             console.error('사용자 등록 중 오류 발생:', err);
