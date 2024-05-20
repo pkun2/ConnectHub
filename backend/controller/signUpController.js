@@ -12,19 +12,22 @@ export const getSignUpController = (req, res) => {
 };
 
 export const postSignUpController = async (req, res) => {
-    const { userId, nickname, phone, password, verificationCode } = req.body;
+    const { email, nickname, phoneNum, password, verificationCode } = req.body;
 
+    
     try {
+        console.log(phoneNum);
+
         const verificationCheck = await client.verify.services(process.env.TWILIO_SERVICE_ID)
             .verificationChecks
-            .create({ to: phone, code: verificationCode });
+            .create({ to: phoneNum, code: verificationCode });
 
         if (verificationCheck.status !== 'approved') {
             return res.status(401).send("유효하지 않은 인증 코드입니다.");
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ userId, nickname, phone, password: hashedPassword });
+        const newUser = new User({ email, nickname, phoneNum, password: hashedPassword });
         await newUser.save();
         res.status(200).send("회원가입 성공");
     } catch (error) {

@@ -6,14 +6,14 @@ export const getLoginController = (req, res) => {
 };
 
 export const postLoginController = async (req, res) => {
-    const { userId, password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        const sql = 'SELECT * FROM users WHERE userId = ?';
-        const [result] = await db.query(sql, [userId]);
+        const sql = 'SELECT * FROM users WHERE email = ?';
+        const [result] = await db.query(sql, [email]);
 
         if (result.length === 0) {
-            res.status(401).send("로그인 실패: 아이디가 존재하지 않습니다.");
+            res.status(401).send("로그인 실패: 이메일이 존재하지 않습니다.");
             return;
         }
 

@@ -6,10 +6,10 @@ const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TO
 
 // 인증 코드를 전송하는 컨트롤러
 export const sendVerificationCode = async (req, res) => {
-    const { phone } = req.body; // Request Body에서 전화번호(phone) 추출
+    const { phoneNum } = req.body; // Request Body에서 전화번호(phone) 추출
 
     // 전화번호가 없는 경우
-    if (!phone) { 
+    if (!phoneNum) { 
         return res.status(400).json({ error: '전화번호를 입력해야 합니다.' });
     }
 
@@ -18,7 +18,7 @@ export const sendVerificationCode = async (req, res) => {
         // SMS 채널을 통해 인증 코드 전송 요청
         const verification = await client.verify.v2.services(process.env.TWILIO_SERVICE_ID)
             .verifications
-            .create({ to: phone, channel: 'sms' });
+            .create({ to: phoneNum, channel: 'sms' });
 
         console.log(verification.sid);
 
