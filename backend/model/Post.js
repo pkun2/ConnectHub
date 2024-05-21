@@ -36,6 +36,19 @@ class Post {
             throw err;
         }
     }
+
+    static async getPostByPostId(postId) {
+        const query = "SELECT * FROM posts WHERE postId = ?";
+        const params = [postId];
+
+        try {
+            const [result] = await pool.query(query, params);
+            return result[0];
+        }
+        catch (err) {
+            throw err;
+        }
+    }
 }
 
-module.exports = Post;
+export default Post;
