@@ -18,7 +18,7 @@ export const postSignUpController = async (req, res) => {
     try {
         console.log(phoneNum);
 
-        const verificationCheck = await client.verify.services(process.env.TWILIO_SERVICE_ID)
+        const verificationCheck = await client.verify.v2.services(process.env.TWILIO_SERVICE_ID)
             .verificationChecks
             .create({ to: phoneNum, code: verificationCode });
 

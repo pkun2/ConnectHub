@@ -7,7 +7,8 @@ import homeRouter from "./router/homeRouter";
 import postRouter from "./router/postRouter";
 import signUpRouter from "./router/signUpRouter";
 import loginRouter from "./router/loginRouter";
-import verificationRouter from "./router/vreificationRouter"; 
+import verificationRouter from "./router/verificationRouter"; // 수정: 오타 수정
+import passwordResetRouter from "./router/passwordResetRouter"; // passwordResetRouter 추가
 
 dotenv.config();
 
@@ -23,7 +24,8 @@ app.use("/", homeRouter);
 app.use("/api/post", postRouter);
 app.use("/api/signup", signUpRouter);
 app.use("/api/login", loginRouter);
-app.use("/api", verificationRouter); // 수정: verificationRouter 추가
+app.use("/api", verificationRouter); // 수정: verificationRouter 경로 수정
+app.use("/api/password", passwordResetRouter); // passwordResetRouter 추가
 
 // 서버 시작
 app.listen(PORT, () => {
