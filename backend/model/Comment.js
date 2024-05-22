@@ -13,7 +13,10 @@ class Comment {
     }
 
     static async getCommentsByPostId(postId) {
-        const query = 'SELECT * FROM comments WHERE postId = ?';
+        const query = `SELECT comments.*, users.nickname
+                       FROM comments
+                       JOIN users ON comments.userId = users.userId
+                       WHERE postId = ?`;
         const params = [postId];
         try {
             const [result] = await pool.query(query, params);
