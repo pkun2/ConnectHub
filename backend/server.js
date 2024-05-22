@@ -1,5 +1,4 @@
 // server.js
-import winston from "winston"
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -14,7 +13,6 @@ import pool from "./config/db.js";
 dotenv.config();
 
 const app = express();
-const logger = winston.createLogger();
 const PORT = process.env.PORT; // 포트 번호 설정
 
 app.use(cors()); // CORS 미들웨어 사용
