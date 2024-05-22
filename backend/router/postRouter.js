@@ -1,10 +1,12 @@
 import express from "express";
-import { getWriteController, postWriteController, postViewController, getPostDetailController } from "../controller/postController";
+import { postWriteController, postViewController, getPostDetailController, postCommentController, getCommentsByPostController} from "../controller/postController";
 
 const postRouter = express.Router();
 
-postRouter.route("/write").get(getWriteController).post(postWriteController);
+postRouter.route("/write").post(postWriteController);
 postRouter.get("/", postViewController)
 postRouter.get("/:id", getPostDetailController);
+postRouter.get("/:id/comment", getCommentsByPostController);
+postRouter.post("/comment", postCommentController);
 
 export default postRouter;
