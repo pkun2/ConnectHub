@@ -9,6 +9,7 @@ import signUpRouter from "./router/signUpRouter";
 import loginRouter from "./router/loginRouter";
 import verificationRouter from "./router/verificationRouter"; // 수정: 오타 수정
 import passwordResetRouter from "./router/passwordResetRouter"; // passwordResetRouter 추가
+import emailFindRouter from "./router/emailFindRouter";
 
 dotenv.config();
 
@@ -24,8 +25,9 @@ app.use("/", homeRouter);
 app.use("/api/post", postRouter);
 app.use("/api/signup", signUpRouter);
 app.use("/api/login", loginRouter);
-app.use("/api", verificationRouter); // 수정: verificationRouter 경로 수정
-app.use("/api/password", passwordResetRouter); // passwordResetRouter 추가
+app.use("/api", verificationRouter);           // verificationRouter
+app.use("/api/password", passwordResetRouter); // 비밀번호 변경 라우터 
+app.use("/api/findEmail", emailFindRouter)     // 이메일 찾기 라우터 
 
 // 서버 시작
 app.listen(PORT, () => {

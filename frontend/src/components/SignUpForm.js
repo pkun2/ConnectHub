@@ -63,6 +63,7 @@ function SignUpForm() {
                 <FindLinks>
                     <p>이미 계정이 있으신가요? <StyledLink href="/login">로그인</StyledLink></p>
                     <p>비밀번호를 잊으셨나요? <StyledLink href="/request-reset">비밀번호 재설정</StyledLink></p>
+                    <p>이메일을 잊으셨나요? <StyledLink href="/email">이메일 찾기</StyledLink></p>
                 </FindLinks>
             </SignUpBox>
         </SignUpContainer>

@@ -7,6 +7,7 @@ dotenv.config();
 
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
+// 인증번호 요청 
 export const requestPasswordResetController = async (req, res) => {
     const { email, phoneNum } = req.body;
 
@@ -31,6 +32,7 @@ export const requestPasswordResetController = async (req, res) => {
     }
 };
 
+// 비밀번호 재설정 
 export const resetPasswordController = async (req, res) => {
     const { email, phoneNum, verificationCode, newPassword } = req.body;
 

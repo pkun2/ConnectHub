@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import PasswordResetRequestForm from './components/PasswordResetRequestForm';
 import PasswordResetForm from './components/PasswordResetForm';
+import PhoneToEmailForm from './components/PhoneToEmailForm';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" component={SignUpForm} />
         <Route path="/request-reset" component={PasswordResetRequestForm} />
         <Route path="/reset" component={PasswordResetForm} />
+        <Route path="/email" component={PhoneToEmailForm} /> {/* "/email" 경로 추가 */}
       </Switch>
 
       <div>
