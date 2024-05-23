@@ -68,7 +68,7 @@ const ProfileImage = styled.img`
 
 const ContentContainer = styled.div`
   margin-top: 20px;
-  font-size: 2.0em; /* 글씨 크기 키우기 */
+  font-size: 2.0em;
   margin: 0 30px 30px 30px;
   word-break: break-word;
 `;
@@ -85,7 +85,7 @@ const Button = styled.button`
   padding: 8px 16px;
   font-size: 1em;
   cursor: pointer;
-  background-color: ${({ color }) => color || '#007bff'};
+  background-color: #add8e6;
   color: white;
   border: none;
   border-radius: 4px;
@@ -94,29 +94,69 @@ const Button = styled.button`
   }
 `;
 
+const CommentSection = styled.div`
+  margin-top: 30px;
+  width: 90%;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  margin: 0 30px 30px 30px;
+`;
+
+const CommentInput = styled.input`
+  width: calc(100% - 20px);
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+`;
+
+const CommentButton = styled(Button)`
+  background-color: #add8e6;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const PostDetail = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체게시판');
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState([]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
   };
 
-  // 임시 데이터
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const handleCommentSubmit = () => {
+    if (comment.trim() === '') return;
+
+    const newComment = {
+      id: comments.length + 1,
+      author: '사용자 닉네임',
+      text: comment,
+    };
+
+    setComments([newComment, ...comments]);
+    setComment('');
+  };
+
   const post = {
     title: '게시물 제목',
     content: '게시물 내용',
     author: '작성자 이름',
     date: '2024-05-21',
-    profileImageUrl: 'https://via.placeholder.com/50', // 프로필 이미지 URL
+    profileImageUrl: 'https://via.placeholder.com/50',
   };
 
   const handleEdit = () => {
-    // 수정 기능 구현
     console.log('수정 버튼 클릭');
   };
 
   const handleDelete = () => {
-    // 삭제 기능 구현
     console.log('삭제 버튼 클릭');
   };
 
@@ -141,15 +181,30 @@ const PostDetail = () => {
             <ContentContainer>
               <p>{post.content}</p>
             </ContentContainer>
+            <CommentSection>
+              <h2>댓글</h2>
+              {comments.map((comment) => (
+                <div key={comment.id}>
+                  <p><strong>{comment.author}:</strong> {comment.text}</p>
+                </div>
+              ))}
+              <CommentInput 
+                type="text" 
+                placeholder="댓글을 입력하세요" 
+                value={comment}
+                onChange={handleCommentChange}
+              />
+              <CommentButton onClick={handleCommentSubmit}>등록</CommentButton>
+            </CommentSection>
           </DetailContainer>
           <ButtonContainer>
-              <Button color="#28a745" hoverColor="#218838" onClick={handleEdit}>
-                수정
-              </Button>
-              <Button color="#dc3545" hoverColor="#c82333" onClick={handleDelete}>
-                삭제
-              </Button>
-            </ButtonContainer>
+            <Button onClick={handleEdit}>
+              수정
+            </Button>
+            <Button onClick={handleDelete}>
+              삭제
+            </Button>
+          </ButtonContainer>
         </LeftSubContainer>
         <RightSubContainer>
           <ProfileSection />
