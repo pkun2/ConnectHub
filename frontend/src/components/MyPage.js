@@ -126,13 +126,6 @@ const MyPage = () => {
                 </ChangeRContainer>
             </ChangeContainer>
 
-            <ChangeContainer>
-                <ChangeL> 아이디 변경 </ChangeL>
-                <ChangeRContainer> 
-                    <ChangeR type="text" placeholder="변경할 아이디 입력"/>
-                </ChangeRContainer>
-            </ChangeContainer>
-
             <ChangeContainer end password>
                 <ChangeL> 비밀번호 변경 </ChangeL>
                 <ChangeRContainer> 
