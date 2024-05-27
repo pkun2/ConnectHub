@@ -36,6 +36,16 @@ class Post {
             throw err;
         }
     }
+    // 게시글 상세 조회
+    static async getPostDetail(postId) {
+        const query = 'SELECT * FROM posts WHERE postId = ?';
+        const params = [postId];
+        try {
+            const [result] = await pool.query(query, params);
+            return result[0];
+        } catch (err) {
+            throw err;
+        }
 
     static deletePost(postId) {
         return new Promise((resolve, reject) => {
@@ -51,4 +61,4 @@ class Post {
     }
 }
 
-module.exports = Post;
+export default Post;
