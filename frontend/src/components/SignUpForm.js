@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom'; // useHistory import 추가
+import { useNavigate } from 'react-router-dom'; // useHistory import 추가
 import { SignUpContainer, SignUpBox, Title, Subtitle, Input, Button, FindLinks, StyledLink } from './SignUpStyle';
 
 function SignUpForm() {
@@ -13,7 +13,7 @@ function SignUpForm() {
         password: ''
     });
 
-    const history = useHistory(); // useHistory 사용
+    const navigate = useNavigate(); // useHistory 사용
 
     const handleChange = (event) => {
         setFormData({
@@ -30,7 +30,7 @@ function SignUpForm() {
             console.log(response.data);
 
             // 회원가입 성공 시 메인 화면으로 이동
-            history.push('/');
+            navigate('/');
         } catch (error) {
             console.error('회원가입 실패:', error);
             window.alert('회원가입 도중 오류가 발생했습니다. 인증 코드를 확인해 주세요.'); // 팝업창으로 실패 메시지 표시

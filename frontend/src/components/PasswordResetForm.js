@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function PasswordResetForm() {
     // useState를 사용하여 컴포넌트의 상태를 초기화
@@ -11,7 +11,7 @@ function PasswordResetForm() {
         phoneNum: ''
     });
     // useHistory()를 사용하여 history 객체를 가져옴
-    const history = useHistory();
+    const navigate = useNavigate();
 
     // 입력 값이 변경될 때마다 상태를 업데이트하는 함수
     const handleChange = (event) => {
@@ -30,7 +30,7 @@ function PasswordResetForm() {
             alert('비밀번호가 성공적으로 재설정되었습니다.');
             
             // 비밀번호 재설정 완료 후 로그인 페이지로 이동합니다.
-            history.push('/login');
+            navigate('/login');
         } catch (error) {
             console.error('비밀번호 재설정 실패:', error);
             alert('비밀번호 재설정 중 오류가 발생했습니다.');
