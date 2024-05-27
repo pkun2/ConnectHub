@@ -46,18 +46,16 @@ class Post {
         } catch (err) {
             throw err;
         }
-
-    static deletePost(postId) {
-        return new Promise((resolve, reject) => {
-            const query = 'DELETE FROM posts WHERE id = ?';
-            db.query(query, [postId], (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
+    }
+    static async deletePost(postId) {
+        const query = 'DELETE FROM posts WHERE id = ?';
+        const params = [postId]
+        try {
+            const [result] = await pool.query(query, params);
+            return result;
+        } catch (err) {
+            throw err;
+        }
     }
 }
 
