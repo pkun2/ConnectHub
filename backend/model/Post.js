@@ -1,59 +1,73 @@
 import pool from '../config/db.js';
 
 class Post {
+    // 게시글 삽입
     static async insertPost(userId, categoryId, title, content) {
-        const connection = await pool.getConnection();
+        const query = 'INSERT INTO posts (userId, categoryId, title, content) VALUES (?, ?, ?, ?)';
+        const values = [userId, categoryId, title, content];
         try {
-            const query = 'INSERT INTO posts (userId, categoryId, title, content) VALUES (?, ?, ?, ?)';
-            const [result] = await connection.query(query, [userId, categoryId, title, content]);
+            const [result] = await pool.query(query, values);
             return result;
         } catch (err) {
-            console.log("삽입중 에러발생:", err);
             throw err;
-        } finally {
-            connection.release();
         }
     }
 
+    // 모든 게시글 조회
     static async getAllPosts(limit) {
-        const connection = await pool.getConnection();
+        const query = 'SELECT * FROM posts LIMIT ?';
+        const params = [parseInt(limit, 10)];
         try {
-            const query = "SELECT * FROM posts LIMIT ?";
-            const [result] = await connection.query(query, [parseInt(limit)]);
+            const [result] = await pool.query(query, params);
             return result;
         } catch (err) {
-            console.log("조회중 에러발생:", err);
             throw err;
-        } finally {
-            connection.release();
         }
     }
 
+    // 카테고리별 게시글 조회
     static async getPostByCategoryId(categoryId, limit) {
-        const connection = await pool.getConnection();
+        const query = 'SELECT * FROM posts WHERE categoryId = ? LIMIT ?';
+        const params = [categoryId, parseInt(limit, 10)];
         try {
-            const query = "SELECT * FROM posts WHERE categoryId = ? LIMIT ?";
-            const [result] = await connection.query(query, [categoryId, parseInt(limit)]);
+            const [result] = await pool.query(query, params);
             return result;
         } catch (err) {
-            console.log("조회중 에러발생:", err);
             throw err;
-        } finally {
-            connection.release();
+        }
+    // 게시글 작성자 조회
+    static async getUserIdByPostId(postId) {
+        const query = `SELECT userId FROM posts WHERE id = ?`;
+        const params = [postId];
+        try {
+            const [result] = await pool.query(query, params);
+            return result[0].userId;
+        } catch (err) {
+            throw err;
         }
     }
 
+    // 게시글 상세 조회
     static async getPostDetail(postId) {
-        const connection = await pool.getConnection();
+        const query = 'SELECT * FROM posts WHERE postId = ?';
+        const params = [postId];
         try {
-            const query = "SELECT * FROM posts WHERE postId = ?";
-            const [result] = await connection.query(query, [postId]);
+            const [result] = await pool.query(query, params);
+            return result[0];
+        } catch (err) {
+            throw err;
+        }
+    }
+    static async deletePost(postId) {
+        const query = 'DELETE FROM posts WHERE id = ?';
+        const params = [postId]
+
+        try {
+            const [result] = await pool.query(query, params);
             return result;
         } catch (err) {
-            console.log("조회중 에러발생:", err);
             throw err;
-        } finally {
-            connection.release();
+
         }
     }
 

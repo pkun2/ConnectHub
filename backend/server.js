@@ -10,6 +10,7 @@ import loginRouter from "./router/loginRouter";
 import verificationRouter from "./router/verificationRouter"; // 수정: 오타 수정
 import passwordResetRouter from "./router/passwordResetRouter"; // passwordResetRouter 추가
 import emailFindRouter from "./router/emailFindRouter";
+import pool from "./config/db.js";
 
 dotenv.config();
 
@@ -28,6 +29,19 @@ app.use("/api/login", loginRouter);
 app.use("/api", verificationRouter);           // verificationRouter
 app.use("/api/password", passwordResetRouter); // 비밀번호 변경 라우터 
 app.use("/api/findEmail", emailFindRouter)     // 이메일 찾기 라우터 
+
+const checkConnectDB = async () => {
+    try {
+        // DB 연결 확인
+        await pool.getConnection();
+        console.log("DB 연결 성공");
+    } catch (err) {
+        console.error("DB 연결 실패");
+        console.error(err);
+    }
+};
+
+checkConnectDB();
 
 // 서버 시작
 app.listen(PORT, () => {

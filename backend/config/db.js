@@ -2,8 +2,8 @@ import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
 dotenv.config();
+// MySQL 데이터베이스 연결 설정
 
-// promise 모듈을 사용했기 때문에 try-catch 생략 
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -11,7 +11,7 @@ const pool = mysql.createPool({
     database: process.env.DB_DATABASE,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0 
 });
 
-export default pool;
+export default pool
