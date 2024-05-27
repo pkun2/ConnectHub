@@ -36,6 +36,18 @@ class Post {
             throw err;
         }
     }
+    // 게시글 작성자 조회
+    static async getUserIdByPostId(postId) {
+        const query = `SELECT userId FROM posts WHERE id = ?`;
+        const params = [postId];
+        try {
+            const [result] = await pool.query(query, params);
+            return result[0].userId;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     // 게시글 상세 조회
     static async getPostDetail(postId) {
         const query = 'SELECT * FROM posts WHERE postId = ?';
