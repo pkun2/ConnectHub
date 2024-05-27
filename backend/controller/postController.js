@@ -9,7 +9,7 @@ export const postWriteController = (req, res) => {
     Post.insertPost(userId, categoryId, title, content)
         .then(result => {
             // 삽입 성공시
-            res.status(200).send('게시글이 성공적으로 생성되었습니다.', result); // 200: OK
+            res.status(200).json(result); // 200: OK
             
         })
         .catch(err => {
@@ -19,7 +19,7 @@ export const postWriteController = (req, res) => {
 }
 
 export const postViewController = (req, res) => {
-    const { userId, categoryId, limit} = req.body; // Request Body에서 userId, categoryId, limit 추출
+    const { categoryId, limit} = req.query; // Request Params에서 userId, categoryId, limit 추출
     // 게시글 조회
     const fetchPost = categoryId 
         ?Post.getPostByCategoryId(categoryId, limit) 
@@ -28,7 +28,7 @@ export const postViewController = (req, res) => {
     fetchPost
         .then(posts => {
             // 조회 성공시
-            res.status(200).send("게시글 조회 성공:", posts);
+            res.status(200).json(posts);
         })
         .catch(err => {
             // 조회중 오류 발생시
@@ -57,5 +57,19 @@ export const deletePostController = (req, res) => {
             res.status(500).send('게시글 삭제중 오류 발생');
         });
     }
-    
+export const getPostDetailController = (req, res) => {
+    const postId = req.params.id; // Request Parameter에서 postId 추출
+    Post.getPostDetail(postId)
+        .then(post => {
+            // 조회 성공시
+            if (post) {
+                res.status(200).json(post);
+            } else {
+                res.status(404).send("해당하는 게시글을 찾을 수 없습니다.");
+            }
+        })
+        .catch(err => {
+            // 조회중 오류 발생시
+            res.status(500).send("게시글 조회중 오류 발생:", err);
+        });
 }
