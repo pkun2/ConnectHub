@@ -1,6 +1,7 @@
 import pool from "../config/db.js"
 
 class Comment {
+    // 댓글 삽입
     static async insertComment(postId, userId, content) {
         const query = 'INSERT INTO comments (userId, postId, content) VALUES (?, ?, ?)';
         const values = [userId, postId, content];
@@ -11,7 +12,7 @@ class Comment {
             throw err;
         }
     }
-
+    // 댓글 조회
     static async getCommentsByPostId(postId) {
         const query = `SELECT comments.*, users.nickname
                        FROM comments
@@ -25,7 +26,7 @@ class Comment {
             throw err;
         }
     }
-
+    // 댓글 삭제
     static async deleteComment(commentId) {
         const query = 'DELETE FROM comments WHERE commentId = ?';
         const values = [commentId];
@@ -36,7 +37,7 @@ class Comment {
             throw err;
         }
     }
-
+    // 댓글 수정
     static async updateComment(commentId, content) {
         const query = 'UPDATE comments SET content = ? WHERE commentId = ?';
         const values = [content, commentId];
