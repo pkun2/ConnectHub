@@ -36,7 +36,6 @@ class Post {
             throw err;
         }
     }
-    
     // 게시글 상세 조회
     static async getPostDetail(postId) {
         const query = 'SELECT * FROM posts WHERE postId = ?';
@@ -47,6 +46,18 @@ class Post {
         } catch (err) {
             throw err;
         }
+
+    static deletePost(postId) {
+        return new Promise((resolve, reject) => {
+            const query = 'DELETE FROM posts WHERE id = ?';
+            db.query(query, [postId], (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
     }
 }
 
