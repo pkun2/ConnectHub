@@ -21,6 +21,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignUpForm/>} />
+          <Route path="/request-reset" element={<PasswordResetRequestForm/>} />
+          <Route path="/reset" element={<PasswordResetForm/>} />
+          <Route path="/email" element={<PhoneToEmailForm/>} />
         </Routes>
 
         {/* 하단바 */}
