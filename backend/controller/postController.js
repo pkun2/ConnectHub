@@ -14,6 +14,30 @@ export const postWriteController = async (req, res) => {
     }
 };
 
+// 게시글 신고 기능 
+export const postReportController = async (req, res) => {
+    const postId = req.params.id; // 게시물의 ID를 파라미터로부터 가져옴
+    try {
+        const result = await Post.reportPost(postId); // 게시물 신고 기능 실행
+        res.status(200).json(result); // 성공 시 결과를 JSON 형태로 반환
+    } catch (error) {
+        console.error('게시글 신고 도중 오류가 발생했습니다:', error);
+        res.status(500).send('게시글 신고 도중 오류가 발생했습니다.');
+    }
+};
+
+// 게시글 변경 기능 
+export const postUpdateController = async (req, res) => {
+    const { title, content, postId } = req.body;
+
+    try {
+        const result = await Post.updatePost(title, content, postId);
+        res.status(200).json(result); // 성공적으로 업데이트되었음을 클라이언트에게 반환
+    } catch (error) {
+        console.error('게시글 업데이트 중 오류 발생:', error);
+        res.status(500).send("게시글 업데이트 도중 오류가 발생했습니다.");
+    }
+};
 export const postViewController = async (req, res) => {
     const { categoryId, limit } = req.query;
     try {

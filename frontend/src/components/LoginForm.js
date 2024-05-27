@@ -6,7 +6,7 @@ import { LoginContainer, LoginBox, Title, Subtitle, Input, Button, FindLinks, St
 function LoginForm() {
     // 상태 초기화
     const [formData, setFormData] = useState({
-        userId: '',
+        email: '',
         password: ''
     });
     const history = useHistory(); // useHistory 사용
@@ -45,7 +45,7 @@ function LoginForm() {
             <LoginBox>
                 <Subtitle>로그인</Subtitle>
                 <form id="login-form" onSubmit={handleSubmit}>
-                    <Input type="text" id="userId" name="userId" placeholder="아이디" value={formData.userId} onChange={handleChange} />
+                    <Input type="text" id="email" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} />
                     <Input type="password" id="login-password" name="password" placeholder="비밀번호" value={formData.password} onChange={handleChange} />
                     <Button type="submit">로그인</Button>
                 </form>

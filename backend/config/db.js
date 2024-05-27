@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
-dotenv.config();
 
+dotenv.config();
 // MySQL 데이터베이스 연결 설정
 
 const pool = mysql.createPool({

@@ -1,4 +1,4 @@
-import pool from "../config/db.js"
+import pool from '../config/db.js';
 
 class Post {
     // 게시글 삽입
@@ -35,7 +35,6 @@ class Post {
         } catch (err) {
             throw err;
         }
-    }
     // 게시글 작성자 조회
     static async getUserIdByPostId(postId) {
         const query = `SELECT userId FROM posts WHERE id = ?`;
@@ -62,13 +61,47 @@ class Post {
     static async deletePost(postId) {
         const query = 'DELETE FROM posts WHERE id = ?';
         const params = [postId]
+
         try {
             const [result] = await pool.query(query, params);
             return result;
         } catch (err) {
             throw err;
+
         }
     }
+
+    // 게시글 신고 기능, 신고 횟수 누적되는 방식 
+    static async reportPost(postId) {
+        const connection = await pool.getConnection();
+        try {
+            const query = "UPDATE posts SET reportCount = reportCount + 1 WHERE id = ?";
+            const [result] = await connection.query(query, [postId]);
+            return result;
+        } catch (err) {
+            console.log("게시글 신고 중 에러 발생:", err);
+            throw err;
+        } finally {
+            connection.release();
+        }
+    }
+
+    // 게시글 변경 기능, content와 title의 내용이 수정되는 방식  
+    static async updatePost(title, content, postId) {
+        const connection = await pool.getConnection();
+        try {
+            const query = "UPDATE posts SET title = ?, content = ? WHERE id = ?";
+            const [result] = await connection.query(query, [title, content, postId]);
+            return result;
+        } catch (err) {
+            console.log("게시글 업데이트 중 에러 발생:", err);
+            throw err;
+        } finally {
+            connection.release();
+        }
+    }
+
+    
 }
 
 export default Post;
