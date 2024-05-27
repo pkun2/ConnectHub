@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 // 로그인 아이디 비밀번호 찾기 회원가입 버튼 컨테이너
 const LoginRegisterContainer = styled.div`
@@ -49,15 +50,23 @@ const Register = styled.div`
 `;
 
 
-const NonLogin = () => (
+const NonLogin = () => {
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  return (
     <LoginRegisterContainer>
-        <Login> 로그인 </Login>
-        <RegisterContainer>
+      <Login onClick={handleLoginClick}> 로그인 </Login>
+      <RegisterContainer>
         <Register> 아이디 찾기 </Register>
         <Register> 비밀번호 찾기 </Register>
         <Register> 회원가입 </Register>
-        </RegisterContainer>
+      </RegisterContainer>
     </LoginRegisterContainer>
-);
+  );
+};
 
 export default NonLogin;
