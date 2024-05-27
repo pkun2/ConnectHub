@@ -1,9 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import GotoTop from './components/GotoTop';
 import Foot from './components/Foot';
-import Main from './components/Main';
-import LoginForm from './components/LoginForm'; // 로그인 폼 컴포넌트 import
+import Main from './components/Main
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import LoginForm from './components/LoginForm';
+import SignUpForm from './components/SignUpForm';
+import PasswordResetRequestForm from './components/PasswordResetRequestForm';
+import PasswordResetForm from './components/PasswordResetForm';
+import PhoneToEmailForm from './components/PhoneToEmailForm';
+
 
 function App() {
   return (
@@ -20,6 +25,7 @@ function App() {
 
         {/* 하단바 */}
         <Foot />
+
       </div>
     </Router>
   );
