@@ -11,15 +11,32 @@ import verificationRouter from "./router/verificationRouter"; // 수정: 오타 
 import passwordResetRouter from "./router/passwordResetRouter"; // passwordResetRouter 추가
 import emailFindRouter from "./router/emailFindRouter";
 import pool from "./config/db.js";
+import cookieParser from "cookie-parser";
+import session from "express-session"
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT; // 포트 번호 설정
 
-app.use(cors()); // CORS 미들웨어 사용
+app.use(cors({
+    origin: 'http://localhost:3000', // 리액트 앱의 주소
+    credentials: true
+})); // CORS 미들웨어 사용
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        maxAge: 60000
+    }
+
+}));
 
 // 라우터 등록
 app.use("/", homeRouter);

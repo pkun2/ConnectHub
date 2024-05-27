@@ -23,10 +23,20 @@ export const postLoginController = async (req, res) => {
             res.status(401).send("로그인 실패: 비밀번호가 일치하지 않습니다.");
             return;
         }
-
+        req.session.user = { id: user.id, nickname: user.nickname };
         res.status(200).send("로그인 성공");
     } catch (error) {
         console.error('로그인 도중 오류가 발생했습니다:', error);
         res.status(500).send("로그인 도중 오류가 발생했습니다.");
     }
 };
+
+export const logoutController = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send("로그아웃 도중 오류가 발생했습니다.");
+        }
+        res.clearCookie("connect.sid");
+        res.status(200).send("로그아웃 성공");
+    });
+}
