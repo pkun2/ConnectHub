@@ -35,6 +35,7 @@ class Post {
         } catch (err) {
             throw err;
         }
+    }
     // 게시글 작성자 조회
     static async getUserIdByPostId(postId) {
         const query = `SELECT userId FROM posts WHERE id = ?`;
