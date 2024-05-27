@@ -6,6 +6,7 @@ import ImageSection from './ImageSection';
 import BoardSection from './BoardSection';
 import ProfileSection from './ProfileSection';
 import MenuSection from './MenuSection';
+import NonLogin from './NonLogin';
 
 const MainContainer = styled.div`
   display: flex;
@@ -56,7 +57,7 @@ const Main = () => {
           <BoardSection title={selectedCategory} contents={emptyContents} onCategoryChange={handleCategoryChange} />
         </LeftSubContainer>
         <RightSubContainer>
-          <ProfileSection />
+          <NonLogin/>
           <MenuSection
             onCategoryChange={handleCategoryChange}
             selectedCategory={selectedCategory}
