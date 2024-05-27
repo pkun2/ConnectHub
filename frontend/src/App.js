@@ -1,8 +1,8 @@
 import React from 'react';
 import GotoTop from './components/GotoTop';
 import Foot from './components/Foot';
-import Main from './components/Main
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import Main from './components/Main';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import PasswordResetRequestForm from './components/PasswordResetRequestForm';

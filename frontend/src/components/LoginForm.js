@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom'; // useHistory import 추가
+import { useNavigate } from 'react-router-dom'; // useHistory import 추가
 import { LoginContainer, LoginBox, Title, Subtitle, Input, Button, FindLinks, StyledLink } from './LoginStyle';
 
 function LoginForm() {
@@ -9,7 +9,7 @@ function LoginForm() {
         email: '',
         password: ''
     });
-    const history = useHistory(); // useHistory 사용
+    const navigate = useNavigate(); // useHistory 사용
 
     // 입력값 변경을 위한 핸들러 함수
     const handleChange = (event) => {
@@ -31,7 +31,7 @@ function LoginForm() {
                 data: formData
             });
             console.log(response.data);
-            history.push('/'); // 로그인 성공 시 홈으로 이동
+            navigate('/'); // 로그인 성공 시 홈으로 이동
         } catch (error) {
             console.error('로그인 실패:', error);
             window.alert('아이디 또는 비밀번호가 올바르지 않습니다.'); // 팝업창으로 실패 메시지 표시
