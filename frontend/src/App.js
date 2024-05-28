@@ -1,13 +1,13 @@
 import React from 'react';
-import MyPage from './components/MyPage';
+import AdminPage from './components/AdminPage';
 
 function App() {
 
   return (
 
-    /* 마이페이지 화면 */
+    /* 관리자페이지 화면 */
     <>
-      <MyPage/>
+      <AdminPage/>
     </>
   );
 }
