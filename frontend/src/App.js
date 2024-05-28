@@ -21,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route path='/signup' element={<SignUpForm/>}/>
         </Routes>
 
         {/* 하단바 */}
