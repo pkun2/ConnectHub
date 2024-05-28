@@ -34,7 +34,23 @@ export const deletePostController = async (req, res) => {
         res.status(500).send('게시글 삭제 중 오류 발생: ' + err.message);
     }
 };
-export const deleteCommentController = async (req, res) => {};
+export const deleteCommentController = async (req, res) => {
+    const userId = req.body.userId;
+    const commentId = req.params.id;
+
+    try {
+        const result = await Admin.checkAdmin(userId);
+        if(result.length > 0) {
+            const result = await Comment.deleteComment(commentId);
+            res.status(200).json(result);
+        }
+        else{
+            res.status(403).send('삭제할 권한이 없습니다.');
+        }
+    } catch (err) {
+        res.status(500).send('댓글 삭제 중 오류 발생: ' + err.message);
+    }
+};
 export const countVisiterController = async (req, res) => {};
 export const getTotalVisitController = async (req, res) => {};
 export const getTodayVisitController = async (req, res) => {};
