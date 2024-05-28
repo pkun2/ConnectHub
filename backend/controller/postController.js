@@ -5,6 +5,10 @@ import logger from "../config/logger";
 // 게시글 작성 기능
 export const postWriteController = async (req, res) => {
     const { userId, categoryId, title, content } = req.body;
+    if(categoryId == 3 || categoryId == 4) {
+        res.status(403).send('해당 카테고리에는 글을 작성할 수 없습니다.');
+        return;
+    }
     try {
         const result = await Post.insertPost(userId, categoryId, title, content);
         res.status(200).json(result);
