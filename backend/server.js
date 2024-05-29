@@ -12,6 +12,7 @@ import passwordResetRouter from "./router/passwordResetRouter"; // passwordReset
 import emailFindRouter from "./router/emailFindRouter";
 import pool from "./config/db.js";
 import adminRouter from "./router/adminRouter.js";
+import visitorCounter from "./middleware/visitorCounter.js"
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ const PORT = process.env.PORT; // 포트 번호 설정
 app.use(cors()); // CORS 미들웨어 사용
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(visitorCounter); // 방문자 수 카운트 미들웨어
 
 // 라우터 등록
 app.use("/", homeRouter);

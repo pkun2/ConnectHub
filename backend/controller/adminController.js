@@ -17,6 +17,7 @@ export const postPostController = async (req, res) => {
         res.status(500).send('게시글 생성 중 오류 발생: ' + err.message);
     }
 };
+
 export const deletePostController = async (req, res) => {
     const postId = req.params.id;
     const userId = req.body.userId;
@@ -34,6 +35,7 @@ export const deletePostController = async (req, res) => {
         res.status(500).send('게시글 삭제 중 오류 발생: ' + err.message);
     }
 };
+
 export const deleteCommentController = async (req, res) => {
     const userId = req.body.userId;
     const commentId = req.params.id;
@@ -51,6 +53,23 @@ export const deleteCommentController = async (req, res) => {
         res.status(500).send('댓글 삭제 중 오류 발생: ' + err.message);
     }
 };
-export const countVisiterController = async (req, res) => {};
-export const getTotalVisitController = async (req, res) => {};
-export const getTodayVisitController = async (req, res) => {};
+
+export const getTotalVisitController = async (req, res) => {
+    try {
+        const result = await Admin.getTotalVisiter();
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).send('방문자 수 조회 중 오류 발생: ' + err.message);
+    }
+
+};
+export const getTodayVisitController = async (req, res) => {
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식의 현재 날짜
+    try {
+        const result = await Admin.getCountVisiter(today);
+        res.status(200).json(result);
+    }
+    catch (err) {
+        res.status(500).send('방문자 수 조회 중 오류 발생: ' + err.message);
+    }
+};
