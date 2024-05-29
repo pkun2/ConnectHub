@@ -34,6 +34,7 @@ app.use("/api/findEmail", emailFindRouter)     // 이메일 찾기 라우터
 app.use('/api/changePassword', passwordChangeRouter); // 비밀번호 변경 라우터 
 app.use('/api/changeNickname', nicknameChangeRouter); // 닉네임 변경 라우터 
 
+
 const checkConnectDB = async () => {
     try {
         // DB 연결 확인
