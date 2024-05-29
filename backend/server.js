@@ -11,6 +11,8 @@ import verificationRouter from "./router/verificationRouter"; // 수정: 오타 
 import passwordResetRouter from "./router/passwordResetRouter"; // passwordResetRouter 추가
 import emailFindRouter from "./router/emailFindRouter";
 import pool from "./config/db.js";
+import passwordChangeRouter from './router/passwordChangeRouter'; // 비밀번호 변경 라우터
+import nicknameChangeRouter from './router/nicknameChangeRouter'; // 닉네임 변경 라우터
 
 dotenv.config();
 
@@ -27,8 +29,10 @@ app.use("/api/post", postRouter);
 app.use("/api/signup", signUpRouter);
 app.use("/api/login", loginRouter);
 app.use("/api", verificationRouter);           // verificationRouter
-app.use("/api/password", passwordResetRouter); // 비밀번호 변경 라우터 
+app.use("/api/password", passwordResetRouter); // 비밀번호 찾기 라우터 
 app.use("/api/findEmail", emailFindRouter)     // 이메일 찾기 라우터 
+app.use('/api/changePassword', passwordChangeRouter); // 비밀번호 변경 라우터 
+app.use('/api/changeNickname', nicknameChangeRouter); // 닉네임 변경 라우터 
 
 const checkConnectDB = async () => {
     try {
