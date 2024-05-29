@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from './AuthContext';
 
 const ProfileContainer = styled.div`
   flex: 0.3;
@@ -55,7 +56,7 @@ const Nickname = styled.div`
   margin-bottom: 5px;
 `;
 
-const MyPageLink = styled(Link)` // Change to Link
+const MyPageLink = styled.button` 
   font-size: 12pt;
   color: #426B1F;
   margin-bottom: 10px;
@@ -66,7 +67,7 @@ const MyPageLink = styled(Link)` // Change to Link
   }
 `;
 
-const WriteButtonLink = styled(Link)`
+const WriteButtonLink = styled.button`
   font-size: 12pt;
   padding: 10px 16px;
   background-color: #426B1F;
@@ -100,19 +101,37 @@ const LogoutButton = styled.button`
   }
 `;
 
-const ProfileSection = () => (
-  <ProfileContainer>
-    <SectionTitle>내 정보</SectionTitle>
-    <ProfileContent>
-      <ProfileImage />
-      <NicknameContainer>
-      <Nickname>닉네임</Nickname>
-      <MyPageLink to = "/mypage">마이페이지</MyPageLink>
-      </NicknameContainer>
-      <LogoutButton>로그아웃</LogoutButton>
-    </ProfileContent>
-    <WriteButtonLink to = "/write">글쓰기</WriteButtonLink>
-  </ProfileContainer>
-);
+const ProfileSection = () => {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const goToMyPage = () => {
+    navigate('/mypage');
+  };
+
+  const goToWritePage = () => {
+    navigate('/write');
+  };
+
+  return (
+    <ProfileContainer>
+      <SectionTitle>내 정보</SectionTitle>
+      <ProfileContent>
+        <ProfileImage />
+        <NicknameContainer>
+          <Nickname>닉네임</Nickname>
+          <MyPageLink onClick = {goToMyPage}>마이페이지</MyPageLink>
+        </NicknameContainer>
+        <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+      </ProfileContent>
+      <WriteButtonLink onClick = {goToWritePage}>글쓰기</WriteButtonLink>
+    </ProfileContainer>
+  );
+};
 
 export default ProfileSection;

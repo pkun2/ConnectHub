@@ -33,6 +33,8 @@ function LoginForm() {
                 url: "/api/login",
                 data: formData
             });
+            const token = response.data.token;
+            localStorage.setItem('authToken', token);
             console.log(response.data);
             navigate('/'); // 로그인 성공 시 홈으로 이동
         } catch (error) {
