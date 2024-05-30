@@ -9,10 +9,12 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding-top: 0px;
-  margin: 50px 200px 176px 200px; 
+  margin: 90px 200px 176px 200px; 
 `;
 
 const Header = styled.div`
+  position: relative;
+  top: 0;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -24,31 +26,27 @@ const Header = styled.div`
 `;
 
 const HeaderItem = styled.div`
-  flex: ${({ isID }) => (isID ? 1.5 : 1)};
+  flex: ${({ isSection, isTitle }) => (
+    isSection ? 1.5 : 
+    isTitle ? 1 : 
+    0.5
+  )};
   text-align: left;
   font-weight: bold;
   text-align: center;
+  white-space: nowrap;
 `;
 
-const Container = styled.div`
+const Container1 = styled.div`
   display: flex;
-  justify-content: space-around;
 `;
 
-// 회원 관리 컨테이너
-const UserManagementContainer = styled.div`
+const Container2 = styled.div`
   display: flex;
-  flex-direction: column;
-  background-color: white;
-  margin-bottom: 30px;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 600px;
-  height: 600px;
+  justify-content: space-between;
 `;
 
-// 회원 관리 컨테이너
+// 게시글 관리 컨테이너
 const PostManagementContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -57,11 +55,11 @@ const PostManagementContainer = styled.div`
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 600px;
-  height: 600px;
+  height: 800px;
+  overflow-y: auto;
 `;
 
-// 회원 관리 컨테이너
+// 댓글 관리 컨테이너
 const CommentManagementContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -70,21 +68,51 @@ const CommentManagementContainer = styled.div`
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 600px;
-  height: 600px;
+  height: 800px;
+  overflow-y: auto;
 `;
 
 // 회원 관리 컨테이너
+const UserManagementContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: 800px;
+  overflow-y: auto;
+`;
+
+
+// 통계 컨테이너
 const StatisticContainer = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   background-color: white;
   margin-bottom: 20px;
+  margin-left: 20px;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 600px;
-  height: 600px;
+  height: 800px;
+  overflow-y: auto;
+`;
+
+// 총 방문자 수 컨테이너
+const VisitorContainer = styled.div`
+  position: relative;
+  top: 44.8px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 10px;
+  margin-bottom: 0px;
 `;
 
 const AdminPage = () => {
@@ -94,15 +122,38 @@ const AdminPage = () => {
         <Navigation/>
         <Option/>
         <MainContainer>
-            <Container>
-                <UserManagementContainer>
-                </UserManagementContainer>
-                <PostManagementContainer></PostManagementContainer>
-            </Container>
-            <Container>
-                <CommentManagementContainer></CommentManagementContainer>
-                <StatisticContainer></StatisticContainer>
-            </Container>
+          <PostManagementContainer>
+            <Header>
+              <HeaderItem isTitle>게시글 제목</HeaderItem>
+              <HeaderItem isSection>내용</HeaderItem>
+            </Header>
+          </PostManagementContainer>
+          <CommentManagementContainer>
+            <Header>
+              <HeaderItem isTitle>게시글 제목</HeaderItem>
+              <HeaderItem>회원아이디</HeaderItem>
+              <HeaderItem isSection>댓글 내용</HeaderItem>
+            </Header>
+          </CommentManagementContainer>
+          <Container2>
+            <UserManagementContainer>
+              <Header>
+                <HeaderItem isTitle>회원아이디</HeaderItem>
+                <HeaderItem>신고 누적</HeaderItem>
+              </Header>
+            </UserManagementContainer>
+            <StatisticContainer>
+              <Header>
+                <HeaderItem>날짜</HeaderItem>
+                <HeaderItem>방문자 수</HeaderItem>
+              </Header>
+              
+              <VisitorContainer>
+                <HeaderItem isTitle>총 방문자 수</HeaderItem>
+                <HeaderItem>0</HeaderItem>
+              </VisitorContainer>
+            </StatisticContainer>
+          </Container2>
         </MainContainer>
         <Foot/>
     </>
