@@ -8,26 +8,24 @@ import SignUpForm from './components/SignUpForm';
 import PasswordResetRequestForm from './components/PasswordResetRequestForm';
 import PasswordResetForm from './components/PasswordResetForm';
 import PhoneToEmailForm from './components/PhoneToEmailForm';
+import { AuthProvider } from './components/AuthContext';
 
 
 function App() {
   return (
-    <Router>
-      <div>
-        {/* 맨 위로 가기 */}
-        <GotoTop />
-
-        {/* 라우팅 설정 */}
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/login" element={<LoginForm />} />
-        </Routes>
-
-        {/* 하단바 */}
-        <Foot />
-
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div>
+          <GotoTop />
+          <Routes>
+            <Route path="/" element={<Main/>} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/signup" element={<SignUpForm />} />
+          </Routes>
+          <Foot />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

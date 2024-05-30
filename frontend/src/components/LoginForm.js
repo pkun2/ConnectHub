@@ -11,6 +11,9 @@ function LoginForm() {
     });
     const navigate = useNavigate(); // useHistory 사용
 
+    const handleSignUpClick = () =>{
+        navigate('/signup');
+    }
     // 입력값 변경을 위한 핸들러 함수
     const handleChange = (event) => {
         setFormData({
@@ -30,6 +33,8 @@ function LoginForm() {
                 url: "/api/login",
                 data: formData
             });
+            const token = response.data.token;
+            localStorage.setItem('authToken', token);
             console.log(response.data);
             navigate('/'); // 로그인 성공 시 홈으로 이동
         } catch (error) {
@@ -50,7 +55,7 @@ function LoginForm() {
                     <Button type="submit">로그인</Button>
                 </form>
                 <FindLinks>
-                    <StyledLink href="/signup">회원가입</StyledLink>
+                    <StyledLink onClick={handleSignUpClick}>회원가입</StyledLink>
                 </FindLinks>
             </LoginBox>
         </LoginContainer>
