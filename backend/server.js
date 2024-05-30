@@ -13,6 +13,8 @@ import emailFindRouter from "./router/emailFindRouter";
 import pool from "./config/db.js";
 import passwordChangeRouter from './router/passwordChangeRouter'; // 비밀번호 변경 라우터
 import nicknameChangeRouter from './router/nicknameChangeRouter'; // 닉네임 변경 라우터
+import userSettingsRouter from './router/userSettingsRouter.js';
+import notificationRouter from './router/notificationRouter.js';
 
 dotenv.config();
 
@@ -33,6 +35,8 @@ app.use("/api/password", passwordResetRouter); // 비밀번호 찾기 라우터
 app.use("/api/findEmail", emailFindRouter)     // 이메일 찾기 라우터 
 app.use('/api/changePassword', passwordChangeRouter); // 비밀번호 변경 라우터 
 app.use('/api/changeNickname', nicknameChangeRouter); // 닉네임 변경 라우터 
+app.use('/api/notifications', notificationRouter);
+app.use('/api/user-settings', userSettingsRouter);
 
 
 const checkConnectDB = async () => {
