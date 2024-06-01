@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import Navigation from './Navigation';
 import Option from './Option';
@@ -6,6 +6,8 @@ import ImageSection from './ImageSection';
 import BoardSection from './BoardSection';
 import ProfileSection from './ProfileSection';
 import MenuSection from './MenuSection';
+import NonLogin from './NonLogin';
+import { AuthContext } from './AuthContext';
 
 const MainContainer = styled.div`
   display: flex;
@@ -46,6 +48,8 @@ const Main = () => {
     setSelectedCategory(category);
   };
 
+  const { authToken } = useContext(AuthContext);
+
   return (
     <>
       <Navigation />
@@ -56,7 +60,7 @@ const Main = () => {
           <BoardSection title={selectedCategory} contents={emptyContents} onCategoryChange={handleCategoryChange} />
         </LeftSubContainer>
         <RightSubContainer>
-          <ProfileSection />
+        {authToken ? <ProfileSection /> : <NonLogin />}
           <MenuSection
             onCategoryChange={handleCategoryChange}
             selectedCategory={selectedCategory}
