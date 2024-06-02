@@ -22,7 +22,7 @@ function App() {
             <Route path="/" element={<Main/>} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/signup" element={<SignUpForm />} />
-            <Route path='/write' element={<WriteBoardPost} />
+            <Route path='/write' element={<WriteBoardPost/>} />
           </Routes>
           <Foot />
         </div>

@@ -1,9 +1,11 @@
 // WriteBoardPost.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import Navigation from './Navigation';
 import Option from './Option';
 import ImageSection from './ImageSection';
+import { AuthContext } from './AuthContext';
 
 const MainContainer = styled.div`
   display: flex;
@@ -97,6 +99,7 @@ const SelectPicker = styled.select`
 `;
 
 const WriteBoardPost = () => {
+    const { user } = useContext(AuthContext);  // AuthContext에서 user 정보 가져오기
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedBoard, setSelectedBoard] = useState('게시판을 선택해주세요'); // 선택된 게시판 종류를 저장하는 state
@@ -113,12 +116,27 @@ const WriteBoardPost = () => {
       setSelectedBoard(e.target.value);
     };
   
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
-      // 여기에 게시글을 제출하는 로직을 추가하세요.
-      console.log('Title:', title);
-      console.log('Content:', content);
-      console.log('Selected Board:', selectedBoard);
+      if (!user) {
+        console.error('로그인이 되어있지 않습니다.');
+        return;
+      }
+
+      const postData = {
+        userId: user.id,  // 실제 사용자 ID로 교체해야 합니다.
+        categoryId: selectedBoard,
+        title: title,
+        content: content,
+      };
+  
+      try {
+        const response = await axios.post('http://localhost:5000/api/post/write', postData); // 포트 5000으로 설정
+        console.log('Response:', response.data);
+        // 성공적으로 글을 작성한 후의 로직을 추가하세요.
+      } catch (error) {
+        console.error('게시글을 작성할 수 없습니다.', error);
+      }
     };
   
     return (
@@ -133,10 +151,10 @@ const WriteBoardPost = () => {
                 <Title>게시글 작성</Title>
                 <SelectPicker value={selectedBoard} onChange={handleBoardChange}>
                   <option value="게시판을 선택해주세요" disabled hidden>게시판을 선택해주세요</option>
-                  <option value="free">자유게시판</option>
-                  <option value="notice">공지사항</option>
-                  <option value="benefits">정부 혜택</option>
-                  <option value="info">정보게시판</option>
+                  <option value="1">자유게시판</option>
+                  <option value="2">공지사항</option>
+                  <option value="3">정부 혜택</option>
+                  <option value="4">정보게시판</option>
                 </SelectPicker>
                 <Input 
                   type="text" 
