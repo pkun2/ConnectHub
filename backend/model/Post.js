@@ -38,7 +38,7 @@ class Post {
     }
     // 게시글 작성자 조회
     static async getUserIdByPostId(postId) {
-        const query = `SELECT userId FROM posts WHERE id = ?`;
+        const query = `SELECT userId FROM posts WHERE postId = ?`;
         const params = [postId];
         try {
             const [result] = await pool.query(query, params);
