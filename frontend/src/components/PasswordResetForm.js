@@ -26,7 +26,7 @@ function PasswordResetForm() {
 
         try {
             // 서버에 비밀번호 재설정 요청을 보냄
-            await axios.post('http://localhost:4000/api/password/reset', formData);
+            await axios.post('http://localhost:4000/api/user/resetPassword', formData);
             alert('비밀번호가 성공적으로 재설정되었습니다.');
             
             // 비밀번호 재설정 완료 후 로그인 페이지로 이동합니다.

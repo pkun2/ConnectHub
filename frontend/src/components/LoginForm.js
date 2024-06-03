@@ -27,7 +27,7 @@ function LoginForm() {
             const response = await axios({
                 method: "post",
                 baseURL: "http://localhost:4000",
-                url: "/api/login",
+                url: "/api/user/login",
                 data: formData
             });
             console.log(response.data);
