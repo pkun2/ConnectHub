@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import Notification from './Notification';
 
 // 네비게이션 바
 const NavContainer = styled.nav`
@@ -27,9 +28,6 @@ const NavItem = styled.div`
   padding : 20px 20px;
   text-align : center;
   cursor: pointer;
-  &:hover {
-    box-shadow: 0 0 10px #44C2FF;
-  }
 `;
 
 // 제목
@@ -40,11 +38,24 @@ const NavTitle = styled(NavItem)`
   font-size: 30pt;
 `;
 
+// 제목 아이콘
+const NavTitleIcon = styled.img`
+  position: relative;
+  left: 0;
+  margin-right: 35px;
+`;
+
 function Navigation() {
+
   return (
     <NavContainer>
-      <NavTitle onClick={() => window.location.href='http://localhost:3000/'}> ConnectHub </NavTitle>
-      <div/> <div/> <div/> <div/> <div/> <div/> <div/>
+      <NavTitle onClick={() => window.location.href='http://localhost:3000/'}> 
+        <NavTitleIcon src="./mainlogo.png" />
+        ConnectHub 
+      </NavTitle>
+      <div/> <div/> <div/> <div/> <div/> 
+      <Notification/>
+      <div/>
     </NavContainer>
   );
 }

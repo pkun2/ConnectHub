@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import Pagination from './Pagination';
 
 const BoardContainer = styled.div`
@@ -57,17 +58,40 @@ const TableHeaderItem = styled.div`
   padding-left: 50px;
 `;
 
-const EmptyBoardContent = styled.div`
+const TableRow = styled.div`
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-  height: 50px;
-  border-top: 0.5px solid #ccc;
-  margin-bottom: 0px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
 `;
 
-const BoardSection = ({ title, contents, onCategoryChange }) => {
+const TableRowItem = styled.div`
+  flex: ${({ isTitle }) => (isTitle ? 2 : 1)};
+  text-align: left;
+  padding-left: 50px;
+`;
+
+const BoardSection = ({ title, onCategoryChange }) => {
+  const [contents, setContents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
   const totalPages = Math.ceil(contents.length / itemsPerPage);
+
+  useEffect(() => {
+    const fetchContents = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/post/', {
+          params: { categoryId: title !== '전체게시판' ? title : undefined }
+        });
+        setContents(response.data);
+      } catch (error) {
+        console.error('Failed to fetch posts:', error);
+      }
+    };
+
+    fetchContents();
+  }, [title]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -84,26 +108,14 @@ const BoardSection = ({ title, contents, onCategoryChange }) => {
   const renderContents = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const getCategoryDescription = () => {
-      switch (title) {
-        case '전체게시판':
-          return '전체게시판입니다.';
-        case '자유게시판':
-          return '자유게시판입니다.';
-        case '공지사항':
-          return '공지사항입니다.';
-        case '정부 혜택':
-          return '정부 혜택입니다.';
-        case '정보게시판':
-          return '정보게시판입니다.';
-        default:
-          return '';
-      }
-    };
+    
     return contents.slice(startIndex, endIndex).map((content) => (
-      <EmptyBoardContent key={content.id}>
-        {getCategoryDescription()}
-      </EmptyBoardContent>
+      <TableRow key={content.id}>
+        <TableRowItem isTitle>{content.category}</TableRowItem>
+        <TableRowItem isTitle>{content.title}</TableRowItem>
+        <TableRowItem>{content.author}</TableRowItem>
+        <TableRowItem>{new Date(content.created_at).toLocaleDateString()}</TableRowItem>
+      </TableRow>
     ));
   };
 
