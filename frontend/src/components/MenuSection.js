@@ -10,8 +10,8 @@ const MenuSelectContainer = styled.div`
 `;
 
 const SectionTitle = styled.div`
-  color: #426b1f;
-  background: linear-gradient(to left top, #add8e6, white);
+  color: #426B1F;
+  background : linear-gradient(to left top, #ADD8E6, white);
   font-size: 25pt;
   font-weight: bolder;
   text-decoration: none;
@@ -27,55 +27,23 @@ const MenuSelect = styled(SectionTitle)`
   font-weight: bolder;
   text-decoration: none;
   padding: 13px 0;
-  width: inherit;
-  border-bottom: 2px double #e4e4e4;
+  width: inherit;  
+  border-bottom: 2px double #E4E4E4;
   background: initial;
   cursor: pointer;
   &:hover {
-    background: linear-gradient(to left top, #add8e6, white);
+    background : linear-gradient(to left top, #ADD8E6, white);
   }
 `;
 
-const MenuSection = ({ onCategoryChange, selectedCategory }) => {
-  const handleCategoryClick = (category) => {
-    onCategoryChange(category);
-  };
-
-  return (
-    <MenuSelectContainer>
-      <SectionTitle>카테고리</SectionTitle>
-      <MenuSelect
-        onClick={() => handleCategoryClick('전체게시판')}
-        style={{ background: selectedCategory === '전체게시판' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
-      >
-        &nbsp;&nbsp;전체게시판
-      </MenuSelect>
-      <MenuSelect
-        onClick={() => handleCategoryClick('자유게시판')}
-        style={{ background: selectedCategory === '자유게시판' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
-      >
-        &nbsp;&nbsp;자유게시판
-      </MenuSelect>
-      <MenuSelect
-        onClick={() => handleCategoryClick('공지사항')}
-        style={{ background: selectedCategory === '공지사항' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
-      >
-        &nbsp;&nbsp;공지사항
-      </MenuSelect>
-      <MenuSelect
-        onClick={() => handleCategoryClick('정부 혜택')}
-        style={{ background: selectedCategory === '정부 혜택' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
-      >
-        &nbsp;&nbsp;정부 혜택
-      </MenuSelect>
-      <MenuSelect
-        onClick={() => handleCategoryClick('정보게시판')}
-        style={{ background: selectedCategory === '정보게시판' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
-      >
-        &nbsp;&nbsp;정보게시판
-      </MenuSelect>
-    </MenuSelectContainer>
-  );
-};
+const MenuSection = () => (
+  <MenuSelectContainer> 
+    <SectionTitle> 카테고리 </SectionTitle>
+    <MenuSelect> &nbsp;&nbsp;자유게시판 </MenuSelect>
+    <MenuSelect> &nbsp;&nbsp;공지사항 </MenuSelect>
+    <MenuSelect> &nbsp;&nbsp;정부 혜택 </MenuSelect>
+    <MenuSelect> &nbsp;&nbsp;정보 </MenuSelect>
+  </MenuSelectContainer>
+);
 
 export default MenuSection;

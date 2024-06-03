@@ -48,8 +48,7 @@ export const Button = styled.button`
     &:hover {
         background-color: ${(props) => props.hoverColor || '#ADD8E6'};
     }
-    margin-bottom: 10px; 
-`; // margin-bottom: 10px; 추가 함. 
+`;
 
 export const FindLinks = styled.div`
     text-align: center;

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Navigation from './Navigation';
 import Option from './Option';
 import Foot from './Foot';
-import axios from 'axios';
 
+// 메인 컨테이너
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,6 +14,7 @@ const MainContainer = styled.div`
   margin: 50px 400px 176px 400px; 
 `;
 
+// 제목
 const SectionTitle = styled.div`
   color: #426B1F;
   font-size: 21pt;
@@ -24,6 +25,7 @@ const SectionTitle = styled.div`
   padding-bottom: 13px;
 `;
 
+// 부제
 const SubTitle = styled.div`
   color: #949494;
   font-size: 15pt;
@@ -32,17 +34,19 @@ const SubTitle = styled.div`
   padding-bottom: 13px;
 `;
 
+// 변경 컨테이너
 const ChangeContainer = styled.div`
   display: flex;
   flex-direction: row; 
   margin-top: ${props => (props.first ? '80px' : '0')};
   width: 700px;
-  height: 100px;
+  height: ${props => (props.password ? '180px' : '100px')};;
   font-size: 10pt;
   border: 1.5px solid #E4E4E4;
   border-bottom: ${props => (props.end ? '1.5px solid #E4E4E4' : 'none')}
 `;
 
+// 변경(Left)
 const ChangeL = styled.div`
   flex: 0.2;
   padding: 10pt 10pt;
@@ -54,12 +58,14 @@ const ChangeL = styled.div`
   width: 300px;
 `;
 
+// 변경(Right)컨테이너
 const ChangeRContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
 `;
 
+// 변경(Right)
 const ChangeR = styled.input`
   font-size: 11pt;
   white-space: nowrap;
@@ -70,6 +76,7 @@ const ChangeR = styled.input`
   padding-left: 3pt;
 `;
 
+// 버튼 컨테이너
 const ButtonContainer = styled.div`
   flex: 0.1;
   display: flex;
@@ -79,6 +86,7 @@ const ButtonContainer = styled.div`
   width: 200px;
 `;
 
+// 적용 버튼
 const SubmitButton = styled.button`
   text-align: center;
   font-size: 11pt;
@@ -90,6 +98,7 @@ const SubmitButton = styled.button`
   border: 1.5px solid #BDBDBD;
 `;
 
+// 취소 버튼
 const ExitButton = styled.button`
   text-align: center;
   font-size: 11pt;
@@ -102,88 +111,36 @@ const ExitButton = styled.button`
 `;
 
 const MyPage = () => {
-  const [nickname, setNickname] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
 
-  const handleNicknameChange = async () => {
-    try {
-      const response = await axios.post('/api/user/changeNickname', {
-        email: "yyy@naver.com",  // 실제 사용자 이메일로 변경
-        currentPassword,
-        newNickname: nickname
-      });
-      alert(response.data);
-    } catch (error) {
-      console.error('닉네임 변경 오류:', error);
-      alert('닉네임 변경에 실패했습니다.');
-    }
-  };
+    return (
+      <>
+        <Navigation/>
+        <Option/>
+        <MainContainer>
+            <SectionTitle> 마이페이지 </SectionTitle>
+            <SubTitle> 개인정보를 수정할 수 있습니다 </SubTitle>
+            <ChangeContainer first>
+                <ChangeL> 닉네임 </ChangeL>
+                <ChangeRContainer> 
+                    <ChangeR type="text" placeholder="변경할 닉네임 입력"/>
+                </ChangeRContainer>
+            </ChangeContainer>
 
-  const handlePasswordChange = async () => {
-    try {
-      const response = await axios.post('/api/user/changePassword', {
-        email: "yyy@naver.com",  // 실제 사용자 이메일로 변경
-        currentPassword,
-        newPassword
-      });
-      alert(response.data);
-    } catch (error) {
-      console.error('비밀번호 변경 오류:', error);
-      alert('비밀번호 변경에 실패했습니다.');
-    }
-  };
-
-  return (
-    <>
-      <Navigation />
-      <Option />
-      <MainContainer>
-        <SectionTitle>마이페이지</SectionTitle>
-        <SubTitle>개인정보를 수정할 수 있습니다</SubTitle>
-        <ChangeContainer first>
-          <ChangeL>닉네임</ChangeL>
-          <ChangeRContainer>
-            <ChangeR
-              type="text"
-              placeholder="변경할 닉네임 입력"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-            />
-                      </ChangeRContainer>
-        </ChangeContainer>
-
-        <ChangeContainer password>
-          <ChangeL>비밀번호 변경</ChangeL>
-          <ChangeRContainer>
-            <ChangeR
-              end
-              type="password"
-              placeholder="변경할 비밀번호 입력"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </ChangeRContainer>
-        </ChangeContainer>
-        <ChangeContainer end>
-          <ChangeL> 현재 비밀번호</ChangeL>
-          <ChangeRContainer>
-            <ChangeR
-              type="password"
-              placeholder="닉네임 혹은 비밀번호 변경 시 반드시 입력"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-            />
-          </ChangeRContainer>
-        </ChangeContainer>
-        <ButtonContainer>
-          <SubmitButton onClick={handleNicknameChange}>적용</SubmitButton>
-          <ExitButton onClick={() => { setNickname(''); setCurrentPassword(''); setNewPassword(''); }}>취소</ExitButton>
-        </ButtonContainer>
-      </MainContainer>
-      <Foot />
-    </>
-  );
-}
-
-export default MyPage;
+            <ChangeContainer end password>
+                <ChangeL> 비밀번호 변경 </ChangeL>
+                <ChangeRContainer> 
+                    <ChangeR end type="text" placeholder="현재 비밀번호 입력"/>
+                    <ChangeR end type="text" placeholder="변경할 비밀번호 입력"/>
+                </ChangeRContainer>
+            </ChangeContainer>
+            <ButtonContainer>
+              <SubmitButton> 적용 </SubmitButton>
+              <ExitButton> 취소 </ExitButton>
+            </ButtonContainer>
+        </MainContainer>
+        <Foot/>
+      </>
+    );
+  }
+  
+  export default MyPage;
