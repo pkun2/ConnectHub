@@ -1,4 +1,4 @@
-import express from "express";
+import express from "express"; 
 import { homeController } from "../controller/homeController";
 
 const homeRouter = express.Router();
