@@ -9,6 +9,7 @@ import PasswordResetRequestForm from './components/PasswordResetRequestForm';
 import PasswordResetForm from './components/PasswordResetForm';
 import PhoneToEmailForm from './components/PhoneToEmailForm';
 import { AuthProvider } from './components/AuthContext';
+import WriteBoardPost from './components/WriteBoardPost';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Route path="/" element={<Main/>} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/signup" element={<SignUpForm />} />
+            <Route path='/write' element={<WriteBoardPost/>} />
           </Routes>
           <Foot />
         </div>
