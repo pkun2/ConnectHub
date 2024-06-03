@@ -1,4 +1,4 @@
-import React from 'react';
+
 import GotoTop from './components/GotoTop';
 import Foot from './components/Foot';
 import Main from './components/Main';
@@ -10,7 +10,7 @@ import PasswordResetForm from './components/PasswordResetForm';
 import PhoneToEmailForm from './components/PhoneToEmailForm';
 import { AuthProvider } from './components/AuthContext';
 import WriteBoardPost from './components/WriteBoardPost';
-
+import PostDetail from './components/PostDetail';
 
 function App() {
   return (
@@ -23,11 +23,12 @@ function App() {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/signup" element={<SignUpForm />} />
             <Route path='/write' element={<WriteBoardPost/>} />
+            <Route path='/postDetail' element={<PostDetail/>} />
           </Routes>
           <Foot />
         </div>
       </Router>
-    </AuthProvider>
+    </AuthProvider
   );
 }
 
