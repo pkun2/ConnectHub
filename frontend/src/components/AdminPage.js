@@ -122,8 +122,8 @@ const StatisticContainer = styled.div`
 const VisitorContainer = styled.div`
   position: absolute;
   bottom: 0;
+  left: 0;
   width: 100%;
-  max-width: 615.6px;
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
