@@ -21,8 +21,6 @@ const Header = styled.div`
   padding: 10px 0;
   border-top: 2px solid #000;
   border-bottom: 2px solid #ccc;
-  margin-bottom: 10px;
-  margin-bottom: 0px;
 `;
 
 const HeaderItem = styled.div`
@@ -37,11 +35,28 @@ const HeaderItem = styled.div`
   white-space: nowrap;
 `;
 
-const Container1 = styled.div`
+const SectionHeader = styled.div`
+  position: relative;
+  top: 0;
   display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
 `;
 
-const Container2 = styled.div`
+const SectionHeaderItem = styled.div`
+  flex: ${({ isSection, isTitle }) => (
+    isSection ? 1.5 : 
+    isTitle ? 1 : 
+    0.5
+  )};
+  text-align: left;
+  text-align: center;
+  white-space: nowrap;
+`;
+
+const Container = styled.div`
   display: flex;
   justify-content: space-between;
 `;
@@ -89,6 +104,7 @@ const UserManagementContainer = styled.div`
 
 // 통계 컨테이너
 const StatisticContainer = styled.div`
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -104,15 +120,29 @@ const StatisticContainer = styled.div`
 
 // 총 방문자 수 컨테이너
 const VisitorContainer = styled.div`
-  position: relative;
-  top: 44.8px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  max-width: 615.6px;
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
   border-top: 2px solid #000;
   border-bottom: 2px solid #ccc;
-  margin-bottom: 10px;
-  margin-bottom: 0px;
+  margin-bottom: 20px;
+`;
+
+// 삭제 버튼
+const DeleteButton = styled.button`
+  position: absolute;
+  right: 10px;
+  text-align: center;
+  font-size: 11pt;
+  font-weight: 550;
+  width: 60px;
+  background-color: white;
+  cursor: pointer;
+  border: 1.5px solid #BDBDBD;
 `;
 
 const AdminPage = () => {
@@ -127,6 +157,11 @@ const AdminPage = () => {
               <HeaderItem isTitle>게시글 제목</HeaderItem>
               <HeaderItem isSection>내용</HeaderItem>
             </Header>
+            <SectionHeader>
+              <SectionHeaderItem isTitle>제목</SectionHeaderItem>
+              <SectionHeaderItem isSection>~~~</SectionHeaderItem>
+              <DeleteButton>삭제</DeleteButton>
+            </SectionHeader>
           </PostManagementContainer>
           <CommentManagementContainer>
             <Header>
@@ -134,8 +169,14 @@ const AdminPage = () => {
               <HeaderItem>회원아이디</HeaderItem>
               <HeaderItem isSection>댓글 내용</HeaderItem>
             </Header>
+            <SectionHeader>
+              <SectionHeaderItem isTitle>제목</SectionHeaderItem>
+              <SectionHeaderItem>test</SectionHeaderItem>
+              <SectionHeaderItem isSection>~~~</SectionHeaderItem>
+              <DeleteButton>삭제</DeleteButton>
+            </SectionHeader>
           </CommentManagementContainer>
-          <Container2>
+          <Container>
             <UserManagementContainer>
               <Header>
                 <HeaderItem isTitle>회원아이디</HeaderItem>
@@ -153,7 +194,7 @@ const AdminPage = () => {
                 <HeaderItem>0</HeaderItem>
               </VisitorContainer>
             </StatisticContainer>
-          </Container2>
+          </Container>
         </MainContainer>
         <Foot/>
     </>
