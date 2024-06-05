@@ -3,6 +3,7 @@ import Comment from "../model/Comment";
 import logger from "../config/logger";
 import Report from "../model/Report";
 
+// 게시글 작성 기능
 export const postWriteController = async (req, res) => {
     const { userId, categoryId, title, content } = req.body;
     try {
@@ -43,6 +44,7 @@ export const postViewController = async (req, res) => {
     }
 };
 
+// 게시글 상세 조회 컨트롤러
 export const getPostDetailController = async (req, res) => {
     const postId = req.params.id;
     try {
@@ -85,7 +87,7 @@ export const getCommentsByPostController = async (req, res) => {
         logger.error(`댓글 조회 중 오류 발생: ${err.message}`);
     }
 };
-
+// 게시글 삭제 컨트롤러
 export const deletePostController = async (req, res) => {
     const { userId, postId } = req.body; // Request Body에서 userId와 postId 추출
 

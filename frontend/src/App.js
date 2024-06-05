@@ -8,6 +8,7 @@ import SignUpForm from './components/SignUpForm';
 import PasswordResetRequestForm from './components/PasswordResetRequestForm';
 import PasswordResetForm from './components/PasswordResetForm';
 import PhoneToEmailForm from './components/PhoneToEmailForm';
+import { AuthProvider } from './components/AuthContext';
 
 
 function App() {

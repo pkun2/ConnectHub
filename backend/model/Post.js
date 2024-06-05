@@ -59,6 +59,8 @@ class Post {
             throw err;
         }
     }
+
+    // 게시글 삭제 기능
     static async deletePost(postId) {
         const query = 'DELETE FROM posts WHERE id = ?';
         const params = [postId]
