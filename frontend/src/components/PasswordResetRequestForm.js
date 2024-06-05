@@ -24,7 +24,7 @@ function PasswordResetRequestForm() {
 
         try {
             // 서버에 인증번호 요청을 보냄
-            await axios.post('http://localhost:4000/api/password/requestReset', formData);
+            await axios.post('http://localhost:4000/api/user/request-resetPassword', formData);
             alert('비밀번호 재설정 인증번호가 SMS로 전송되었습니다.');
 
             // 인증번호 요청 완료 후 비밀번호 재설정 페이지로 이동합니다.
