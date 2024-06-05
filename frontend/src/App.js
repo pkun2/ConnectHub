@@ -28,7 +28,7 @@ function App() {
           <Foot />
         </div>
       </Router>
-    </AuthProvider
+    </AuthProvider>
   );
 }
 

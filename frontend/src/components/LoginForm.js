@@ -29,7 +29,7 @@ function LoginForm() {
         try { // 서버에 POST 요청 보냄
             const response = await axios({
                 method: "post",
-                baseURL: "http://localhost:4000",
+                baseURL: "http://localhost:3000",
                 url: "/api/login",
                 data: formData
             });

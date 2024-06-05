@@ -26,7 +26,7 @@ function SignUpForm() {
         event.preventDefault();
         try {
             // 인증 코드 유효성 검사 및 회원가입 요청
-            const response = await axios.post('http://localhost:4000/api/signup', formData);
+            const response = await axios.post('http://localhost:3000/api/signup', formData);
             console.log(response.data);
 
             // 회원가입 성공 시 메인 화면으로 이동
@@ -39,7 +39,7 @@ function SignUpForm() {
 
     const handleSendCode = async () => {
         try {
-            const response = await axios.post('http://localhost:4000/api/sendVerificationCode', { phoneNum: formData.phoneNum });
+            const response = await axios.post('http://localhost:3000/api/sendVerificationCode', { phoneNum: formData.phoneNum });
             console.log(response.data);
         } catch (error) {
             console.error('인증번호 전송 실패:', error);
