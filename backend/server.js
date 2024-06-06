@@ -29,8 +29,8 @@ app.use("/api/login", loginRouter);
 app.use("/api", verificationRouter);
 app.use("/api/password", passwordResetRouter);
 app.use("/api/findEmail", emailFindRouter);
-app.use('/api/changePassword', passwordChangeRouter);
-app.use('/api/changeNickname', nicknameChangeRouter);
+app.use('/api/user/changePassword', passwordChangeRouter);
+app.use('/api/user/changeNickname', nicknameChangeRouter);
 
 const checkConnectDB = async () => {
     try {

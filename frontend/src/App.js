@@ -5,9 +5,10 @@ import MyPage from './components/MyPage';
 function App() {
   return (
     <Router>
-      <MyPage/>
       <Routes>
-        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/" element={<MyPage />} />
+        <Route path="/changePassword" element={<MyPage />} />
+        <Route path="/changeNickname" element={<MyPage />} />
       </Routes>
     </Router>
   );

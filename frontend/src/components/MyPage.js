@@ -74,16 +74,16 @@ const ButtonContainer = styled.div`
   flex: 0.1;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
   margin-top: 30px;
-  width: 200px;
+  
 `;
 
 const SubmitButton = styled.button`
   text-align: center;
   font-size: 11pt;
   font-weight: 550;
-  width: 60px;
+  white-space: nowrap;
+  margin-right: 5px;
   height: 40px;
   background-color: white;
   cursor: pointer;
@@ -94,7 +94,7 @@ const ExitButton = styled.button`
   text-align: center;
   font-size: 11pt;
   font-weight: 550;
-  width: 60px;
+  white-space: nowrap;
   height: 40px;
   background-color: white;
   cursor: pointer;
@@ -177,7 +177,8 @@ const MyPage = () => {
           </ChangeRContainer>
         </ChangeContainer>
         <ButtonContainer>
-          <SubmitButton onClick={handleNicknameChange}>적용</SubmitButton>
+          <SubmitButton onClick={handleNicknameChange}> 닉네임 적용</SubmitButton>
+          <SubmitButton onClick={handlePasswordChange}> 비밀번호 적용</SubmitButton>
           <ExitButton onClick={() => { setNickname(''); setCurrentPassword(''); setNewPassword(''); }}>취소</ExitButton>
         </ButtonContainer>
       </MainContainer>
