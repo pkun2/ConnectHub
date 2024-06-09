@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Navigation from './Navigation';
 import Option from './Option';
 import Foot from './Foot';
+import axios from 'axios';
 
 // 메인 컨테이너
 const MainContainer = styled.div`
@@ -101,7 +102,6 @@ const UserManagementContainer = styled.div`
   overflow-y: auto;
 `;
 
-
 // 통계 컨테이너
 const StatisticContainer = styled.div`
   position: relative;
@@ -146,59 +146,119 @@ const DeleteButton = styled.button`
 `;
 
 const AdminPage = () => {
+  const [posts, setPosts] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [totalVisitors, setTotalVisitors] = useState(0);
+  const [todayVisitors, setTodayVisitors] = useState(0);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get('/api/post');
+        setPosts(response.data);
+      } catch (error) {
+        console.error('게시글을 불러오는 중 오류 발생:', error);
+      }
+    };
+
+    const fetchComments = async (postId) => {
+      try {
+        const response = await axios.get(`/api/post/${postId}/comment`);
+        setComments(response.data);
+      } catch (error) {
+        console.error('댓글을 불러오는 중 오류 발생:', error);
+      }
+    };
+
+    const fetchVisitors = async () => {
+      try {
+        const totalResponse = await axios.get('/api/admin/visit/total');
+        setTotalVisitors(totalResponse.data);
+
+        const todayResponse = await axios.get('/api/admin/visit/today');
+        setTodayVisitors(todayResponse.data);
+      } catch (error) {
+        console.error('방문자 수를 불러오는 중 오류 발생:', error);
+      }
+    };
+
+    fetchPosts();
+    fetchVisitors();
+  }, []);
+
+  const handleDeletePost = async (postId) => {
+    try {
+      await axios.delete(`/api/admin/delete/post/${postId}`);
+      setPosts(posts.filter(post => post.postId !== postId));
+    } catch (error) {
+      console.error('게시글을 삭제하는 중 오류 발생:', error);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await axios.delete(`/api/admin/delete/comment/${commentId}`);
+      setComments(comments.filter(comment => comment.commentId !== commentId));
+    } catch (error) {
+      console.error('댓글을 삭제하는 중 오류 발생:', error);
+    }
+  };
 
   return (
     <>
-        <Navigation/>
-        <Option/>
-        <MainContainer>
-          <PostManagementContainer>
-            <Header>
-              <HeaderItem isTitle>게시글 제목</HeaderItem>
-              <HeaderItem isSection>내용</HeaderItem>
-            </Header>
-            <SectionHeader>
-              <SectionHeaderItem isTitle>제목</SectionHeaderItem>
-              <SectionHeaderItem isSection>~~~</SectionHeaderItem>
-              <DeleteButton>삭제</DeleteButton>
+      <Navigation />
+      <Option />
+      <MainContainer>
+        <PostManagementContainer>
+          <Header>
+            <HeaderItem isTitle>게시글 제목</HeaderItem>
+            <HeaderItem isSection>내용</HeaderItem>
+          </Header>
+          {posts.map(post => (
+            <SectionHeader key={post.postId}>
+              <SectionHeaderItem isTitle>{post.title}</SectionHeaderItem>
+              <SectionHeaderItem isSection>{post.content}</SectionHeaderItem>
+              <DeleteButton onClick={() => handleDeletePost(post.postId)}>삭제</DeleteButton>
             </SectionHeader>
-          </PostManagementContainer>
-          <CommentManagementContainer>
-            <Header>
-              <HeaderItem isTitle>게시글 제목</HeaderItem>
-              <HeaderItem>회원아이디</HeaderItem>
-              <HeaderItem isSection>댓글 내용</HeaderItem>
-            </Header>
-            <SectionHeader>
-              <SectionHeaderItem isTitle>제목</SectionHeaderItem>
-              <SectionHeaderItem>test</SectionHeaderItem>
-              <SectionHeaderItem isSection>~~~</SectionHeaderItem>
-              <DeleteButton>삭제</DeleteButton>
+          ))}
+        </PostManagementContainer>
+        <CommentManagementContainer>
+          <Header>
+            <HeaderItem isTitle>게시글 제목</HeaderItem>
+            <HeaderItem>회원아이디</HeaderItem>
+            <HeaderItem isSection>댓글 내용</HeaderItem>
+          </Header>
+          {comments.map(comment => (
+            <SectionHeader key={comment.commentId}>
+              <SectionHeaderItem isTitle>{comment.postId}</SectionHeaderItem>
+              <SectionHeaderItem>{comment.nickname}</SectionHeaderItem>
+              <SectionHeaderItem isSection>{comment.content}</SectionHeaderItem>
+              <DeleteButton onClick={() => handleDeleteComment(comment.commentId)}>삭제</DeleteButton>
             </SectionHeader>
-          </CommentManagementContainer>
-          <Container>
-            <UserManagementContainer>
-              <Header>
-                <HeaderItem isTitle>회원아이디</HeaderItem>
-                <HeaderItem>신고 누적</HeaderItem>
-              </Header>
-            </UserManagementContainer>
-            <StatisticContainer>
-              <Header>
-                <HeaderItem>날짜</HeaderItem>
-                <HeaderItem>방문자 수</HeaderItem>
-              </Header>
-              
-              <VisitorContainer>
-                <HeaderItem isTitle>총 방문자 수</HeaderItem>
-                <HeaderItem>0</HeaderItem>
-              </VisitorContainer>
-            </StatisticContainer>
-          </Container>
-        </MainContainer>
-        <Foot/>
+          ))}
+        </CommentManagementContainer>
+        <Container>
+          <UserManagementContainer>
+            <Header>
+              <HeaderItem isTitle>회원아이디</HeaderItem>
+              <HeaderItem>신고 누적</HeaderItem>
+            </Header>
+          </UserManagementContainer>
+          <StatisticContainer>
+            <Header>
+              <HeaderItem>날짜</HeaderItem>
+              <HeaderItem>방문자 수</HeaderItem>
+            </Header>
+            <VisitorContainer>
+              <HeaderItem isTitle>총 방문자 수</HeaderItem>
+              <HeaderItem>{totalVisitors}</HeaderItem>
+            </VisitorContainer>
+          </StatisticContainer>
+        </Container>
+      </MainContainer>
+      <Foot />
     </>
   );
-}
+};
 
 export default AdminPage;

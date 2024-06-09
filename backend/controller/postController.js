@@ -1,16 +1,23 @@
-import Post from "../model/Post";
+// controller/postController.js
+import Post from '../model/Post';
+import Comment from '../model/Comment';
 
-export const getWriteController = (req, res) => {
-    res.send("글쓰기 페이지 입니다.");
-}
+export const getPostById = async (req, res) => {
+    const postId = req.params.id;
+    try {
+        const post = await Post.getPostDetail(postId);
+        res.status(200).json(post);
+    } catch (err) {
+        res.status(500).send('게시글 조회 중 오류 발생: ' + err.message);
+    }
+};
 
-export const postWriteController = (req, res) => {
-    const { userId, categoryId, title, content } = req.body; // Request Body에서 userId, categoryId, title, content 추출
-    Post.insertPost(userId, categoryId, title, content, (err, result) => {
-        if (err) {// 삽입중 오류 발생시
-            res.status(500).send('Error creating post'); // 500: Internal Server Error
-            return;
-        }
-        res.status(200).send('Post created successfully'); // 200: OK
-    });
-}
+export const getCommentsByPostId = async (req, res) => {
+    const postId = req.params.id;
+    try {
+        const comments = await Comment.getCommentsByPostId(postId);
+        res.status(200).json(comments);
+    } catch (err) {
+        res.status(500).send('댓글 조회 중 오류 발생: ' + err.message);
+    }
+};
