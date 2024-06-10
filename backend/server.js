@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import pool from "./config/db.js";
+import cookieParser from "cookie-parser";
+import session from "express-session"
 import adminRouter from "./router/adminRouter.js";
 import visitorCounter from "./middleware/visitorCounter.js"
 
@@ -15,10 +17,24 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT; // 포트 번호 설정
 
-app.use(cors()); // CORS 미들웨어 사용
+app.use(cors({
+    origin: 'http://localhost:3000', // 리액트 앱의 주소
+    credentials: true
+})); // CORS 미들웨어 사용
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(visitorCounter); // 방문자 수 카운트 미들웨어
+app.use(cookieParser());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        maxAge: 60000
+    }
+
+}));
 
 // 라우터 등록
 app.use("/api/post", postRouter);
