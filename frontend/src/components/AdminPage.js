@@ -182,6 +182,7 @@ const AdminPage = () => {
       }
     };
 
+    fetchComments();
     fetchPosts();
     fetchVisitors();
   }, []);
