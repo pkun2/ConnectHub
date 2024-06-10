@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import homeRouter from "./router/homeRouter";
-import postRouter from "./router/postRouter";
 import signUpRouter from "./router/signUpRouter";
 import loginRouter from "./router/loginRouter";
 import verificationRouter from "./router/verificationRouter";
@@ -12,15 +11,37 @@ import emailFindRouter from "./router/emailFindRouter";
 import pool from "./config/db.js";
 import passwordChangeRouter from './router/passwordChangeRouter';
 import nicknameChangeRouter from './router/nicknameChangeRouter';
+import cookieParser from "cookie-parser";
+import session from "express-session"
+import adminRouter from "./router/adminRouter.js";
+import visitorCounter from "./middleware/visitorCounter.js"
+import postRouter from "./router/postRouter.js"
+import userRouter from "./router/userRouter.js";
+import notificationRouter from './router/notificationRouter.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // 리액트 앱의 주소
+    credentials: true
+})); // CORS 미들웨어 사용
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        maxAge: 60000
+    }
+
+}));
 
 app.use("/", homeRouter);
 app.use("/api/post", postRouter);
@@ -31,6 +52,9 @@ app.use("/api/password", passwordResetRouter);
 app.use("/api/findEmail", emailFindRouter);
 app.use('/api/user/changePassword', passwordChangeRouter);
 app.use('/api/user/changeNickname', nicknameChangeRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/user", userRouter);          
+app.use('/api/notifications', notificationRouter);
 
 const checkConnectDB = async () => {
     try {

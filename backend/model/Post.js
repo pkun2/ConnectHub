@@ -38,7 +38,7 @@ class Post {
     }
     // 게시글 작성자 조회
     static async getUserIdByPostId(postId) {
-        const query = `SELECT userId FROM posts WHERE id = ?`;
+        const query = `SELECT userId FROM posts WHERE postId = ?`;
         const params = [postId];
         try {
             const [result] = await pool.query(query, params);
@@ -62,7 +62,7 @@ class Post {
 
     // 게시글 삭제 기능
     static async deletePost(postId) {
-        const query = 'DELETE FROM posts WHERE id = ?';
+        const query = 'DELETE FROM posts WHERE postId = ?';
         const params = [postId]
 
         try {
@@ -71,21 +71,6 @@ class Post {
         } catch (err) {
             throw err;
 
-        }
-    }
-
-    // 게시글 신고 기능, 신고 횟수 누적되는 방식 
-    static async reportPost(postId) {
-        const connection = await pool.getConnection();
-        try {
-            const query = "UPDATE posts SET reportCount = reportCount + 1 WHERE id = ?";
-            const [result] = await connection.query(query, [postId]);
-            return result;
-        } catch (err) {
-            console.log("게시글 신고 중 에러 발생:", err);
-            throw err;
-        } finally {
-            connection.release();
         }
     }
 
@@ -101,6 +86,18 @@ class Post {
             throw err;
         } finally {
             connection.release();
+        }
+    }
+
+    // 신고 기능 
+    static async insertReport(type, targetId, content) {
+        const query = 'INSERT INTO reports (type, targetId, content) VALUES (?, ?, ?)';
+        const values = [type, targetId, content];
+        try {
+            const [result] = await pool.query(query, values);
+            return result;
+        } catch (err) {
+            throw err;
         }
     }
 
