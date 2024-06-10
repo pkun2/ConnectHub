@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { LoginContainer, LoginBox, Title, Subtitle, Input, Button, FindLinks, StyledLink } from './LoginStyle';
-import { speak } from '../speech/speechUtils';      // tts, 음성 출력을 위한 함수 import
-import AlertMessage from '../speech/alertMessage';  // tts, 음성으로 알려줄 경고 메시지 컴포넌트 import
+import { speak } from '../speech/speechUtils'; // tts, 음성 출력을 위한 함수 import
+import AlertMessage from '../speech/alertMessage'; // tts, 음성으로 알려줄 경고 메시지 컴포넌트 import
 
 function LoginForm() {
     const [alertMessage, setAlertMessage] = useState(''); // tts, alertMessage state 추가
@@ -28,7 +28,7 @@ function LoginForm() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+
         try {
             const response = await axios({
                 method: "post",
@@ -40,8 +40,7 @@ function LoginForm() {
             localStorage.setItem('authToken', token);
             const successMessage = '로그인에 성공하였습니다.';
             setAlertMessage(successMessage);
-            alert(successMessage);
-    
+            
             // 음성 출력이 끝난 후 화면 전환
             speak(successMessage, { lang: 'ko-KR' }).then(() => {
                 navigate('/');
@@ -50,13 +49,11 @@ function LoginForm() {
             console.error('로그인 실패:', error);
             const errorMessage = '아이디 또는 비밀번호가 올바르지 않습니다.';
             setAlertMessage(errorMessage);
-            alert(errorMessage);
-    
+            
             // 음성 출력
             speak(errorMessage, { lang: 'ko-KR' });
         }
     };
-    
 
     // tts, 음성 출력 및 탭으로 포커싱 및 엔터 키로 작동 설정
     useEffect(() => {
@@ -86,7 +83,6 @@ function LoginForm() {
             });
         };
     }, []);
-
 
     return (
         <LoginContainer>

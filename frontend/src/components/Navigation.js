@@ -49,7 +49,7 @@ function Navigation() {
 
   return (
     <NavContainer>
-      <NavTitle onClick={() => window.location.href='http://localhost:4000/'}> 
+      <NavTitle onClick={() => window.location.href='http://localhost:3000/'}> 
         <NavTitleIcon src="./mainlogo.png" />
         ConnectHub 
       </NavTitle>

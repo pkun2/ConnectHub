@@ -19,11 +19,14 @@ function PhoneToEmailForm() {
         try {
             const response = await axios.post('http://localhost:4000/api/user/findEmail', { phoneNum });
             setFoundEmail(response.data);
+            const successMessage = `찾은 이메일: ${response.data}`;
+            setAlertMessage(successMessage); // 알림 음성 출력
+            speak(successMessage, { lang: 'ko-KR' });
         } catch (error) {
             console.error('이메일 찾기 실패:', error);
             const errorMessage = '이메일 찾기 중 오류가 발생했습니다.';
             setAlertMessage(errorMessage); // 알림 음성 출력 
-            alert(errorMessage);
+            speak(errorMessage, { lang: 'ko-KR' });
         }
     };
 
@@ -58,18 +61,18 @@ function PhoneToEmailForm() {
 
     return (
         <>
-        <Navigation />
-        <SignUpContainer>
-            <Title>이메일 찾기</Title>
-            <SignUpBox>
-                <form onSubmit={handleSubmit}>
-                    <Input type="tel" value={phoneNum} onChange={handleChange} placeholder="전화번호 입력" tabIndex="0" />
-                    <Button type="submit" tabIndex="0">이메일 찾기</Button>
-                </form>
-                {foundEmail && <p>찾은 이메일: {foundEmail}</p>}
-            </SignUpBox>
-            {alertMessage && <AlertMessage message={alertMessage} />}
-        </SignUpContainer>
+            <Navigation />
+            <SignUpContainer>
+                <Title>이메일 찾기</Title>
+                <SignUpBox>
+                    <form onSubmit={handleSubmit}>
+                        <Input type="tel" value={phoneNum} onChange={handleChange} placeholder="전화번호 입력" tabIndex="0" />
+                        <Button type="submit" tabIndex="0">이메일 찾기</Button>
+                    </form>
+                    {foundEmail && <p>찾은 이메일: {foundEmail}</p>}
+                </SignUpBox>
+                {alertMessage && <AlertMessage message={alertMessage} />}
+            </SignUpContainer>
         </>
     );
 }

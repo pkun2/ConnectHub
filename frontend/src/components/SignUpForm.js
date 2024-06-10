@@ -32,12 +32,20 @@ function SignUpForm() {
         try {
             const response = await axios.post('http://localhost:4000/api/user/signup', formData);
             console.log(response.data);
-            navigate('/');
+            const successMessage = '회원가입에 성공하였습니다.';
+            setAlertMessage(successMessage);
+            
+            // 음성 출력이 끝난 후 화면 전환
+            speak(successMessage, { lang: 'ko-KR' }).then(() => {
+                navigate('/');
+            });
         } catch (error) {
             console.error('회원가입 실패:', error);
             const errorMessage = '회원가입 도중 오류가 발생했습니다. 인증 코드를 확인해 주세요.';
             setAlertMessage(errorMessage);
-            alert(errorMessage);
+            
+            // 음성 출력
+            speak(errorMessage, { lang: 'ko-KR' });
         }
     };
 
@@ -45,14 +53,18 @@ function SignUpForm() {
         try {
             const response = await axios.post('http://localhost:4000/api/user/sendVerificationCode', { phoneNum: formData.phoneNum });
             console.log(response.data);
-            const successMessage = '인증번호가 전송되었습니다.';
+            const successMessage = '인증번호가 전송되었습니다. 핸드폰을 확인해주세요. ';
             setAlertMessage(successMessage);
-            alert(successMessage);
+            
+            // 음성 출력
+            speak(successMessage, { lang: 'ko-KR' });
         } catch (error) {
             console.error('인증번호 전송 실패:', error);
             const errorMessage = '인증번호 전송에 실패했습니다.';
             setAlertMessage(errorMessage);
-            alert(errorMessage);
+            
+            // 음성 출력
+            speak(errorMessage, { lang: 'ko-KR' });
         }
     };
 
@@ -84,7 +96,6 @@ function SignUpForm() {
             });
         };
     }, []);
-
 
     return (
         <SignUpContainer>

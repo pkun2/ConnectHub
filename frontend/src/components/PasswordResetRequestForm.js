@@ -27,13 +27,18 @@ function PasswordResetRequestForm() {
             await axios.post('http://localhost:4000/api/user/request-resetPassword', formData);
             const successMessage = '비밀번호 재설정 인증번호가 SMS로 전송되었습니다.';
             setAlertMessage(successMessage); // tts, 성공 메시지
-            alert(successMessage);
-            navigate('/reset'); 
+
+            // 음성 출력이 끝난 후 화면 전환
+            speak(successMessage, { lang: 'ko-KR' }).then(() => {
+                navigate('/reset');
+            });
         } catch (error) {
             console.error('비밀번호 재설정 요청 실패:', error);
             const errorMessage = '비밀번호 재설정 요청 중 오류가 발생했습니다.';
             setAlertMessage(errorMessage); // tts, 실패 메시지 
-            alert(errorMessage);
+
+            // 음성 출력
+            speak(errorMessage, { lang: 'ko-KR' });
         }
     };
 
@@ -63,16 +68,16 @@ function PasswordResetRequestForm() {
     }, []);
 
     return (
-        <SignUpContainer> {/* Use SignUpContainer */}
-            <Title>비밀번호 재설정 요청</Title> {/* Use Title */}
-            <SignUpBox> {/* Use SignUpBox */}
+        <SignUpContainer>
+            <Title>비밀번호 재설정 요청</Title>
+            <SignUpBox>
                 <form onSubmit={handleSubmit}>
                     <Input type="email" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} tabIndex="0" />
                     <Input type="tel" name="phoneNum" placeholder="전화번호" value={formData.phoneNum} onChange={handleChange} tabIndex="0" />
-                    <Button type="submit" tabIndex="0">인증번호 요청</Button> {/* Use Button */}
+                    <Button type="submit" tabIndex="0">인증번호 요청</Button>
                 </form>
             </SignUpBox>
-            {alertMessage && <AlertMessage message={alertMessage} />} {/* Render alert message for speech */}
+            {alertMessage && <AlertMessage message={alertMessage} />}
         </SignUpContainer>
     );
 }
