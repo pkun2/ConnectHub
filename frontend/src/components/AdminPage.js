@@ -150,6 +150,7 @@ const AdminPage = () => {
   const [comments, setComments] = useState([]);
   const [totalVisitors, setTotalVisitors] = useState(0);
   const [todayVisitors, setTodayVisitors] = useState(0);
+  const [currentDate, setCurrentDate] = useState('');
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -182,6 +183,14 @@ const AdminPage = () => {
       }
     };
 
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+
+    setCurrentDate(formattedDate);
     fetchComments();
     fetchPosts();
     fetchVisitors();
@@ -203,6 +212,7 @@ const AdminPage = () => {
     } catch (error) {
       console.error('댓글을 삭제하는 중 오류 발생:', error);
     }
+  
   };
 
   return (
@@ -250,6 +260,10 @@ const AdminPage = () => {
               <HeaderItem>날짜</HeaderItem>
               <HeaderItem>방문자 수</HeaderItem>
             </Header>
+            <SectionHeader>
+              <SectionHeaderItem>{currentDate}</SectionHeaderItem>
+              <SectionHeaderItem>{todayVisitors}</SectionHeaderItem>
+            </SectionHeader>
             <VisitorContainer>
               <HeaderItem isTitle>총 방문자 수</HeaderItem>
               <HeaderItem>{totalVisitors}</HeaderItem>

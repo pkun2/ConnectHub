@@ -12,7 +12,8 @@ function App() {
       {/* 라우팅 설정 */}
       <Routes>
         <Route path="/" element={<AdminPage />} />
-        <Route path="/post" element={<AdminPage />} />
+        <Route path="/admin/:id" element={<AdminPage />} />
+        <Route path="/admin/:id/comment" element={<AdminPage />} />
       </Routes>     
     </Router>
   );
