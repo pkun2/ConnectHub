@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import Navigation from './Navigation';
 import Option from './Option';
 import ImageSection from './ImageSection';
 import ProfileSection from './ProfileSection';
 import MenuSection from './MenuSection';
+import axios from 'axios';
+import { AuthContext } from './AuthContext';
 
 const MainContainer = styled.div`
   display: flex;
@@ -64,6 +66,7 @@ const ProfileImage = styled.img`
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
+  background-image: url('/user.png');
 `;
 
 const ContentContainer = styled.div`
@@ -118,10 +121,28 @@ const CommentButton = styled(Button)`
   }
 `;
 
-const PostDetail = () => {
+const PostDetail = ({postId}) => {
   const [selectedCategory, setSelectedCategory] = useState('전체게시판');
+  const [post, setPost] = useState(null);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
+
+  const { userId } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/post/${postId}`);
+        setPost(response.data);
+      } catch (error) {
+        console.error('Failed to fetch post:', error);
+      }
+    };
+
+    if (postId) {
+      fetchPost();
+    }
+  }, [postId]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
@@ -131,33 +152,45 @@ const PostDetail = () => {
     setComment(e.target.value);
   };
 
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
     if (comment.trim() === '') return;
 
     const newComment = {
-      id: comments.length + 1,
-      author: '사용자 닉네임',
-      text: comment,
+      postId: post.postId, // 여기에 실제 postId를 넣어주세요
+      userId: userId, // 여기에 실제 userId를 넣어주세요
+      content: comment.trim(),
     };
 
-    setComments([newComment, ...comments]);
-    setComment('');
+    try {
+      const response = await axios.post('http://localhost:4000/api/post/comment', newComment);
+      console.log('Comment submitted:', response.data);
+      setComments([newComment, ...comments]); // 새로운 댓글을 기존 댓글 목록에 추가
+      setComment(''); // 댓글 입력 창 비우기
+    } catch (error) {
+      console.error('Failed to submit comment:', error);
+      // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
+    }
   };
 
-  const post = {
-    title: '게시물 제목',
-    content: '게시물 내용',
-    author: '작성자 이름',
-    date: '2024-05-21',
-    profileImageUrl: 'https://via.placeholder.com/50',
-  };
+  
 
   const handleEdit = () => {
     console.log('수정 버튼 클릭');
   };
 
-  const handleDelete = () => {
-    console.log('삭제 버튼 클릭');
+  const handleReport = async () => {
+    if (!post) return;
+    try {
+      const response = await axios.post('http://localhost:4000/api/post/report', {
+        postId: post.postId,
+        reportContent: '게시글을 신고합니다.',
+      });
+      console.log('Post reported:', response.data);
+      // 성공적으로 신고된 경우에 대한 처리 작업을 추가할 수 있습니다.
+    } catch (error) {
+      console.error('Failed to report post:', error);
+      // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
+    }
   };
 
   return (
@@ -172,10 +205,10 @@ const PostDetail = () => {
               <h1>{post.title}</h1>
             </TitleContainer>
             <InfoContainer>
-              <ProfileImage src={post.profileImageUrl} alt="Profile" />
+              <ProfileImage/>
               <div>
-                <p>{post.author}</p>
-                <p>{post.date}</p>
+                <p>{post.userId}</p>
+                <p>{post.createdAt}</p>
               </div>
             </InfoContainer>
             <ContentContainer>
@@ -201,8 +234,8 @@ const PostDetail = () => {
             <Button onClick={handleEdit}>
               수정
             </Button>
-            <Button onClick={handleDelete}>
-              삭제
+            <Button onClick={handleReport}>
+              신고
             </Button>
           </ButtonContainer>
         </LeftSubContainer>

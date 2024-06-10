@@ -72,7 +72,7 @@ const TableRowItem = styled.div`
   padding-left: 50px;
 `;
 
-const BoardSection = ({ title, onCategoryChange }) => {
+const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
   const [contents, setContents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
@@ -81,7 +81,7 @@ const BoardSection = ({ title, onCategoryChange }) => {
   useEffect(() => {
     const fetchContents = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/post/', {
+        const response = await axios.get('http://localhost:4000/api/post/', {
           params: { categoryId: title !== '전체게시판' ? title : undefined }
         });
         setContents(response.data);
@@ -110,10 +110,11 @@ const BoardSection = ({ title, onCategoryChange }) => {
     const endIndex = startIndex + itemsPerPage;
     
     return contents.slice(startIndex, endIndex).map((content) => (
-      <TableRow key={content.id}>
+      <TableRow key={content.id} onClick={() => onPostClick(content.postId)}>
+        <TableRowItem>{content.postId}</TableRowItem>
         <TableRowItem isTitle>{content.category}</TableRowItem>
         <TableRowItem isTitle>{content.title}</TableRowItem>
-        <TableRowItem>{content.author}</TableRowItem>
+        <TableRowItem>{content.userId}</TableRowItem>
         <TableRowItem>{new Date(content.created_at).toLocaleDateString()}</TableRowItem>
       </TableRow>
     ));
@@ -134,6 +135,7 @@ const BoardSection = ({ title, onCategoryChange }) => {
 
       <BoardContent>
         <TableHeader>
+          <TableHeaderItem>게시판번호</TableHeaderItem>
           <TableHeaderItem isTitle>게시판</TableHeaderItem>
           <TableHeaderItem isTitle>제목</TableHeaderItem>
           <TableHeaderItem>작성자</TableHeaderItem>

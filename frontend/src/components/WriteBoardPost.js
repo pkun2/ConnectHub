@@ -6,6 +6,7 @@ import Navigation from './Navigation';
 import Option from './Option';
 import ImageSection from './ImageSection';
 import { AuthContext } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const MainContainer = styled.div`
   display: flex;
@@ -100,10 +101,12 @@ const SelectPicker = styled.select`
 
 const WriteBoardPost = () => {
     const { user } = useContext(AuthContext);  // AuthContext에서 user 정보 가져오기
+    const [postId, setPostId] = useState(1);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedBoard, setSelectedBoard] = useState('게시판을 선택해주세요'); // 선택된 게시판 종류를 저장하는 state
-  
+    const navigate = useNavigate();
+
     const handleTitleChange = (e) => {
       setTitle(e.target.value);
     };
@@ -122,21 +125,36 @@ const WriteBoardPost = () => {
         console.error('로그인이 되어있지 않습니다.');
         return;
       }
+      
+      if (selectedBoard === '' || selectedBoard === '게시판을 선택해주세요') {
+        alert('게시판을 선택해주세요.');
+        return;
+      }
+  
+      if (!title || !content) {
+        alert('제목과 내용을 입력해주세요.');
+        return;
+      }
 
       const postData = {
-        userId: user.id,  // 실제 사용자 ID로 교체해야 합니다.
+        postId: postId,
+        userId: user.id,
         categoryId: selectedBoard,
         title: title,
         content: content,
+        createdAt: new Date().toISOString(),
       };
   
       try {
-        const response = await axios.post('http://localhost:5000/api/post/write', postData); // 포트 5000으로 설정
-        console.log('Response:', response.data);
-        // 성공적으로 글을 작성한 후의 로직을 추가하세요.
-      } catch (error) {
-        console.error('게시글을 작성할 수 없습니다.', error);
-      }
+      const response = await axios.post('http://localhost:4000/api/post/write', postData);
+      console.log('Response:', response.data);
+      alert('글 작성이 완료되었습니다.');
+      setPostId(postId + 1);
+      navigate('/'); // 글 작성 후 Main 페이지로 이동
+    } catch (error) {
+      console.error('게시글을 작성할 수 없습니다.', error);
+      alert('게시글 작성에 실패했습니다.');
+    }
     };
   
     return (
