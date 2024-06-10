@@ -1,7 +1,8 @@
-import React, {useContext} from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
+import { speak } from '../speech/speechUtils'; // tts, 음성 출력을 위한 함수 import
 
 const ProfileContainer = styled.div`
   flex: 0.3;
@@ -28,7 +29,6 @@ const ProfileContent = styled.div`
   flex-direction: row;
   align-items: center;
   margin: 40px;
-
   width: 100%;
   justify-content: flex-start;
 `;
@@ -118,18 +118,38 @@ const ProfileSection = () => {
     navigate('/write');
   };
 
+  // tts, 음성 출력 및 탭으로 포커싱
+  useEffect(() => {
+    const tabs = document.querySelectorAll('[tabindex]');
+
+    const handleFocus = (event) => {
+      const text = event.target.textContent.trim();
+      speak(text, { lang: 'ko-KR' });
+    };
+
+    tabs.forEach(tab => {
+      tab.addEventListener('focus', handleFocus);
+    });
+
+    return () => {
+      tabs.forEach(tab => {
+        tab.removeEventListener('focus', handleFocus);
+      });
+    };
+  }, []);
+
   return (
     <ProfileContainer>
-      <SectionTitle>내 정보</SectionTitle>
+      <SectionTitle tabIndex="0">내 정보</SectionTitle>
       <ProfileContent>
-        <ProfileImage />
+        <ProfileImage/>
         <NicknameContainer>
           <Nickname>닉네임</Nickname>
-          <MyPageLink onClick = {goToMyPage}>마이페이지</MyPageLink>
+          <MyPageLink onClick={goToMyPage} tabIndex="0">마이페이지</MyPageLink>
         </NicknameContainer>
-        <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+        <LogoutButton onClick={handleLogout} tabIndex="0">로그아웃</LogoutButton>
       </ProfileContent>
-      <WriteButtonLink onClick = {goToWritePage}>글쓰기</WriteButtonLink>
+      <WriteButtonLink onClick={goToWritePage} tabIndex="0">글쓰기</WriteButtonLink>
     </ProfileContainer>
   );
 };

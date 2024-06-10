@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useHistory from react-router-dom
+import { useNavigate } from 'react-router-dom';
+import { SignUpContainer, SignUpBox, Title, Input, Button } from './SignUpStyle'; // Import SignUpStyle for styling
+import { speak } from '../speech/speechUtils';     // tts, 음성 출력을 위한 함수 import
+import AlertMessage from '../speech/alertMessage'; // tts, 음성으로 알려줄 경고 메시지 컴포넌트 import
 
 function PasswordResetRequestForm() {
-    // useState를 사용하여 컴포넌트의 상태를 초기화
     const [formData, setFormData] = useState({
         email: '',
         phoneNum: ''
     });
-    // useHistory()를 사용하여 history 객체를 가져옴
+    const [alertMessage, setAlertMessage] = useState(''); // tts
     const navigate = useNavigate();
 
-    // 입력 값이 변경될 때마다 상태를 업데이트하는 함수
     const handleChange = (event) => {
         setFormData({
             ...formData,
@@ -23,28 +24,56 @@ function PasswordResetRequestForm() {
         event.preventDefault();
 
         try {
-            // 서버에 인증번호 요청을 보냄
             await axios.post('http://localhost:4000/api/user/request-resetPassword', formData);
-            alert('비밀번호 재설정 인증번호가 SMS로 전송되었습니다.');
-
-            // 인증번호 요청 완료 후 비밀번호 재설정 페이지로 이동합니다.
-            navigate('/reset'); // Use history to navigate to '/reset-sent'
+            const successMessage = '비밀번호 재설정 인증번호가 SMS로 전송되었습니다.';
+            setAlertMessage(successMessage); // tts, 성공 메시지
+            alert(successMessage);
+            navigate('/reset'); 
         } catch (error) {
             console.error('비밀번호 재설정 요청 실패:', error);
-            alert('비밀번호 재설정 요청 중 오류가 발생했습니다.');
+            const errorMessage = '비밀번호 재설정 요청 중 오류가 발생했습니다.';
+            setAlertMessage(errorMessage); // tts, 실패 메시지 
+            alert(errorMessage);
         }
     };
 
-    // 화면에 표시되는 내용
+    // tts, 음성 출력 및 탭으로 포커싱 및 엔터 키로 작동 설정
+    useEffect(() => {
+        const tabs = document.querySelectorAll('[tabindex]');
+        const handleFocus = (event) => {
+            const text = event.target.placeholder || event.target.textContent || '';
+            speak(text, { lang: 'ko-KR' });
+        };
+        const handleKeyDown = (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                event.target.click();
+            }
+        };
+        tabs.forEach(tab => {
+            tab.addEventListener('focus', handleFocus);
+            tab.addEventListener('keydown', handleKeyDown);
+        });
+        return () => {
+            tabs.forEach(tab => {
+                tab.removeEventListener('focus', handleFocus);
+                tab.removeEventListener('keydown', handleKeyDown);
+            });
+        };
+    }, []);
+
     return (
-        <div>
-            <h2>비밀번호 재설정 요청</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="email" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} />
-                <input type="tel" name="phoneNum" placeholder="전화번호" value={formData.phoneNum} onChange={handleChange} />
-                <button type="submit">인증번호 요청</button>
-            </form>
-        </div>
+        <SignUpContainer> {/* Use SignUpContainer */}
+            <Title>비밀번호 재설정 요청</Title> {/* Use Title */}
+            <SignUpBox> {/* Use SignUpBox */}
+                <form onSubmit={handleSubmit}>
+                    <Input type="email" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} tabIndex="0" />
+                    <Input type="tel" name="phoneNum" placeholder="전화번호" value={formData.phoneNum} onChange={handleChange} tabIndex="0" />
+                    <Button type="submit" tabIndex="0">인증번호 요청</Button> {/* Use Button */}
+                </form>
+            </SignUpBox>
+            {alertMessage && <AlertMessage message={alertMessage} />} {/* Render alert message for speech */}
+        </SignUpContainer>
     );
 }
 

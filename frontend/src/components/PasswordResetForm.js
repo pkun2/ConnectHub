@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { SignUpContainer, SignUpBox, Title, Input, Button } from './SignUpStyle'; // 스타일 파일에서 스타일 import
+import { speak } from '../speech/speechUtils';     // tts, 음성 출력을 위한 함수 import
+import AlertMessage from '../speech/alertMessage'; // tts, 음성으로 알려줄 경고 메시지 컴포넌트 import
 
 function PasswordResetForm() {
-    // useState를 사용하여 컴포넌트의 상태를 초기화
     const [formData, setFormData] = useState({
         email: '',
         verificationCode: '',
         newPassword: '',
         phoneNum: ''
     });
-    // useHistory()를 사용하여 history 객체를 가져옴
+    const [alertMessage, setAlertMessage] = useState(''); // 음성으로 알려줄 경고 메시지 상태 추가
     const navigate = useNavigate();
 
-    // 입력 값이 변경될 때마다 상태를 업데이트하는 함수
     const handleChange = (event) => {
         setFormData({
             ...formData,
@@ -25,30 +26,59 @@ function PasswordResetForm() {
         event.preventDefault();
 
         try {
-            // 서버에 비밀번호 재설정 요청을 보냄
             await axios.post('http://localhost:4000/api/user/resetPassword', formData);
-            alert('비밀번호가 성공적으로 재설정되었습니다.');
-            
-            // 비밀번호 재설정 완료 후 로그인 페이지로 이동합니다.
+            const successMessage = '비밀번호가 성공적으로 재설정되었습니다.';
+            setAlertMessage(successMessage); // 음성으로 성공 메시지 출력
+            alert(successMessage);
             navigate('/login');
         } catch (error) {
             console.error('비밀번호 재설정 실패:', error);
-            alert('비밀번호 재설정 중 오류가 발생했습니다.');
+            const errorMessage = '비밀번호 재설정 중 오류가 발생했습니다.';
+            setAlertMessage(errorMessage); // 음성으로 실패 메시지 출력
+            alert(errorMessage);
         }
     };
 
-    // 화면에 표시되는 내용
+    // tts, 음성 출력 및 탭으로 포커싱 및 엔터 키로 작동 설정
+    useEffect(() => {
+        const tabs = document.querySelectorAll('[tabindex]');
+        const handleFocus = (event) => {
+            const text = event.target.placeholder || event.target.textContent || '';
+            speak(text, { lang: 'ko-KR' });
+        };
+        const handleKeyDown = (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                event.target.click();
+            }
+        };
+        tabs.forEach(tab => {
+            tab.addEventListener('focus', handleFocus);
+            tab.addEventListener('keydown', handleKeyDown);
+        });
+        return () => {
+            tabs.forEach(tab => {
+                tab.removeEventListener('focus', handleFocus);
+                tab.removeEventListener('keydown', handleKeyDown);
+            });
+        };
+    }, []);
+
+
     return (
-        <div>
-            <h2>비밀번호 재설정</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="email" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} />
-                <input type="tel" name="phoneNum" placeholder="전화번호" value={formData.phoneNum} onChange={handleChange} />
-                <input type="text" name="verificationCode" placeholder="인증번호" value={formData.verificationCode} onChange={handleChange} />
-                <input type="password" name="newPassword" placeholder="새 비밀번호" value={formData.newPassword} onChange={handleChange} />
-                <button type="submit">비밀번호 재설정</button>
-            </form>
-        </div>
+        <SignUpContainer> {/* SignUpContainer로 변경 */}
+            <Title>비밀번호 재설정</Title> {/* Title로 변경 */}
+            <SignUpBox> {/* SignUpBox로 변경 */}
+                <form onSubmit={handleSubmit}>
+                    <Input type="email" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} tabIndex="0"/>
+                    <Input type="tel" name="phoneNum" placeholder="전화번호" value={formData.phoneNum} onChange={handleChange} tabIndex="0"/>
+                    <Input type="text" name="verificationCode" placeholder="인증번호" value={formData.verificationCode} onChange={handleChange} tabIndex="0"/>
+                    <Input type="password" name="newPassword" placeholder="새 비밀번호" value={formData.newPassword} onChange={handleChange} tabIndex="0"/>
+                    <Button type="submit" tabIndex="0">비밀번호 재설정 </Button> {/* Button으로 변경 */}
+                </form>
+            </SignUpBox>
+            {alertMessage && <AlertMessage message={alertMessage} />} {/* 음성으로 알려줄 경고 메시지 출력 */}
+        </SignUpContainer>
     );
 }
 
