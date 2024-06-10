@@ -15,19 +15,27 @@ import PostDetail from './components/PostDetail';
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <div>
-          <GotoTop />
-          <Routes>
-            <Route path="/" element={<Main/>} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/signup" element={<SignUpForm />} />
-            <Route path='/write' element={<WriteBoardPost/>} />
-            <Route path='/postDetail' element={<PostDetail/>} />
-          </Routes>
-          <Foot />
-        </div>
-      </Router>
+    <Router>
+      <div>
+        {/* 맨 위로 가기 */}
+        <GotoTop />
+
+        {/* 라우팅 설정 */}
+        <Routes>
+          <Route path="/" element={<Main/>} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignUpForm/>} />
+          <Route path='/write' element={<WriteBoardPost/>} />
+          <Route path="/request-reset" element={<PasswordResetRequestForm/>} />
+          <Route path="/reset" element={<PasswordResetForm/>} />
+          <Route path="/email" element={<PhoneToEmailForm/>} />
+        </Routes>
+
+        {/* 하단바 */}
+        <Foot />
+
+      </div>
+    </Router>
     </AuthProvider>
   );
 }

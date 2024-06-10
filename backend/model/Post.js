@@ -74,21 +74,6 @@ class Post {
         }
     }
 
-    // 게시글 신고 기능, 신고 횟수 누적되는 방식 
-    static async reportPost(postId) {
-        const connection = await pool.getConnection();
-        try {
-            const query = "UPDATE posts SET reportCount = reportCount + 1 WHERE id = ?";
-            const [result] = await connection.query(query, [postId]);
-            return result;
-        } catch (err) {
-            console.log("게시글 신고 중 에러 발생:", err);
-            throw err;
-        } finally {
-            connection.release();
-        }
-    }
-
     // 게시글 변경 기능, content와 title의 내용이 수정되는 방식  
     static async updatePost(title, content, postId) {
         const connection = await pool.getConnection();
@@ -101,6 +86,18 @@ class Post {
             throw err;
         } finally {
             connection.release();
+        }
+    }
+
+    // 신고 기능 
+    static async insertReport(type, targetId, content) {
+        const query = 'INSERT INTO reports (type, targetId, content) VALUES (?, ?, ?)';
+        const values = [type, targetId, content];
+        try {
+            const [result] = await pool.query(query, values);
+            return result;
+        } catch (err) {
+            throw err;
         }
     }
 
