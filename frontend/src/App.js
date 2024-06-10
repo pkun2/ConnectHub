@@ -1,4 +1,4 @@
-import React from 'react';
+
 import GotoTop from './components/GotoTop';
 import Foot from './components/Foot';
 import Main from './components/Main';
@@ -9,6 +9,7 @@ import PasswordResetRequestForm from './components/PasswordResetRequestForm';
 import PasswordResetForm from './components/PasswordResetForm';
 import PhoneToEmailForm from './components/PhoneToEmailForm';
 import { AuthProvider } from './components/AuthContext';
+import WriteBoardPost from './components/WriteBoardPost';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/request-reset" element={<PasswordResetRequestForm />} />
             <Route path="/reset" element={<PasswordResetForm />} />
             <Route path="/email" element={<PhoneToEmailForm />} />
+            <Route path='/write' element={<WriteBoardPost/>} />
           </Routes>
 
           {/* 하단바 */}
