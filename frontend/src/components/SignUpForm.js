@@ -26,7 +26,7 @@ function SignUpForm() {
         event.preventDefault();
         try {
             // 인증 코드 유효성 검사 및 회원가입 요청
-            const response = await axios.post('http://localhost:4000/api/signup', formData);
+            const response = await axios.post('http://localhost:4000/api/user/signup', formData);
             console.log(response.data);
 
             // 회원가입 성공 시 메인 화면으로 이동
@@ -39,11 +39,15 @@ function SignUpForm() {
 
     const handleSendCode = async () => {
         try {
-            const response = await axios.post('http://localhost:4000/api/sendVerificationCode', { phoneNum: formData.phoneNum });
+            const response = await axios.post('http://localhost:4000/api/user/sendVerificationCode', { phoneNum: formData.phoneNum });
             console.log(response.data);
         } catch (error) {
             console.error('인증번호 전송 실패:', error);
         }
+    };
+
+    const handleLoginClick = () => {
+        navigate('/login');
     };
 
     return (
@@ -61,7 +65,7 @@ function SignUpForm() {
                     <Button type="submit">가입하기</Button>
                 </form>
                 <FindLinks>
-                    <p>이미 계정이 있으신가요? <StyledLink href="/login">로그인</StyledLink></p>
+                    <p>이미 계정이 있으신가요? <StyledLink onClick={handleLoginClick}>로그인</StyledLink></p>
                     <p>비밀번호를 잊으셨나요? <StyledLink href="/request-reset">비밀번호 재설정</StyledLink></p>
                     <p>이메일을 잊으셨나요? <StyledLink href="/email">이메일 찾기</StyledLink></p>
                 </FindLinks>

@@ -57,13 +57,17 @@ const NonLogin = () => {
     navigate('/login');
   };
 
+  const handleSignUpClick = () =>{
+    navigate('/signup');
+}
+
   return (
     <LoginRegisterContainer>
       <Login onClick={handleLoginClick}> 로그인 </Login>
       <RegisterContainer>
         <Register> 아이디 찾기 </Register>
         <Register> 비밀번호 찾기 </Register>
-        <Register> 회원가입 </Register>
+        <Register onClick={handleSignUpClick}> 회원가입 </Register>
       </RegisterContainer>
     </LoginRegisterContainer>
   );

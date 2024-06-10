@@ -1,6 +1,7 @@
 import Post from "../model/Post";
 import Comment from "../model/Comment";
 import logger from "../config/logger";
+import Report from "../model/Report";
 
 // 게시글 작성 기능
 export const postWriteController = async (req, res) => {
@@ -19,18 +20,6 @@ export const postWriteController = async (req, res) => {
     }
 };
 
-// 게시글 신고 기능 
-export const postReportController = async (req, res) => {
-    const postId = req.params.id; // 게시물의 ID를 파라미터로부터 가져옴
-    try {
-        const result = await Post.reportPost(postId); // 게시물 신고 기능 실행
-        res.status(200).json(result); // 성공 시 결과를 JSON 형태로 반환
-    } catch (error) {
-        console.error('게시글 신고 도중 오류가 발생했습니다:', error);
-        res.status(500).send('게시글 신고 도중 오류가 발생했습니다.');
-    }
-};
-
 // 게시글 변경 기능 
 export const postUpdateController = async (req, res) => {
     const { title, content, postId } = req.body;
@@ -43,6 +32,7 @@ export const postUpdateController = async (req, res) => {
         res.status(500).send("게시글 업데이트 도중 오류가 발생했습니다.");
     }
 };
+
 export const postViewController = async (req, res) => {
     const { categoryId, limit } = req.query;
     try {
@@ -124,5 +114,27 @@ export const deletePostController = async (req, res) => {
     } catch (err) {
         res.status(500).send('게시글 삭제 중 오류 발생: ' + err.message);
         logger.error(`게시글 삭제 중 오류 발생: ${err.message}`);
+    }
+};
+
+// 게시글 신고 컨트롤러
+export const reportPostController = async (req, res) => {
+    const { postId, reportContent } = req.body;
+    try {
+        const report = await Report.insertReport('post', postId, reportContent);
+        res.status(200).json(report);
+    } catch (error) {
+        res.status(500).json({ error: '신고 중 에러 발생', details: error.message });
+    }
+};
+
+// 댓글 신고 컨트롤러
+export const reportCommentController = async (req, res) => {
+    const { commentId, reportContent } = req.body;
+    try {
+        const report = await Report.insertReport('comment', commentId, reportContent);
+        res.status(200).json(report);
+    } catch (error) {
+        res.status(500).json({ error: '댓글 신고 중 에러 발생', details: error.message });
     }
 };

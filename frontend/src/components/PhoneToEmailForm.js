@@ -16,7 +16,7 @@ function PhoneToEmailForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:4000/api/findEmail', { phoneNum });
+            const response = await axios.post('http://localhost:4000/api/user/findEmail', { phoneNum });
             setFoundEmail(response.data);
         } catch (error) {
             console.error('이메일 찾기 실패:', error);
