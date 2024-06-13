@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
+import axios from 'axios';
 
 const ProfileContainer = styled.div`
   flex: 0.3;
@@ -107,6 +108,7 @@ const ProfileSection = () => {
 
   const handleLogout = () => {
     logout();
+    axios.post('http://localhost:4000/api/user/logout');
     navigate('/login');
   };
 
