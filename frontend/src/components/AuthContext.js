@@ -8,6 +8,7 @@ export const AuthContext = createContext();
 //초기값은 localStorage에서 'authToken'을 가져오거나, 없으면 null로 설정합니다.
 export const AuthProvider = ({ children }) => {
     const [authToken, setAuthToken] = useState(localStorage.getItem('authToken') || null);
+    console.log(authToken);
     const [user, setUser] = useState(localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
 
     useEffect(() => {

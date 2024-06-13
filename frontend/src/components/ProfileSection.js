@@ -107,6 +107,7 @@ const ProfileSection = () => {
 
   const handleLogout = () => {
     logout();
+    axios.post('http://localhost:4000/api/user/logout');
     navigate('/login');
   };
 

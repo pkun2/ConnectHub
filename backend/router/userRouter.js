@@ -4,7 +4,8 @@ import {
     getLoginController, postLoginController,
     findEmailByPhoneNum, sendVerificationCode,
     changeNicknameController, changePasswordController,
-    requestPasswordResetController, resetPasswordController
+    requestPasswordResetController, resetPasswordController,
+    logoutController
 } from "../controller/userController.js";
 
 const userRouter = express.Router();
@@ -12,6 +13,7 @@ const userRouter = express.Router();
 userRouter.route("/signup").get(getSignUpController).post(postSignUpController);
 userRouter.route("/login").get(getLoginController).post(postLoginController);
 userRouter.route("/findemail").post(findEmailByPhoneNum);
+userRouter.post("/logout", logoutController)
 userRouter.route("/changeNickname").post(changeNicknameController);
 userRouter.route("/changePassword").post(changePasswordController);
 userRouter.route("/request-resetPassword").post(requestPasswordResetController);
