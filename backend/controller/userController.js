@@ -96,7 +96,7 @@ export const findEmailByPhoneNum = async (req, res) => {
     }
 };
 
-// 닉네임 변경
+// 프로필: 닉네임 변경
 export const changeNicknameController = async (req, res) => {
     const { email, currentPassword, newNickname } = req.body;
 
@@ -128,7 +128,7 @@ export const changeNicknameController = async (req, res) => {
     }
 };
 
-// 비밀번호 변경
+// 프로필: 비밀번호 변경
 export const changePasswordController = async (req, res) => {
     const { email, currentPassword, newPassword } = req.body;
 

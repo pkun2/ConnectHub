@@ -39,9 +39,6 @@ const RightSubContainer = styled.div`
 `;
 
 const Main = () => {
-  const numberOfEmptyContents = 55;
-  const emptyContents = Array.from({ length: numberOfEmptyContents }, (_, index) => ({ id: index }));
-
   const [selectedCategory, setSelectedCategory] = useState('전체게시판');
 
   const handleCategoryChange = (category) => {
@@ -57,7 +54,7 @@ const Main = () => {
       <MainContainer>
         <LeftSubContainer>
           <ImageSection imageUrl="https://img.freepik.com/free-vector/men-women-welcoming-people-with-disabilities-group-people-meeting-blind-female-character-male-wheelchair_74855-18436.jpg?t=st=1715345864~exp=1715349464~hmac=174d5e762b369d4beba592670b688d3510807248c829290eee0a091388aae385&w=826" />
-          <BoardSection title={selectedCategory} contents={emptyContents} onCategoryChange={handleCategoryChange} />
+          <BoardSection title={selectedCategory} onCategoryChange={handleCategoryChange} />
         </LeftSubContainer>
         <RightSubContainer>
         {authToken ? <ProfileSection /> : <NonLogin />}

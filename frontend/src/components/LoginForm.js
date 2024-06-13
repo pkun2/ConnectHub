@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // useHistory import 추가
+import { useNavigate } from 'react-router-dom';
 import { LoginContainer, LoginBox, Title, Subtitle, Input, Button, FindLinks, StyledLink } from './LoginStyle';
+import { speak } from '../speech/speechUtils'; // tts, 음성 출력을 위한 함수 import
+import AlertMessage from '../speech/alertMessage'; // tts, 음성으로 알려줄 경고 메시지 컴포넌트 import
 
 function LoginForm() {
-    // 상태 초기화
+    const [alertMessage, setAlertMessage] = useState(''); // tts, alertMessage state 추가
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -16,10 +19,10 @@ function LoginForm() {
         return token ? { Authorization: `Bearer ${token}` } : {};
     }; // 인증 헤더를 반환하는 함수 이걸로 사용하시면 됩니다.
 
-    const handleSignUpClick = () =>{
+    const handleSignUpClick = () => {
         navigate('/signup');
-    }
-    // 입력값 변경을 위한 핸들러 함수
+    };
+
     const handleChange = (event) => {
         setFormData({
             ...formData,
@@ -27,7 +30,6 @@ function LoginForm() {
         });
     };
 
-    // Form 제출 핸들러 함수
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -35,29 +37,67 @@ function LoginForm() {
             const response = await axios.post("http://localhost:4000/api/user/login", formData);
             const token = response.data.token;
             localStorage.setItem('authToken', token);
-            console.log(response.data);
-            navigate('/'); // 로그인 성공 시 홈으로 이동
+            const successMessage = '로그인에 성공하였습니다.';
+            setAlertMessage(successMessage);
+            
+            // 음성 출력이 끝난 후 화면 전환
+            speak(successMessage, { lang: 'ko-KR' }).then(() => {
+                navigate('/');
+            });
         } catch (error) {
             console.error('로그인 실패:', error);
-            window.alert('아이디 또는 비밀번호가 올바르지 않습니다.'); // 팝업창으로 실패 메시지 표시
+            const errorMessage = '아이디 또는 비밀번호가 올바르지 않습니다.';
+            setAlertMessage(errorMessage);
+            
+            // 음성 출력
+            speak(errorMessage, { lang: 'ko-KR' });
         }
     };
 
-    // LoginForm 구성
+    // tts, 음성 출력 및 탭으로 포커싱 및 엔터 키로 작동 설정
+    useEffect(() => {
+        const tabs = document.querySelectorAll('[tabindex]');
+
+        const handleFocus = (event) => {
+            const text = event.target.placeholder || event.target.textContent || '';
+            speak(text);
+        };
+
+        const handleKeyDown = (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                event.target.click();
+            }
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('focus', handleFocus);
+            tab.addEventListener('keydown', handleKeyDown);
+        });
+
+        return () => {
+            tabs.forEach(tab => {
+                tab.removeEventListener('focus', handleFocus);
+                tab.removeEventListener('keydown', handleKeyDown);
+            });
+        };
+    }, []);
+
     return (
         <LoginContainer>
-            <Title>ConnectedHub</Title>
+            <Title onClick={() => window.location.href='http://localhost:3000/'}>ConnectedHub</Title>
             <LoginBox>
                 <Subtitle>로그인</Subtitle>
                 <form id="login-form" onSubmit={handleSubmit}>
-                    <Input type="text" id="email" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} />
-                    <Input type="password" id="login-password" name="password" placeholder="비밀번호" value={formData.password} onChange={handleChange} />
-                    <Button type="submit">로그인</Button>
+                    <Input type="text" id="email" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} tabIndex="0" />
+                    <Input type="password" id="login-password" name="password" placeholder="비밀번호" value={formData.password} onChange={handleChange} tabIndex="0" />
+                    <Button type="submit" tabIndex="0">로그인</Button>
                 </form>
                 <FindLinks>
-                    <StyledLink onClick={handleSignUpClick}>회원가입</StyledLink>
+                    <StyledLink onClick={handleSignUpClick} tabIndex="0">회원가입</StyledLink>
                 </FindLinks>
             </LoginBox>
+            {alertMessage && <AlertMessage message={alertMessage} />} {/* AlertMessage 추가 */}
         </LoginContainer>
     );
 }
