@@ -28,9 +28,9 @@ function App() {
             <Route path="/request-reset" element={<PasswordResetRequestForm />} />
             <Route path="/reset" element={<PasswordResetForm />} />
             <Route path="/email" element={<PhoneToEmailForm />} />
+            <Route path='/write' element={<WriteBoardPost/>} />
             <Route path="/changePassword" element={<MyPage />} />
             <Route path="/changeNickname" element={<MyPage />} />
-            <Route path='/write' element={<WriteBoardPost/>} />
           </Routes>
 
           {/* 하단바 */}
