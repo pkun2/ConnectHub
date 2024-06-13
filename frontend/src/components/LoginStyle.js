@@ -19,6 +19,7 @@ export const Title = styled.h1`
     text-align: center;
     margin-bottom: 20px;
     color: #426B1F;
+    cursor: pointer;
 `;
 
 export const Subtitle = styled.h2`
@@ -58,6 +59,7 @@ export const FindLinks = styled.div`
 export const StyledLink = styled.a`
     color: #999;
     text-decoration: none;
+    cursor: pointer;
     &:hover {
         text-decoration: underline;
     }
