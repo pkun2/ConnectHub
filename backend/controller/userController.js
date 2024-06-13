@@ -3,6 +3,7 @@ import db from '../config/db.js';
 import twilio from 'twilio';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 dotenv.config();
 
@@ -62,14 +63,16 @@ export const postLoginController = async (req, res) => {
             res.status(401).send("로그인 실패: 비밀번호가 일치하지 않습니다.");
             return;
         }
-        // 로그인 성공 시 사용자 ID 가져오기
-        const userId = await getUserIdByEmail(email);
-        console.log(userId);
+        const secretKey = process.env.JWT_SECRET_KEY;
+        const token = jwt.sign({ userId: user.id, email: user.email }, secretKey, { expiresIn: '1h' });
+        console.log("토큰 이후 userId: ",userId);
 
-        res.status(200).json({
-            message: "로그인 성공",
-            userId: userId  
-        });
+        req.session.userId = { email, token};
+        
+        const userId = await getUserIdByEmail(email);
+        console.log("getUserIdByEmail 이후 userId: ",userId);
+
+        res.status(200).json({message: "로그인 성공", token: token, userId: userId});
     } catch (error) {
         console.error('로그인 도중 오류가 발생했습니다:', error);
         res.status(500).send("로그인 도중 오류가 발생했습니다.");
@@ -97,7 +100,7 @@ export const findEmailByPhoneNum = async (req, res) => {
     }
 };
 
-// 닉네임 변경
+// 프로필: 닉네임 변경
 export const changeNicknameController = async (req, res) => {
     const { email, currentPassword, newNickname } = req.body;
 
@@ -129,7 +132,7 @@ export const changeNicknameController = async (req, res) => {
     }
 };
 
-// 비밀번호 변경
+// 프로필: 비밀번호 변경
 export const changePasswordController = async (req, res) => {
     const { email, currentPassword, newPassword } = req.body;
 
@@ -211,6 +214,16 @@ export const resetPasswordController = async (req, res) => {
         console.error('비밀번호 재설정 중 오류 발생:', error);
         res.status(500).send('서버 오류가 발생했습니다.');
     }
+};
+
+// 로그아웃
+export const logoutController = (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ message: '로그 아웃 실패' });
+        }
+        res.status(200).json({ message: '성공적으로 로그아웃 되었습니다.' });
+    });
 };
 
 // 인증 코드 전송 

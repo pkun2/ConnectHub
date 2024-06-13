@@ -7,10 +7,10 @@ import cookieParser from "cookie-parser";
 import session from "express-session"
 import adminRouter from "./router/adminRouter.js";
 import visitorCounter from "./middleware/visitorCounter.js"
-
 import postRouter from "./router/postRouter.js"
 import userRouter from "./router/userRouter.js";
 import notificationRouter from './router/notificationRouter.js';
+import authenticateJWT from "./middleware/jwtController.js";
 
 dotenv.config();
 
@@ -35,11 +35,13 @@ app.use(session({
     }
 
 }));
+app.use(visitorCounter); // 방문자 수 카운트 미들웨어
 
 // 라우터 등록
+app.use("/api/user", userRouter);          
+//app.use(authenticateJWT) // JWT 미들웨어 인증
 app.use("/api/post", postRouter);
 app.use("/api/admin", adminRouter);
-app.use("/api/user", userRouter);          
 app.use('/api/notifications', notificationRouter);
 
 const checkConnectDB = async () => {
