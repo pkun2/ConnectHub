@@ -1,5 +1,5 @@
 import express from "express";
-import { postWriteController, postViewController, getPostDetailController, deletePostController, postCommentController, getCommentsByPostController, postUpdateController, reportPostController, reportCommentController} from "../controller/postController";
+import { correctGrammar, postWriteController, postViewController, getPostDetailController, deletePostController, postCommentController, getCommentsByPostController, postUpdateController, reportPostController, reportCommentController} from "../controller/postController";
 
 const postRouter = express.Router();
 
@@ -12,5 +12,6 @@ postRouter.get("/:id/comment", getCommentsByPostController);
 postRouter.post("/comment", postCommentController);
 postRouter.post('/report', reportPostController);
 postRouter.post("/:id/comment/report", reportCommentController); // 댓글 신고 기능
+postRouter.post("/grammer", correctGrammar);
 
 export default postRouter;

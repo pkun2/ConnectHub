@@ -2,6 +2,14 @@ import Post from "../model/Post";
 import Comment from "../model/Comment";
 import logger from "../config/logger";
 import Report from "../model/Report";
+import dotenv from "dotenv";
+import axios from "axios";
+import cheerio from "cheerio";
+
+dotenv.config();
+
+// 지연 함수
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 게시글 작성 기능
 export const postWriteController = async (req, res) => {
@@ -138,3 +146,33 @@ export const reportCommentController = async (req, res) => {
         res.status(500).json({ error: '댓글 신고 중 에러 발생', details: error.message });
     }
 };
+
+// 맞춤법 검사 컨트롤러
+export const correctGrammar = async (req, res) => {
+    const { text } = req.body;
+    if (!text) {
+      return res.status(400).json({ error: '텍스트가 제공되지 않았습니다.' });
+    }
+  
+    try {
+      const params = new URLSearchParams();
+      params.append('text', text);
+      params.append('language', 'ko');
+  
+      const response = await axios.post(
+        'https://api.languagetool.org/v2/check',
+        params,
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+  
+      const matches = response.data.matches;
+      res.status(200).json({ matches });
+    } catch (error) {
+      console.error('맞춤법 검사 중 오류 발생:', error.message);
+      res.status(500).json({ error: '맞춤법 검사 중 오류가 발생했습니다.' });
+    }
+  };
