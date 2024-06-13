@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Notification from './Notification';
 
@@ -49,7 +49,7 @@ function Navigation() {
 
   return (
     <NavContainer>
-      <NavTitle onClick={() => window.location.href='http://localhost:3000/'}> 
+      <NavTitle onClick={() => window.location.href='http://localhost:4000/'}> 
         <NavTitleIcon src="./mainlogo.png" />
         ConnectHub 
       </NavTitle>
