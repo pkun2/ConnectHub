@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // useHistory import 추가
 import { LoginContainer, LoginBox, Title, Subtitle, Input, Button, FindLinks, StyledLink } from './LoginStyle';
+import { AuthContext } from './AuthContext';
 
 function LoginForm() {
     // 상태 초기화
@@ -10,6 +11,7 @@ function LoginForm() {
         password: ''
     });
     const navigate = useNavigate(); // useHistory 사용
+    const {setUserId} = useContext(AuthContext);
 
     const handleSignUpClick = () =>{
         navigate('/signup');
@@ -34,8 +36,12 @@ function LoginForm() {
                 data: formData
             });
             const token = response.data.token;
-            localStorage.setItem('authToken', token);
+            console.log(formData);
+            const userId = response.data.userId;
+            console.log(" 로그인폼 userId: ",userId);
+            setUserId(userId);
             console.log(response.data);
+            localStorage.setItem('authToken', token);
             navigate('/'); // 로그인 성공 시 홈으로 이동
         } catch (error) {
             console.error('로그인 실패:', error);

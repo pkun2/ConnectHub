@@ -40,12 +40,13 @@ const RightSubContainer = styled.div`
 
 const Main = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체게시판');
+  const { authToken } = useContext(AuthContext);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
   };
 
-  const { authToken } = useContext(AuthContext);
+  
 
   return (
     <>
@@ -57,7 +58,7 @@ const Main = () => {
           <BoardSection title={selectedCategory} onCategoryChange={handleCategoryChange} />
         </LeftSubContainer>
         <RightSubContainer>
-        {authToken ? <ProfileSection /> : <NonLogin />}
+        {authToken ? <ProfileSection /> : <NonLogin /> }
           <MenuSection
             onCategoryChange={handleCategoryChange}
             selectedCategory={selectedCategory}

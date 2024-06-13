@@ -78,21 +78,7 @@ const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
   const itemsPerPage = 18;
   const totalPages = Math.ceil(contents.length / itemsPerPage);
 
-  useEffect(() => {
-    const fetchContents = async () => {
-      try {
-        const response = await axios.get('http://localhost:4000/api/post/', {
-          params: { categoryId: title !== '전체게시판' ? title : undefined }
-        });
-        setContents(response.data);
-      } catch (error) {
-        console.error('Failed to fetch posts:', error);
-      }
-    };
-
-    fetchContents();
-  }, [title]);
-
+  
   useEffect(() => {
     setCurrentPage(1);
   }, [title]);

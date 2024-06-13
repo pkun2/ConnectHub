@@ -62,8 +62,14 @@ export const postLoginController = async (req, res) => {
             res.status(401).send("로그인 실패: 비밀번호가 일치하지 않습니다.");
             return;
         }
+        // 로그인 성공 시 사용자 ID 가져오기
+        const userId = await getUserIdByEmail(email);
+        console.log(userId);
 
-        res.status(200).send("로그인 성공");
+        res.status(200).json({
+            message: "로그인 성공",
+            userId: userId  
+        });
     } catch (error) {
         console.error('로그인 도중 오류가 발생했습니다:', error);
         res.status(500).send("로그인 도중 오류가 발생했습니다.");
@@ -229,5 +235,20 @@ export const sendVerificationCode = async (req, res) => {
     } catch (error) {
         console.error('인증 코드 전송 오류:', error);
         res.status(500).json({ error: '인증 코드를 전송하는 데 실패했습니다.' });
+    }
+};
+
+export const getUserIdByEmail = async (email) => {
+    try {
+        const sql = 'SELECT userId FROM users WHERE email = ?';
+        const [rows] = await db.query(sql, [email]);
+        if (rows.length > 0) {
+            return rows[0].userId;
+        } else {
+            throw new Error('User not found');
+        }
+    } catch (error) {
+        console.error('Failed to get user ID:', error);
+        throw error;
     }
 };
