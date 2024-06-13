@@ -43,6 +43,7 @@ function LoginForm() {
             // 음성 출력이 끝난 후 화면 전환
             speak(successMessage, { lang: 'ko-KR' }).then(() => {
                 navigate('/');
+                window.location.reload();
             });
         } catch (error) {
             console.error('로그인 실패:', error);
