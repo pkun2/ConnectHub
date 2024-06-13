@@ -214,11 +214,12 @@ export const resetPasswordController = async (req, res) => {
 
 // 로그아웃
 export const logoutController = (req, res) => {
-    req.session.destroy();
-    if (err) {
-        return res.status(500).json({ message: '로그아웃 실패' });
-    }
-    res.status(200).json({ message: '성공적으로 로그아웃 되었습니디.' });
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ message: '로그 아웃 실패' });
+        }
+        res.status(200).json({ message: '성공적으로 로그아웃 되었습니다.' });
+    });
 };
 
 // 인증 코드 전송 

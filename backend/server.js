@@ -39,7 +39,7 @@ app.use(visitorCounter); // 방문자 수 카운트 미들웨어
 
 // 라우터 등록
 app.use("/api/user", userRouter);          
-app.use(authenticateJWT) // JWT 미들웨어 인증
+//app.use(authenticateJWT) // JWT 미들웨어 인증
 app.use("/api/post", postRouter);
 app.use("/api/admin", adminRouter);
 app.use('/api/notifications', notificationRouter);
