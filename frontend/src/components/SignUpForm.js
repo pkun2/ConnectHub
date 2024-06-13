@@ -99,7 +99,7 @@ function SignUpForm() {
 
     return (
         <SignUpContainer>
-            <Title>ConnectedHub</Title>
+            <Title onClick={() => window.location.href='http://localhost:3000/'}>ConnectedHub</Title>
             <SignUpBox>
                 <Subtitle>회원가입</Subtitle>
                 <form id="signup-form" onSubmit={handleSubmit}>

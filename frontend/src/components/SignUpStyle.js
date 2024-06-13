@@ -19,6 +19,7 @@ export const Title = styled.h1`
     text-align: center;
     margin-bottom: 20px;
     color: #426B1F;
+    cursor: pointer;
 `;
 
 export const Subtitle = styled.h2`
@@ -46,7 +47,7 @@ export const Button = styled.button`
     cursor: pointer;
     font-size: 15px;
     &:hover {
-        background-color: ${(props) => props.hoverColor || '#ADD8E6'};
+        background-color: ${(props) => props.hoverColor || '#7BB7D3'};
     }
     margin-bottom: 10px; 
 `; // margin-bottom: 10px; 추가 함. 
@@ -59,6 +60,7 @@ export const FindLinks = styled.div`
 export const StyledLink = styled.a`
     color: ${(props) => props.linkColor || '#ADD8E6'};
     text-decoration: none;
+    cursor: pointer;
     &:hover {
         text-decoration: underline;
     }
