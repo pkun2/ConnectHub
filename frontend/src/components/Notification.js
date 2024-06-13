@@ -31,7 +31,7 @@ const Modal_Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정색 */
+  background-color: rgba(0, 0, 0, 0.9); /* 반투명 검정색 */
   z-index: 999; /* 모달보다 낮은 레벨 */
 `;
 
