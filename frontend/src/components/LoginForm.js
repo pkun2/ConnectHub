@@ -11,6 +11,11 @@ function LoginForm() {
     });
     const navigate = useNavigate(); // useHistory 사용
 
+    const getAuthHeader = () => {
+        const token = localStorage.getItem('authToken');
+        return token ? { Authorization: `Bearer ${token}` } : {};
+    }; // 인증 헤더를 반환하는 함수 이걸로 사용하시면 됩니다.
+
     const handleSignUpClick = () =>{
         navigate('/signup');
     }
@@ -27,12 +32,7 @@ function LoginForm() {
         event.preventDefault();
 
         try { // 서버에 POST 요청 보냄
-            const response = await axios({
-                method: "post",
-                baseURL: "http://localhost:4000",
-                url: "/api/user/login",
-                data: formData
-            });
+            const response = await axios.post("http://localhost:4000/api/user/login", formData);
             const token = response.data.token;
             localStorage.setItem('authToken', token);
             console.log(response.data);
