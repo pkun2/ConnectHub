@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import { speak } from '../speech/speechUtils'; // tts, 음성 출력을 위한 함수 import
+import axios from 'axios';
 
 const ProfileContainer = styled.div`
   flex: 0.3;
