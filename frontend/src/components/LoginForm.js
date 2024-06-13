@@ -86,7 +86,7 @@ function LoginForm() {
 
     return (
         <LoginContainer>
-            <Title>ConnectedHub</Title>
+            <Title onClick={() => window.location.href='http://localhost:3000/'}>ConnectedHub</Title>
             <LoginBox>
                 <Subtitle>로그인</Subtitle>
                 <form id="login-form" onSubmit={handleSubmit}>
