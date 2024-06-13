@@ -101,6 +101,7 @@ const SelectPicker = styled.select`
 
 const WriteBoardPost = () => {
     const { user } = useContext(AuthContext);  // AuthContext에서 user 정보 가져오기
+    console.log(user)
     const [postId, setPostId] = useState(1);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
