@@ -2,9 +2,9 @@ import pool from '../config/db.js';
 
 class Post {
     // 게시글 삽입
-    static async insertPost(userId, categoryId, title, content) {
-        const query = 'INSERT INTO posts (userId, categoryId, title, content) VALUES (?, ?, ?, ?)';
-        const values = [userId, categoryId, title, content];
+    static async insertPost(userId, categoryId, title, content, nickname) {
+        const query = 'INSERT INTO posts (userId, categoryId, title, content, nickname) VALUES (?, ?, ?, ?, ?)';
+        const values = [userId, categoryId, title, content, nickname];
         try {
             const [result] = await pool.query(query, values);
             return result;
@@ -101,6 +101,17 @@ class Post {
         }
     }
 
+    // 카테고리 이름 가져오기
+    static async getCategoryNameByCategoryId (categoryId) {
+        const query = 'SELECT categoryName FROM categories WHERE categoryId = ?';
+        const values = [categoryId];
+        try {
+            const [result] = await pool.query(query, values);
+            return result.length > 0 ? result[0].categoryName : null;
+        } catch (err) {
+            throw err;
+        }
+    }
     
 }
 

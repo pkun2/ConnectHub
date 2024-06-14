@@ -100,11 +100,13 @@ const SelectPicker = styled.select`
 `;
 
 const WriteBoardPost = () => {
-    const {userId} = useContext(AuthContext);
+    const {userId, nickname} = useContext(AuthContext);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedBoard, setSelectedBoard] = useState('게시판을 선택해주세요'); // 선택된 게시판 종류를 저장하는 state
     const navigate = useNavigate();
+
+    console.log("현재 사용자 ID:", userId);
 
     const handleTitleChange = (e) => {
       setTitle(e.target.value);
@@ -136,6 +138,7 @@ const WriteBoardPost = () => {
         categoryId: selectedBoard,
         title: title,
         content: content,
+        nickname: nickname,
       };
   
       try {

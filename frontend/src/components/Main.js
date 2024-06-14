@@ -39,11 +39,25 @@ const RightSubContainer = styled.div`
 `;
 
 const Main = () => {
-  const [selectedCategory, setSelectedCategory] = useState('전체게시판');
+  const [selectedCategory, setSelectedCategory] = useState("전체게시판");
   const { authToken } = useContext(AuthContext);
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
+  const handleCategoryChange = (value) => {
+    switch (value) {
+      case '0':
+        return setSelectedCategory("전체게시판");
+      case '1':
+        return setSelectedCategory("자유게시판");
+      case '2':
+        return setSelectedCategory("공지사항");
+      case '3':
+        return setSelectedCategory("정부 혜택");
+      case '4':
+        return setSelectedCategory("정보게시판");
+      default:
+        return '';
+    }
+  
   };
 
   
@@ -59,10 +73,7 @@ const Main = () => {
         </LeftSubContainer>
         <RightSubContainer>
         {authToken ? <ProfileSection /> : <NonLogin /> }
-          <MenuSection
-            onCategoryChange={handleCategoryChange}
-            selectedCategory={selectedCategory}
-          />
+          <MenuSection onCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
         </RightSubContainer>
       </MainContainer>
     </>

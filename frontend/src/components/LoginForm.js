@@ -14,7 +14,7 @@ function LoginForm() {
         password: ''
     });
     const navigate = useNavigate(); // useHistory 사용
-    const {setUserId} = useContext(AuthContext);
+    const { login } = useContext(AuthContext);
 
     const getAuthHeader = () => {
         const token = localStorage.getItem('authToken');
@@ -37,13 +37,10 @@ function LoginForm() {
 
         try { // 서버에 POST 요청 보냄
             const response = await axios.post("http://localhost:4000/api/user/login", formData);
-            const token = response.data.token;
-            console.log(formData);
-            const userId = response.data.userId;
-            console.log(" 로그인폼 userId: ",userId);
-            setUserId(userId);
-            console.log(response.data);
-            localStorage.setItem('authToken', token);
+            const { token, userId, nickname } = response.data;
+            console.log(" 로그인 폼에서의: ",response.data);
+            login(token, userId, nickname);
+
             const successMessage = '로그인에 성공하였습니다.';
             setAlertMessage(successMessage);
             

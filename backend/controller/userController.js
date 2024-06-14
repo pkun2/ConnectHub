@@ -65,14 +65,14 @@ export const postLoginController = async (req, res) => {
         }
         const secretKey = process.env.JWT_SECRET_KEY;
         const token = jwt.sign({ userId: user.id, email: user.email }, secretKey, { expiresIn: '1h' });
-        console.log("토큰 이후 userId: ",userId);
+        console.log("토큰 이후 userId: ", userId);
 
         req.session.userId = { email, token};
         
-        const userId = await getUserIdByEmail(email);
-        console.log("getUserIdByEmail 이후 userId: ",userId);
+        const { userId, nickname } = await getUserIdAndNicknameByEmail(email);
+        console.log("서버에서의 userId: ", userId, "nickname: ", nickname);
 
-        res.status(200).json({message: "로그인 성공", token: token, userId: userId});
+        res.status(200).json({ message: "로그인 성공", token: token, userId: userId, nickname: nickname });
     } catch (error) {
         console.error('로그인 도중 오류가 발생했습니다:', error);
         res.status(500).send("로그인 도중 오류가 발생했습니다.");
@@ -251,17 +251,17 @@ export const sendVerificationCode = async (req, res) => {
     }
 };
 
-export const getUserIdByEmail = async (email) => {
+export const getUserIdAndNicknameByEmail = async (email) => {
     try {
-        const sql = 'SELECT userId FROM users WHERE email = ?';
+        const sql = 'SELECT userId, nickname FROM users WHERE email = ?';
         const [rows] = await db.query(sql, [email]);
         if (rows.length > 0) {
-            return rows[0].userId;
+            return { userId: rows[0].userId, nickname: rows[0].nickname };
         } else {
             throw new Error('User not found');
         }
     } catch (error) {
-        console.error('Failed to get user ID:', error);
+        console.error('Failed to get user ID and nickname:', error);
         throw error;
     }
 };

@@ -78,10 +78,26 @@ const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
   const itemsPerPage = 18;
   const totalPages = Math.ceil(contents.length / itemsPerPage);
 
-  
+  console.log(title);
+
   useEffect(() => {
-    setCurrentPage(1);
-  }, [title]);
+    const fetchContents = async () => {
+      const postData = {
+        categoryId: null,
+        limit: 20
+      };
+
+      try {
+        const response = await axios.get('http://localhost:4000/api/post/', { params: postData });
+        setContents(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('게시글을 가져올 수 없습니다.', error);
+      }
+    };
+
+    fetchContents();
+  }, [title, currentPage]);
 
   const handleCategoryChange = (e) => {
     onCategoryChange(e.target.value);
@@ -94,14 +110,18 @@ const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
   const renderContents = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
+
+    const formatDate = (dateString) => {
+      const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('ko-KR', options);
+    };
     
     return contents.slice(startIndex, endIndex).map((content) => (
-      <TableRow key={content.id} onClick={() => onPostClick(content.postId)}>
-        <TableRowItem>{content.postId}</TableRowItem>
-        <TableRowItem isTitle>{content.category}</TableRowItem>
+      <TableRow key={content.postIdid} onClick={() => onPostClick(content.postId)}>
+        <TableRowItem isTitle>{content.categoryName}</TableRowItem>
         <TableRowItem isTitle>{content.title}</TableRowItem>
-        <TableRowItem>{content.userId}</TableRowItem>
-        <TableRowItem>{new Date(content.created_at).toLocaleDateString()}</TableRowItem>
+        <TableRowItem>{content.nickname}</TableRowItem>
+        <TableRowItem>{formatDate(content.createdAt)}</TableRowItem>
       </TableRow>
     ));
   };
@@ -110,18 +130,17 @@ const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
     <BoardContainer>
       <BoardTitleWrapper>
         <BoardTitle>{title}</BoardTitle>
-        <DropdownMenu value={title} onChange={handleCategoryChange}>
-          <option value="전체게시판">전체게시판</option>
-          <option value="자유게시판">자유게시판</option>
-          <option value="공지사항">공지사항</option>
-          <option value="정부 혜택">정부 혜택</option>
-          <option value="정보게시판">정보게시판</option>
+        <DropdownMenu value = {title.selectedCategory} onChange={handleCategoryChange}>
+          <option value="0" >전체게시판</option>
+          <option value="1" >자유게시판</option>
+          <option value="2" >공지사항</option>
+          <option value="3" >정부 혜택</option>
+          <option value="4" >정보게시판</option>
         </DropdownMenu>
       </BoardTitleWrapper>
 
       <BoardContent>
         <TableHeader>
-          <TableHeaderItem>게시판번호</TableHeaderItem>
           <TableHeaderItem isTitle>게시판</TableHeaderItem>
           <TableHeaderItem isTitle>제목</TableHeaderItem>
           <TableHeaderItem>작성자</TableHeaderItem>
