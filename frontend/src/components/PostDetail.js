@@ -7,6 +7,7 @@ import ProfileSection from './ProfileSection';
 import MenuSection from './MenuSection';
 import axios from 'axios';
 import { AuthContext } from './AuthContext';
+import { useParams } from 'react-router-dom';
 
 const MainContainer = styled.div`
   display: flex;
@@ -121,13 +122,13 @@ const CommentButton = styled(Button)`
   }
 `;
 
-const PostDetail = ({postId}) => {
+const PostDetail = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체게시판');
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
-
-  const { userId } = useContext(AuthContext);
+  const { postId } = useParams();
+  const { userId, nickname } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -135,63 +136,49 @@ const PostDetail = ({postId}) => {
         const response = await axios.get(`http://localhost:4000/api/post/${postId}`);
         setPost(response.data);
       } catch (error) {
-        console.error('Failed to fetch post:', error);
+        console.error('게시글을 불러오는 데 실패했습니다.', error);
       }
     };
 
-    if (postId) {
-      fetchPost();
-    }
+    fetchPost();
   }, [postId]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
   };
 
-  const handleCommentChange = (e) => {
-    setComment(e.target.value);
-  };
-
   const handleCommentSubmit = async () => {
     if (comment.trim() === '') return;
 
     const newComment = {
-      postId: postId, // 여기에 실제 postId를 넣어주세요
-      userId: userId, // 여기에 실제 userId를 넣어주세요
+      postId: postId, 
+      userId: userId, 
       content: comment.trim(),
     };
 
     try {
       const response = await axios.post('http://localhost:4000/api/post/comment', newComment);
-      console.log('Comment submitted:', response.data);
-      setComments([newComment, ...comments]); // 새로운 댓글을 기존 댓글 목록에 추가
+      console.log('댓글이 작성되었습니다:', response.data);
+      setComments([...comments, newComment ]); // 새로운 댓글을 기존 댓글 목록에 추가
       setComment(''); // 댓글 입력 창 비우기
     } catch (error) {
-      console.error('Failed to submit comment:', error);
+      console.error('댓글을 등록하는 데 실패했습니다:', error);
       // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
     }
   };
 
-  
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
 
   const handleEdit = () => {
     console.log('수정 버튼 클릭');
   };
 
-  const handleReport = async () => {
-    if (!post) return;
-    try {
-      const response = await axios.post('http://localhost:4000/api/post/report', {
-        postId: post.postId,
-        reportContent: '게시글을 신고합니다.',
-      });
-      console.log('Post reported:', response.data);
-      // 성공적으로 신고된 경우에 대한 처리 작업을 추가할 수 있습니다.
-    } catch (error) {
-      console.error('Failed to report post:', error);
-      // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
-    }
-  };
+  if (!post) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -207,8 +194,8 @@ const PostDetail = ({postId}) => {
             <InfoContainer>
               <ProfileImage/>
               <div>
-                <p>{post.userId}</p>
-                <p>{post.createdAt}</p>
+                <p>{post.nickname}</p>
+                <p>{new Date(post.createdAt).toLocaleDateString()}</p>
               </div>
             </InfoContainer>
             <ContentContainer>
@@ -216,9 +203,9 @@ const PostDetail = ({postId}) => {
             </ContentContainer>
             <CommentSection>
               <h2>댓글</h2>
-              {comments.map((comment) => (
-                <div key={comment.id}>
-                  <p><strong>{comment.author}:</strong> {comment.text}</p>
+              {comments.map((comment, index) => (
+                <div key={index}>
+                  <p><strong>{nickname} : </strong> {comment.content}</p>
                 </div>
               ))}
               <CommentInput 
@@ -231,12 +218,8 @@ const PostDetail = ({postId}) => {
             </CommentSection>
           </DetailContainer>
           <ButtonContainer>
-            <Button onClick={handleEdit}>
-              수정
-            </Button>
-            <Button onClick={handleReport}>
-              신고
-            </Button>
+            <Button onClick={handleEdit}>수정</Button>
+            <Button>신고</Button>
           </ButtonContainer>
         </LeftSubContainer>
         <RightSubContainer>

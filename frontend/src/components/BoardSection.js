@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import Pagination from './Pagination';
+import { Link } from 'react-router-dom';
 
 const BoardContainer = styled.div`
   flex: 1;
@@ -72,7 +73,7 @@ const TableRowItem = styled.div`
   padding-left: 50px;
 `;
 
-const BoardSection = ({ title, onCategoryChange, selectcategoryNum, onPostClick  }) => {
+const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
   const [contents, setContents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
@@ -117,12 +118,14 @@ const BoardSection = ({ title, onCategoryChange, selectcategoryNum, onPostClick 
     };
     
     return contents.slice(startIndex, endIndex).map((content) => (
-      <TableRow key={content.postIdid} onClick={() => onPostClick(content.postId)}>
-        <TableRowItem isTitle>{content.categoryName}</TableRowItem>
-        <TableRowItem isTitle>{content.title}</TableRowItem>
-        <TableRowItem>{content.nickname}</TableRowItem>
-        <TableRowItem>{formatDate(content.createdAt)}</TableRowItem>
-      </TableRow>
+      <Link key={content.postId} to={`/post/${content.postId}`}> {/* Link를 사용하여 게시물 상세 페이지로 이동 */}
+        <TableRow>
+          <TableRowItem isTitle>{content.categoryName}</TableRowItem>
+          <TableRowItem isTitle>{content.title}</TableRowItem>
+          <TableRowItem>{content.nickname}</TableRowItem>
+          <TableRowItem>{formatDate(content.createdAt)}</TableRowItem>
+        </TableRow>
+      </Link>
     ));
   };
 
@@ -130,7 +133,7 @@ const BoardSection = ({ title, onCategoryChange, selectcategoryNum, onPostClick 
     <BoardContainer>
       <BoardTitleWrapper>
         <BoardTitle>{title}</BoardTitle>
-        <DropdownMenu value = {title.selectedCategory} onChange={handleCategoryChange}>
+        <DropdownMenu value = {selectcategoryNum} onChange={handleCategoryChange}>
           <option value='0' >전체게시판</option>
           <option value='1' >자유게시판</option>
           <option value='2' >공지사항</option>
