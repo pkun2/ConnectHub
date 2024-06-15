@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { LoginContainer, LoginBox, Title, Subtitle, Input, Button, FindLinks, StyledLink } from './LoginStyle';
 import { speak } from '../speech/speechUtils'; // tts, 음성 출력을 위한 함수 import
 import AlertMessage from '../speech/alertMessage'; // tts, 음성으로 알려줄 경고 메시지 컴포넌트 import
+import {AuthContext} from './AuthContext';
 
 function LoginForm() {
     const [alertMessage, setAlertMessage] = useState(''); // tts, alertMessage state 추가
@@ -13,6 +14,7 @@ function LoginForm() {
         password: ''
     });
     const navigate = useNavigate(); // useHistory 사용
+    const { login } = useContext(AuthContext);
 
     const getAuthHeader = () => {
         const token = localStorage.getItem('authToken');
@@ -35,8 +37,10 @@ function LoginForm() {
 
         try { // 서버에 POST 요청 보냄
             const response = await axios.post("http://localhost:4000/api/user/login", formData);
-            const token = response.data.token;
-            localStorage.setItem('authToken', token);
+            const { token, userId, nickname } = response.data;
+            console.log(" 로그인 폼에서의: ",response.data);
+            login(token, userId, nickname);
+
             const successMessage = '로그인에 성공하였습니다.';
             setAlertMessage(successMessage);
             

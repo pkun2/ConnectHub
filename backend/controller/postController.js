@@ -5,13 +5,14 @@ import Report from "../model/Report";
 
 // 게시글 작성 기능
 export const postWriteController = async (req, res) => {
-    const { userId, categoryId, title, content } = req.body;
+    const { userId, categoryId, title, content, nickname } = req.body;
     if(categoryId == 3 || categoryId == 4) {
         res.status(403).send('해당 카테고리에는 글을 작성할 수 없습니다.');
         return;
     }
     try {
-        const result = await Post.insertPost(userId, categoryId, title, content);
+        const result = await Post.insertPost(userId, categoryId, title, content, nickname);
+        
         res.status(200).json(result);
         logger.info(`게시글 생성 성공: ${title}`);
     } catch (err) {
@@ -36,10 +37,24 @@ export const postUpdateController = async (req, res) => {
 export const postViewController = async (req, res) => {
     const { categoryId, limit } = req.query;
     try {
-        const posts = categoryId 
-            ? await Post.getPostByCategoryId(categoryId, limit) 
-            : await Post.getAllPosts(limit);
-        
+        let posts;
+
+        if (categoryId) {
+            // 카테고리 아이디로 조회할 때 카테고리 이름 추가
+            posts = await Post.getPostByCategoryId(categoryId, limit);
+            for (let post of posts) {
+                const categoryName = await Post.getCategoryNameByCategoryId(post.categoryId);
+                post.categoryName = categoryName;
+            }
+        } else {
+            // 전체 게시글 조회할 때 카테고리 이름 추가
+            posts = await Post.getAllPosts(limit);
+            for (let post of posts) {
+                const categoryName = await Post.getCategoryNameByCategoryId(post.categoryId);
+                post.categoryName = categoryName;
+            }
+        }
+
         res.status(200).json(posts);
         logger.info('게시글 조회 성공');
     } catch (err) {

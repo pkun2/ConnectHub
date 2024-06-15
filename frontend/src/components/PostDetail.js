@@ -156,7 +156,7 @@ const PostDetail = ({postId}) => {
     if (comment.trim() === '') return;
 
     const newComment = {
-      postId: post.postId, // 여기에 실제 postId를 넣어주세요
+      postId: postId, // 여기에 실제 postId를 넣어주세요
       userId: userId, // 여기에 실제 userId를 넣어주세요
       content: comment.trim(),
     };

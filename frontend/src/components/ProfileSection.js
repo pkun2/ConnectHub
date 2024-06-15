@@ -103,7 +103,7 @@ const LogoutButton = styled.button`
 `;
 
 const ProfileSection = () => {
-  const { logout } = useContext(AuthContext);
+  const { nickname ,logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -146,7 +146,7 @@ const ProfileSection = () => {
       <ProfileContent>
         <ProfileImage/>
         <NicknameContainer>
-          <Nickname>닉네임</Nickname>
+          <Nickname>{nickname}</Nickname>
           <MyPageLink onClick={goToMyPage} tabIndex="0">마이페이지</MyPageLink>
         </NicknameContainer>
         <LogoutButton onClick={handleLogout} tabIndex="0">로그아웃</LogoutButton>

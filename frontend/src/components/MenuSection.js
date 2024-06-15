@@ -38,8 +38,8 @@ const MenuSelect = styled(SectionTitle)`
 `;
 
 const MenuSection = ({ onCategoryChange, selectedCategory }) => {
-  const handleCategoryClick = (category) => {
-    onCategoryChange(category);
+  const handleCategoryClick = (value) => {
+    onCategoryChange(value);
   };
 
   // tts, 음성 출력 및 탭으로 포커싱 및 엔터 키로 작동 설정
@@ -77,35 +77,36 @@ const MenuSection = ({ onCategoryChange, selectedCategory }) => {
       <SectionTitle tabIndex="0">카테고리</SectionTitle>
       <MenuSelect
         tabIndex="0"
-        onClick={() => handleCategoryClick('전체게시판')}
+        onClick={() => handleCategoryClick('0')}
+        
         style={{ background: selectedCategory === '전체게시판' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
       >
         &nbsp;&nbsp;전체게시판
       </MenuSelect>
       <MenuSelect
-        tabIndex="0"
-        onClick={() => handleCategoryClick('자유게시판')}
+        tabIndex="1"
+        onClick={() => handleCategoryClick('1')}
         style={{ background: selectedCategory === '자유게시판' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
       >
         &nbsp;&nbsp;자유게시판
       </MenuSelect>
       <MenuSelect
-        tabIndex="0"
-        onClick={() => handleCategoryClick('공지사항')}
+        tabIndex="2"
+        onClick={() => handleCategoryClick('2')}
         style={{ background: selectedCategory === '공지사항' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
       >
         &nbsp;&nbsp;공지사항
       </MenuSelect>
       <MenuSelect
-        tabIndex="0"
-        onClick={() => handleCategoryClick('정부 혜택')}
+        tabIndex="3"
+        onClick={() => handleCategoryClick('3')}
         style={{ background: selectedCategory === '정부 혜택' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
       >
         &nbsp;&nbsp;정부 혜택
       </MenuSelect>
       <MenuSelect
-        tabIndex="0"
-        onClick={() => handleCategoryClick('정보게시판')}
+        tabIndex="4"
+        onClick={() => handleCategoryClick('4')}
         style={{ background: selectedCategory === '정보게시판' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
       >
         &nbsp;&nbsp;정보게시판
