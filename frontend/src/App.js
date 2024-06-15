@@ -10,6 +10,7 @@ import PasswordResetForm from './components/PasswordResetForm';
 import PhoneToEmailForm from './components/PhoneToEmailForm';
 import { AuthProvider } from './components/AuthContext';
 import WriteBoardPost from './components/WriteBoardPost';
+import PostDetail from './components/PostDetail';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/reset" element={<PasswordResetForm />} />
             <Route path="/email" element={<PhoneToEmailForm />} />
             <Route path='/write' element={<WriteBoardPost/>} />
+            <Route path='/post/:postId' element={<PostDetail/>} />
           </Routes>
 
           {/* 하단바 */}
