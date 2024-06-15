@@ -72,7 +72,7 @@ const TableRowItem = styled.div`
   padding-left: 50px;
 `;
 
-const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
+const BoardSection = ({ title, onCategoryChange, selectcategoryNum, onPostClick  }) => {
   const [contents, setContents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
@@ -83,7 +83,7 @@ const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
   useEffect(() => {
     const fetchContents = async () => {
       const postData = {
-        categoryId: null,
+        categoryId: selectcategoryNum,
         limit: 20
       };
 
@@ -97,7 +97,7 @@ const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
     };
 
     fetchContents();
-  }, [title, currentPage]);
+  }, [title, selectcategoryNum, currentPage]);
 
   const handleCategoryChange = (e) => {
     onCategoryChange(e.target.value);
@@ -131,11 +131,11 @@ const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
       <BoardTitleWrapper>
         <BoardTitle>{title}</BoardTitle>
         <DropdownMenu value = {title.selectedCategory} onChange={handleCategoryChange}>
-          <option value="0" >전체게시판</option>
-          <option value="1" >자유게시판</option>
-          <option value="2" >공지사항</option>
-          <option value="3" >정부 혜택</option>
-          <option value="4" >정보게시판</option>
+          <option value='0' >전체게시판</option>
+          <option value='1' >자유게시판</option>
+          <option value='2' >공지사항</option>
+          <option value='3' >정부 혜택</option>
+          <option value='4' >정보게시판</option>
         </DropdownMenu>
       </BoardTitleWrapper>
 
