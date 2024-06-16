@@ -73,6 +73,19 @@ const TableRowItem = styled.div`
   padding-left: 50px;
 `;
 
+const StyledLink = styled(Link)`
+  color: black;
+  text-decoration: none;
+
+  &:visited {
+    color: black;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
   const [contents, setContents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -118,14 +131,14 @@ const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
     };
     
     return contents.slice(startIndex, endIndex).map((content) => (
-      <Link key={content.postId} to={`/post/${content.postId}`}> {/* Link를 사용하여 게시물 상세 페이지로 이동 */}
+      <StyledLink key={content.postId} to={`/post/${content.postId}`}> {/* Link를 사용하여 게시물 상세 페이지로 이동 */}
         <TableRow>
           <TableRowItem isTitle>{content.categoryName}</TableRowItem>
           <TableRowItem isTitle>{content.title}</TableRowItem>
           <TableRowItem>{content.nickname}</TableRowItem>
           <TableRowItem>{formatDate(content.createdAt)}</TableRowItem>
         </TableRow>
-      </Link>
+      </StyledLink>
     ));
   };
 

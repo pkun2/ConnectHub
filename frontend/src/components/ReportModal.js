@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const ReportInput = styled.textarea`
   width: calc(100% - 20px);
@@ -31,7 +32,31 @@ const Button = styled.button`
   }
 `;
 
-const ReportModal = ({ isOpen, onRequestClose, reportContent, handleReportChange, handleReportSubmit }) => {
+const ReportModal = ({ isOpen, onRequestClose, postId }) => {
+  const [reportContent, setReportContent] = useState('');
+
+  const handleReportChange = (e) => {
+    setReportContent(e.target.value);
+  };
+
+  const handleReportSubmit = async () => {
+    if (reportContent.trim() === '') return;
+
+    try {
+      const response = await axios.post('http://localhost:4000/api/post/report', {
+        postId,
+        reportContent: reportContent.trim(),
+      });
+      console.log('신고가 접수되었습니다:', response.data);
+      setReportContent(''); // 신고 입력 창 비우기
+      alert('신고가 접수되었습니다.');
+      onRequestClose();
+    } catch (error) {
+      console.error('신고를 등록하는 데 실패했습니다:', error);
+      alert('신고를 등록하는 데 실패했습니다.');
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}

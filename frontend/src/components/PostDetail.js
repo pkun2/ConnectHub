@@ -70,7 +70,6 @@ const ProfileImage = styled.img`
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
-  background-image: url('/user.png');
 `;
 
 const ContentContainer = styled.div`
@@ -130,7 +129,6 @@ const PostDetail = () => {
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
-  const [reportContent, setReportContent] = useState('');
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { postId } = useParams();
@@ -176,46 +174,35 @@ const PostDetail = () => {
       // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
     }
   };
-
+  
   const handleCommentChange = (e) => {
     setComment(e.target.value);
+  };
+
+  const handleGoMain = () => {
+    navigate('/');
   };
 
   const handleEdit = () => {
     setIsEditModalOpen(true); // 수정 모달 열기
   };
 
-  const handleGoMain = () => {
-    navigate('/');
-  };
-  const handleReportChange = (e) => {
-    setReportContent(e.target.value);
-  };
-
-  const handleReportSubmit = async () => {
-    if (reportContent.trim() === '') return;
-
-    try {
-      const response = await axios.post('http://localhost:4000/api/post/report', {
-        postId,
-        reportContent: reportContent.trim(),
-      });
-      console.log('신고가 접수되었습니다:', response.data);
-      setReportContent(''); // 신고 입력 창 비우기
-      setIsReportModalOpen(false); // 모달 닫기
-      alert('신고가 접수되었습니다.');
-    } catch (error) {
-      console.error('신고를 등록하는 데 실패했습니다:', error);
-      alert('신고를 등록하는 데 실패했습니다.');
-    }
-  };
-
-  const openReportModal = () => {
+  const handleReport = () => {
     setIsReportModalOpen(true);
-  };
+  }
 
-  const closeReportModal = () => {
-    setIsReportModalOpen(false);
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:4000/api/post/`, {
+        data: { userId: userId , postId: postId}
+      });
+      console.log('게시글이 삭제되었습니다:', response.data);
+      alert('게시글이 삭제되었습니다.');
+      navigate('/');
+    } catch (error) {
+      console.error('게시글을 삭제하는 데 실패했습니다:', error);
+      // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
+    }
   };
 
   if (!post) {
@@ -228,13 +215,13 @@ const PostDetail = () => {
       <Option />
       <MainContainer>
         <LeftSubContainer>
-          <ImageSection imageUrl="https://img.freepik.com/free-vector/men-women-welcoming-people-with-disabilities-group-people-meeting-blind-female-character-male-wheelchair_74855-18436.jpg?t=st=1715345864~exp=1715349464~hmac=174d5e762b369d4beba592670b688d3510807248c829290eee0a091388aae385&w=826" />
+          <ImageSection />
           <DetailContainer>
             <TitleContainer>
               <h1>{post.title}</h1>
             </TitleContainer>
             <InfoContainer>
-              <ProfileImage/>
+              <ProfileImage src={`${process.env.PUBLIC_URL}/user.png`} alt="Profile"/>
               <div>
                 <p>{post.nickname}</p>
                 <p>{new Date(post.createdAt).toLocaleDateString()}</p>
@@ -262,7 +249,8 @@ const PostDetail = () => {
           <ButtonContainer>
             <Button onClick={handleGoMain}>목록</Button>
             <Button onClick={handleEdit}>수정</Button>
-            <Button onClick={openReportModal}>신고</Button>
+            <Button onClick={handleReport}>신고</Button>
+            <Button onClick={handleDelete}>삭제</Button>
           </ButtonContainer>
         </LeftSubContainer>
         <RightSubContainer>
@@ -276,10 +264,8 @@ const PostDetail = () => {
 
       <ReportModal
         isOpen={isReportModalOpen}
-        onRequestClose={closeReportModal}
-        reportContent={reportContent}
-        handleReportChange={handleReportChange}
-        handleReportSubmit={handleReportSubmit}
+        onRequestClose={() => setIsReportModalOpen(false)}
+        postId={postId}
       />
 
       <EditModal
