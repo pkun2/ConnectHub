@@ -9,6 +9,7 @@ import axios from 'axios';
 import { AuthContext } from './AuthContext';
 import { useParams } from 'react-router-dom';
 import ReportModal from './ReportModal';
+import { speak } from '../speech/speechUtils'; // TTS 함수 import
 
 const MainContainer = styled.div`
   display: flex;
@@ -211,6 +212,54 @@ const PostDetail = () => {
     setIsReportModalOpen(false);
   };
 
+  useEffect(() => {
+    const handleFocus = (event) => {
+      const text = event.target.placeholder || event.target.textContent || '';
+      speak(text, { lang: 'ko-KR' });
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        event.target.click();
+      }
+    };
+
+    const elements = document.querySelectorAll('[tabindex]');
+
+    elements.forEach(element => {
+      element.addEventListener('focus', handleFocus);
+      element.addEventListener('keydown', handleKeyDown);
+    });
+
+    return () => {
+      elements.forEach(element => {
+        element.removeEventListener('focus', handleFocus);
+        element.removeEventListener('keydown', handleKeyDown);
+      });
+    };
+  }, []);
+
+  // 댓글 요소에 포커스 이벤트 리스너 추가
+  useEffect(() => {
+    const commentsElements = document.querySelectorAll('.comment');
+
+    const handleFocus = (event) => {
+      const text = event.target.textContent || '';
+      speak(text, { lang: 'ko-KR' });
+    };
+
+    commentsElements.forEach((comment) => {
+      comment.addEventListener('focus', handleFocus);
+    });
+
+    return () => {
+      commentsElements.forEach((comment) => {
+        comment.removeEventListener('focus', handleFocus);
+      });
+    };
+  }, [comments]);
+
   if (!post) {
     return <div>Loading...</div>;
   }
@@ -224,7 +273,7 @@ const PostDetail = () => {
           <ImageSection imageUrl="https://img.freepik.com/free-vector/men-women-welcoming-people-with-disabilities-group-people-meeting-blind-female-character-male-wheelchair_74855-18436.jpg?t=st=1715345864~exp=1715349464~hmac=174d5e762b369d4beba592670b688d3510807248c829290eee0a091388aae385&w=826" />
           <DetailContainer>
             <TitleContainer>
-              <h1>{post.title}</h1>
+              <h1 tabIndex="0">{post.title}</h1>
             </TitleContainer>
             <InfoContainer>
               <ProfileImage/>
@@ -233,13 +282,13 @@ const PostDetail = () => {
                 <p>{new Date(post.createdAt).toLocaleDateString()}</p>
               </div>
             </InfoContainer>
-            <ContentContainer>
+            <ContentContainer tabIndex="0">
               <p>{post.content}</p>
             </ContentContainer>
             <CommentSection>
               <h2>댓글</h2>
               {comments.map((comment, index) => (
-                <div key={index}>
+                <div key={index} className="comment" tabIndex="0">
                   <p><strong>{comment.nickname} : </strong> {comment.content}</p>
                 </div>
               ))}
@@ -248,14 +297,15 @@ const PostDetail = () => {
                 placeholder="댓글을 입력하세요" 
                 value={comment}
                 onChange={handleCommentChange}
+                tabIndex="0"
               />
-              <CommentButton onClick={handleCommentSubmit}>등록</CommentButton>
+              <CommentButton onClick={handleCommentSubmit} tabIndex="0">등록</CommentButton>
             </CommentSection>
           </DetailContainer>
           <ButtonContainer>
-            <Button>목록</Button>
-            <Button onClick={handleEdit}>수정</Button>
-            <Button onClick={openReportModal}>신고</Button>
+            <Button tabIndex="0">목록</Button>
+            <Button onClick={handleEdit} tabIndex="0">수정</Button>
+            <Button onClick={openReportModal} tabIndex="0">신고</Button>
           </ButtonContainer>
         </LeftSubContainer>
         <RightSubContainer>

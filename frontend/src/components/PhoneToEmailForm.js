@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { SignUpContainer, SignUpBox, Title, Input, Button } from './SignUpStyle';
-import Navigation from './Navigation';
+import { SignUpContainer, SignUpBox, Title, Input, Button, StyledLink } from './SignUpStyle';
+import { useNavigate } from 'react-router-dom';
 import { speak } from '../speech/speechUtils';     // tts, 음성 출력을 위한 함수 import
 import AlertMessage from '../speech/alertMessage'; // tts, 음성으로 알려줄 경고 메시지 컴포넌트 import
 
@@ -9,6 +9,8 @@ function PhoneToEmailForm() {
     const [phoneNum, setPhoneNum] = useState('');
     const [foundEmail, setFoundEmail] = useState('');
     const [alertMessage, setAlertMessage] = useState(''); // tts 
+
+    const navigate = useNavigate();
 
     const handleChange = (event) => {
         setPhoneNum(event.target.value);
@@ -59,21 +61,23 @@ function PhoneToEmailForm() {
         };
     }, []);
 
+    const handleGoBack = () => {
+        navigate(-1);
+    };
+
     return (
-        <>
-            <Navigation />
-            <SignUpContainer>
-                <Title>이메일 찾기</Title>
-                <SignUpBox>
-                    <form onSubmit={handleSubmit}>
-                        <Input type="tel" value={phoneNum} onChange={handleChange} placeholder="전화번호 입력" tabIndex="0" />
-                        <Button type="submit" tabIndex="0">이메일 찾기</Button>
-                    </form>
-                    {foundEmail && <p>찾은 이메일: {foundEmail}</p>}
-                </SignUpBox>
-                {alertMessage && <AlertMessage message={alertMessage} />}
-            </SignUpContainer>
-        </>
+        <SignUpContainer>
+            <Title>이메일 찾기</Title>
+            <SignUpBox>
+                <form onSubmit={handleSubmit}>
+                    <Input type="tel" value={phoneNum} onChange={handleChange} placeholder="전화번호 입력" tabIndex="0" />
+                    <Button type="submit" tabIndex="0">이메일 찾기</Button>
+                </form>
+                {foundEmail && <p>찾은 이메일: {foundEmail}</p>}
+                <StyledLink onClick={handleGoBack} tabIndex="0">뒤로가기</StyledLink>
+            </SignUpBox>
+            {alertMessage && <AlertMessage message={alertMessage} />}
+        </SignUpContainer>
     );
 }
 

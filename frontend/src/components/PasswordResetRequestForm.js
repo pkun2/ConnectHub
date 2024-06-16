@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { SignUpContainer, SignUpBox, Title, Input, Button } from './SignUpStyle'; // Import SignUpStyle for styling
+import { SignUpContainer, SignUpBox, Title, Input, Button, StyledLink } from './SignUpStyle'; // Import SignUpStyle for styling
 import { speak } from '../speech/speechUtils';     // tts, 음성 출력을 위한 함수 import
 import AlertMessage from '../speech/alertMessage'; // tts, 음성으로 알려줄 경고 메시지 컴포넌트 import
 
@@ -67,6 +67,10 @@ function PasswordResetRequestForm() {
         };
     }, []);
 
+    const handleGoBack = () => {
+        navigate(-1);
+    };
+
     return (
         <SignUpContainer>
             <Title>비밀번호 재설정 요청</Title>
@@ -76,6 +80,7 @@ function PasswordResetRequestForm() {
                     <Input type="tel" name="phoneNum" placeholder="전화번호" value={formData.phoneNum} onChange={handleChange} tabIndex="0" />
                     <Button type="submit" tabIndex="0">인증번호 요청</Button>
                 </form>
+                <StyledLink onClick={handleGoBack} tabIndex="0">뒤로가기</StyledLink>
             </SignUpBox>
             {alertMessage && <AlertMessage message={alertMessage} />}
         </SignUpContainer>
