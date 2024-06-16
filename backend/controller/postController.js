@@ -34,6 +34,7 @@ export const postUpdateController = async (req, res) => {
     }
 };
 
+// 게시글 전체 조회 컨트롤러
 export const postViewController = async (req, res) => {
     const { categoryId, limit } = req.query;
     try {
