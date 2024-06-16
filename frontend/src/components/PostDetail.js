@@ -10,6 +10,8 @@ import { AuthContext } from './AuthContext';
 import { useParams } from 'react-router-dom';
 import ReportModal from './ReportModal';
 import { speak } from '../speech/speechUtils'; // TTS 함수 import
+import EditModal from './EditModal';
+import { useNavigate } from 'react-router-dom';
 
 const MainContainer = styled.div`
   display: flex;
@@ -131,8 +133,10 @@ const PostDetail = () => {
   const [comments, setComments] = useState([]);
   const [reportContent, setReportContent] = useState('');
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { postId } = useParams();
   const { userId } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -179,9 +183,12 @@ const PostDetail = () => {
   };
 
   const handleEdit = () => {
-    console.log('수정 버튼 클릭');
+    setIsEditModalOpen(true); // 수정 모달 열기
   };
 
+  const handleGoMain = () => {
+    navigate('/');
+  };
   const handleReportChange = (e) => {
     setReportContent(e.target.value);
   };
@@ -303,7 +310,7 @@ const PostDetail = () => {
             </CommentSection>
           </DetailContainer>
           <ButtonContainer>
-            <Button tabIndex="0">목록</Button>
+            <Button onClick={handleGoMain} tabIndex="0">목록</Button>
             <Button onClick={handleEdit} tabIndex="0">수정</Button>
             <Button onClick={openReportModal} tabIndex="0">신고</Button>
           </ButtonContainer>
@@ -323,6 +330,12 @@ const PostDetail = () => {
         reportContent={reportContent}
         handleReportChange={handleReportChange}
         handleReportSubmit={handleReportSubmit}
+      />
+
+      <EditModal
+        isOpen={isEditModalOpen}
+        onRequestClose={() => setIsEditModalOpen(false)}
+        postId={postId}
       />
     </>
   );

@@ -78,7 +78,7 @@ class Post {
     static async updatePost(title, content, postId) {
         const connection = await pool.getConnection();
         try {
-            const query = "UPDATE posts SET title = ?, content = ? WHERE id = ?";
+            const query = "UPDATE posts SET title = ?, content = ? WHERE postId = ?";
             const [result] = await connection.query(query, [title, content, postId]);
             return result;
         } catch (err) {
