@@ -8,6 +8,7 @@ import MenuSection from './MenuSection';
 import axios from 'axios';
 import { AuthContext } from './AuthContext';
 import { useParams } from 'react-router-dom';
+import ReportModal from './ReportModal';
 
 const MainContainer = styled.div`
   display: flex;
@@ -127,14 +128,19 @@ const PostDetail = () => {
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
+  const [reportContent, setReportContent] = useState('');
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const { postId } = useParams();
-  const { userId, nickname } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/api/post/${postId}`);
         setPost(response.data);
+        
+        const commentsResponse = await axios.get(`http://localhost:4000/api/post/${postId}/comment`);
+        setComments(commentsResponse.data);
       } catch (error) {
         console.error('게시글을 불러오는 데 실패했습니다.', error);
       }
@@ -167,13 +173,42 @@ const PostDetail = () => {
     }
   };
 
-
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
 
   const handleEdit = () => {
     console.log('수정 버튼 클릭');
+  };
+
+  const handleReportChange = (e) => {
+    setReportContent(e.target.value);
+  };
+
+  const handleReportSubmit = async () => {
+    if (reportContent.trim() === '') return;
+
+    try {
+      const response = await axios.post('http://localhost:4000/api/post/report', {
+        postId,
+        reportContent: reportContent.trim(),
+      });
+      console.log('신고가 접수되었습니다:', response.data);
+      setReportContent(''); // 신고 입력 창 비우기
+      setIsReportModalOpen(false); // 모달 닫기
+      alert('신고가 접수되었습니다.');
+    } catch (error) {
+      console.error('신고를 등록하는 데 실패했습니다:', error);
+      alert('신고를 등록하는 데 실패했습니다.');
+    }
+  };
+
+  const openReportModal = () => {
+    setIsReportModalOpen(true);
+  };
+
+  const closeReportModal = () => {
+    setIsReportModalOpen(false);
   };
 
   if (!post) {
@@ -205,7 +240,7 @@ const PostDetail = () => {
               <h2>댓글</h2>
               {comments.map((comment, index) => (
                 <div key={index}>
-                  <p><strong>{nickname} : </strong> {comment.content}</p>
+                  <p><strong>{comment.nickname} : </strong> {comment.content}</p>
                 </div>
               ))}
               <CommentInput 
@@ -218,8 +253,9 @@ const PostDetail = () => {
             </CommentSection>
           </DetailContainer>
           <ButtonContainer>
+            <Button>목록</Button>
             <Button onClick={handleEdit}>수정</Button>
-            <Button>신고</Button>
+            <Button onClick={openReportModal}>신고</Button>
           </ButtonContainer>
         </LeftSubContainer>
         <RightSubContainer>
@@ -230,6 +266,14 @@ const PostDetail = () => {
           />
         </RightSubContainer>
       </MainContainer>
+
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onRequestClose={closeReportModal}
+        reportContent={reportContent}
+        handleReportChange={handleReportChange}
+        handleReportSubmit={handleReportSubmit}
+      />
     </>
   );
 };
