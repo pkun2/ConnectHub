@@ -135,6 +135,9 @@ const PostDetail = () => {
       try {
         const response = await axios.get(`http://localhost:4000/api/post/${postId}`);
         setPost(response.data);
+        
+        const commentsResponse = await axios.get(`http://localhost:4000/api/post/${postId}/comment`);
+        setComments(commentsResponse.data);
       } catch (error) {
         console.error('게시글을 불러오는 데 실패했습니다.', error);
       }
@@ -154,6 +157,7 @@ const PostDetail = () => {
       postId: postId, 
       userId: userId, 
       content: comment.trim(),
+      nickname: nickname,
     };
 
     try {
@@ -205,7 +209,7 @@ const PostDetail = () => {
               <h2>댓글</h2>
               {comments.map((comment, index) => (
                 <div key={index}>
-                  <p><strong>{nickname} : </strong> {comment.content}</p>
+                  <p><strong>{comment.nickname} : </strong> {comment.content}</p>
                 </div>
               ))}
               <CommentInput 
