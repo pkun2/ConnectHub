@@ -1,9 +1,10 @@
 // EditModal.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-modal';
 import axios from 'axios';
+import { speak } from '../speech/speechUtils';
 
 const customStyles = {
   content: {
@@ -81,25 +82,36 @@ const EditModal = ({ isOpen, onRequestClose, postId }) => {
 
   const handleEditSubmit = async () => {
     if (title.trim() === '' || content.trim() === '') {
-      alert('제목과 내용을 모두 입력해주세요.');
+      speak('제목과 내용을 모두 입력해주세요.', { lang: 'ko-KR' });
       return;
     }
-
+  
     try {
       const response = await axios.put(`http://localhost:4000/api/post/update/${postId}`, {
         title: title,
         content: content,
         postId: postId,
       });
+      speak('게시글이 성공적으로 수정되었습니다.', { lang: 'ko-KR' });
       console.log('게시글이 성공적으로 수정되었습니다:', response.data);
-      alert('게시글이 성공적으로 수정되었습니다.');
-      window.location.reload();
-      onRequestClose(); // 모달 닫기
+  
+      // TTS 발화 후 페이지 새로 고침
+      setTimeout(() => {
+        window.location.reload();
+        onRequestClose(); // 모달 닫기
+      }, 3000); // 1초 지연 (TTS 발화 시간 고려)
     } catch (error) {
       console.error('게시글 수정 중 오류 발생:', error);
-      alert('게시글 수정 중 오류가 발생했습니다.');
+      speak('게시글 수정 중 오류가 발생했습니다.', { lang: 'ko-KR' });
     }
   };
+  
+
+  useEffect(() => {
+    if (isOpen) {
+      speak('게시글 수정 창이 열렸습니다.', { lang: 'ko-KR' });
+    }
+  }, [isOpen]);
 
   return (
     <Modal
@@ -108,21 +120,31 @@ const EditModal = ({ isOpen, onRequestClose, postId }) => {
       style={customStyles}
       contentLabel="Edit Modal"
     >
-      <ModalTitle>게시글 수정</ModalTitle>
+      <ModalTitle tabIndex="0" onFocus={() => speak('게시글 수정', { lang: 'ko-KR' })}>
+        게시글 수정
+      </ModalTitle>
       <ModalInput
         type="text"
         placeholder="제목"
         value={title}
         onChange={handleTitleChange}
+        tabIndex="0"
+        onFocus={() => speak('제목', { lang: 'ko-KR' })}
       />
       <ModalTextarea
         placeholder="내용을 입력하세요"
         value={content}
         onChange={handleContentChange}
+        tabIndex="0"
+        onFocus={() => speak('내용을 입력하세요', { lang: 'ko-KR' })}
       />
       <ModalButtonContainer>
-        <ModalButton onClick={handleEditSubmit}>수정 </ModalButton>
-        <ModalButton onClick={onRequestClose}>닫기 </ModalButton>
+        <ModalButton tabIndex="0" onFocus={() => speak('수정', { lang: 'ko-KR' })} onClick={handleEditSubmit}>
+          수정
+        </ModalButton>
+        <ModalButton tabIndex="0" onFocus={() => speak('닫기', { lang: 'ko-KR' })} onClick={onRequestClose}>
+          닫기
+        </ModalButton>
       </ModalButtonContainer>
     </Modal>
   );

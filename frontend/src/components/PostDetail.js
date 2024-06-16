@@ -194,8 +194,11 @@ const PostDetail = () => {
   };
 
   const handleReportSubmit = async () => {
-    if (reportContent.trim() === '') return;
-
+    if (reportContent.trim() === '') {
+      speak('신고 내용을 입력해주세요.', { lang: 'ko-KR' });
+      return;
+    }
+  
     try {
       const response = await axios.post('http://localhost:4000/api/post/report', {
         postId,
@@ -203,13 +206,18 @@ const PostDetail = () => {
       });
       console.log('신고가 접수되었습니다:', response.data);
       setReportContent(''); // 신고 입력 창 비우기
-      setIsReportModalOpen(false); // 모달 닫기
-      alert('신고가 접수되었습니다.');
+      
+      // TTS 발화 후 모달 닫기
+      speak('신고가 접수되었습니다.', { lang: 'ko-KR' });
+      setTimeout(() => {
+        setIsReportModalOpen(false); // 모달 닫기
+      }, 3000); // TTS 발화 시간이 충분하도록 지연 시간을 조정할 수 있습니다.
     } catch (error) {
       console.error('신고를 등록하는 데 실패했습니다:', error);
-      alert('신고를 등록하는 데 실패했습니다.');
+      speak('신고를 등록하는 데 실패했습니다.', { lang: 'ko-KR' });
     }
   };
+  
 
   const openReportModal = () => {
     setIsReportModalOpen(true);

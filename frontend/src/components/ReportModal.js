@@ -1,6 +1,9 @@
-import React from 'react';
+// ReportModal.js
+
+import React, { useEffect } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
+import { speak } from '../speech/speechUtils';
 
 const ReportInput = styled.textarea`
   width: calc(100% - 20px);
@@ -32,13 +35,21 @@ const Button = styled.button`
 `;
 
 const ReportModal = ({ isOpen, onRequestClose, reportContent, handleReportChange, handleReportSubmit }) => {
-  return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      contentLabel="신고 모달"
-      appElement={document.getElementById('root')}
-      style={{
+  useEffect(() => {
+    if (isOpen) {
+      speak('신고 창이 열렸습니다.', { lang: 'ko-KR' });
+    } 
+  }, [isOpen]);
+
+
+
+return (
+  <Modal
+    isOpen={isOpen}
+    onRequestClose={onRequestClose}
+    contentLabel="신고 모달"
+    appElement={document.getElementById('root')}
+    style={{
         content: {
           top: '50%',
           left: '50%',
@@ -55,16 +66,18 @@ const ReportModal = ({ isOpen, onRequestClose, reportContent, handleReportChange
         },
       }}
     >
-      <h2>신고 내용</h2>
+      <h2 tabIndex="0" onFocus={() => speak('신고 내용', { lang: 'ko-KR' })}>신고 내용</h2>
       <ReportInput
         rows="4"
         placeholder="신고 내용을 입력하세요"
         value={reportContent}
         onChange={handleReportChange}
+        tabIndex="0"
+        onFocus={() => speak('신고 내용을 입력하세요', { lang: 'ko-KR' })}
       />
       <ButtonContainer>
-        <Button onClick={handleReportSubmit}>제출</Button>
-        <Button onClick={onRequestClose}>닫기</Button>
+        <Button tabIndex="0" onFocus={() => speak('제출', { lang: 'ko-KR' })} onClick={handleReportSubmit}>제출</Button>
+        <Button tabIndex="0" onFocus={() => speak('닫기', { lang: 'ko-KR' })} onClick={onRequestClose}>닫기</Button>
       </ButtonContainer>
     </Modal>
   );
