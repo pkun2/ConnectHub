@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Modal from 'react-modal';
 import axios from 'axios';
 import { speak } from '../speech/speechUtils';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'; // STT 사용을 위한 import
 
 const customStyles = {
   content: {
@@ -57,8 +58,37 @@ const ModalButton = styled.button`
   }
 `;
 
+const VoiceInputButton = styled.button`
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: #add8e6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-right: 10px;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const ReportModal = ({ isOpen, onRequestClose, postId }) => {
   const [reportContent, setReportContent] = useState('');
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (isOpen) {
+      speak('신고 창이 열렸습니다.', { lang: 'ko-KR' });
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!listening && transcript) {
+      setReportContent(transcript);
+      speak('음성 입력이 완료되었습니다.', { lang: 'ko-KR' });
+    }
+  }, [listening, transcript]);
 
   const handleReportChange = (e) => {
     setReportContent(e.target.value);
@@ -87,11 +117,10 @@ const ReportModal = ({ isOpen, onRequestClose, postId }) => {
     }
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      speak('신고 창이 열렸습니다.', { lang: 'ko-KR' });
-    }
-  }, [isOpen]);
+  const handleVoiceInput = () => {
+    resetTranscript();
+    SpeechRecognition.startListening({ continuous: false });
+  };
 
   return (
     <Modal
@@ -110,6 +139,9 @@ const ReportModal = ({ isOpen, onRequestClose, postId }) => {
         tabIndex="0"
         onFocus={() => speak('신고 내용을 입력하세요', { lang: 'ko-KR' })}
       />
+      <VoiceInputButton onClick={handleVoiceInput} tabIndex="0" onFocus={() => speak('내용 음성 입력', { lang: 'ko-KR' })}>
+        내용 음성 입력
+      </VoiceInputButton>
       <ModalButtonContainer>
         <ModalButton tabIndex="0" onFocus={() => speak('제출', { lang: 'ko-KR' })} onClick={handleReportSubmit}>
           제출

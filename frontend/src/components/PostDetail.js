@@ -12,6 +12,7 @@ import ReportModal from './ReportModal';
 import { speak } from '../speech/speechUtils'; // TTS 함수 import
 import EditModal from './EditModal';
 import { useNavigate } from 'react-router-dom';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'; // STT 사용을 위한 import
 
 const MainContainer = styled.div`
   display: flex;
@@ -135,6 +136,7 @@ const PostDetail = () => {
   const { postId } = useParams();
   const { userId } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -168,7 +170,7 @@ const PostDetail = () => {
     try {
       const response = await axios.post('http://localhost:4000/api/post/comment', newComment);
       console.log('댓글이 작성되었습니다:', response.data);
-      setComments([...comments, newComment ]); // 새로운 댓글을 기존 댓글 목록에 추가
+      setComments([...comments, newComment]); // 새로운 댓글을 기존 댓글 목록에 추가
       setComment(''); // 댓글 입력 창 비우기
     } catch (error) {
       console.error('댓글을 등록하는 데 실패했습니다:', error);
@@ -190,23 +192,36 @@ const PostDetail = () => {
 
   const handleReport = () => {
     setIsReportModalOpen(true);
-  }
+  };
 
   const handleDelete = async () => {
     try {
       const response = await axios.delete(`http://localhost:4000/api/post/`, {
-        data: { userId: userId , postId: postId}
-
+        data: { userId: userId, postId: postId }
       });
       console.log('게시글이 삭제되었습니다:', response.data);
       speak('게시글이 삭제되었습니다.', { lang: 'ko-KR' });
       navigate('/');
     } catch (error) {
       console.error('게시글을 삭제하는 데 실패했습니다:', error);
-      speak('게시글을 삭제하는 데 실패했습니다', { lang: 'ko-KR' });
+      speak('게시글을 삭제하는 데 실패했습니다.', { lang: 'ko-KR' });
       // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
     }
   };
+
+  const handleVoiceCommentInput = () => {
+    resetTranscript();
+    SpeechRecognition.startListening({ continuous: false });
+  };
+
+  useEffect(() => {
+    if (!listening) {
+      if (transcript) {
+        setComment(transcript);
+        speak('댓글이 입력되었습니다.', { lang: 'ko-KR' });
+      }
+    }
+  }, [listening, transcript]);
 
   useEffect(() => {
     const handleFocus = (event) => {
@@ -295,6 +310,7 @@ const PostDetail = () => {
                 onChange={handleCommentChange}
                 tabIndex="0"
               />
+              <Button type="button" tabIndex="0" onClick={handleVoiceCommentInput}>음성으로 댓글 입력</Button>
               <CommentButton onClick={handleCommentSubmit} tabIndex="0">등록</CommentButton>
             </CommentSection>
           </DetailContainer>
