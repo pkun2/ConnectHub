@@ -74,6 +74,21 @@ const TableRowItem = styled.div`
   outline: none; // 포커스 시 외곽선이 표시되지 않도록 설정
 `;
 
+const StyledLink = styled(Link)`
+  color: black;
+  text-decoration: none;
+
+  &:visited {
+    color: black;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+
+
 const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
   const [contents, setContents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -122,14 +137,14 @@ const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
     };
 
     return contents.slice(startIndex, endIndex).map((content) => (
-      <Link key={content.postId} to={`/post/${content.postId}`}>
+      <StyledLink key={content.postId} to={`/post/${content.postId}`}> {/* Link를 사용하여 게시물 상세 페이지로 이동 */}
         <TableRow>
           <TableRowItem onFocus={handleFocus} isTitle>{content.categoryName}</TableRowItem>
           <TableRowItem tabIndex="0" onFocus={handleFocus} isTitle>{content.title}</TableRowItem>
           <TableRowItem onFocus={handleFocus}>{content.nickname}</TableRowItem>
           <TableRowItem onFocus={handleFocus}>{formatDate(content.createdAt)}</TableRowItem>
         </TableRow>
-      </Link>
+      </StyledLink>
     ));
   };
 

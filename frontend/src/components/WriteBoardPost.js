@@ -164,11 +164,11 @@ const WriteBoardPost = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (selectedBoard === '' || selectedBoard === '게시판을 선택해주세요') {
-            alert('게시판을 선택해주세요.');
+          speak('게시판을 선택해주세요.', { lang: 'ko-KR' });
             return;
         }
         if (!title || !content) {
-            alert('제목과 내용을 입력해주세요.');
+          speak('제목과 내용을 입력해주세요.', { lang: 'ko-KR' });
             return;
         }
         const postData = {
@@ -181,11 +181,11 @@ const WriteBoardPost = () => {
         try {
             const response = await axios.post('http://localhost:4000/api/post/write', postData);
             console.log('Response:', response.data);
-            alert('글 작성이 완료되었습니다.');
+            speak('글 작성이 완료되었습니다.', { lang: 'ko-KR' });
             navigate('/'); // 글 작성 후 Main 페이지로 이동
         } catch (error) {
             console.error('게시글을 작성할 수 없습니다.', error);
-            alert('게시글 작성에 실패했습니다.');
+            speak('게시글 작성에 실패했습니다.', { lang: 'ko-KR' });
         }
     };
 
