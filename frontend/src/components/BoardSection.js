@@ -92,8 +92,6 @@ const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
   const itemsPerPage = 18;
   const totalPages = Math.ceil(contents.length / itemsPerPage);
 
-  console.log(title);
-
   useEffect(() => {
     const fetchContents = async () => {
       const postData = {
@@ -104,7 +102,6 @@ const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
       try {
         const response = await axios.get('http://localhost:4000/api/post/', { params: postData });
         setContents(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('게시글을 가져올 수 없습니다.', error);
       }

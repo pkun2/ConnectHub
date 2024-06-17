@@ -52,7 +52,7 @@ const ModalButtonContainer = styled.div`
   justify-content: center;
 `;
 
-const ModalButton = styled.button`
+const Button = styled.button`
   margin-top: 10px;
   padding: 8px 16px;
   font-size: 1em;
@@ -106,7 +106,7 @@ const EditModal = ({ isOpen, onRequestClose, postId }) => {
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={customStyles}
-      contentLabel="Edit Modal"
+      contentLabel="수정 모달"
     >
       <ModalTitle>게시글 수정</ModalTitle>
       <ModalInput
@@ -121,8 +121,8 @@ const EditModal = ({ isOpen, onRequestClose, postId }) => {
         onChange={handleContentChange}
       />
       <ModalButtonContainer>
-        <ModalButton onClick={handleEditSubmit}>수정 </ModalButton>
-        <ModalButton onClick={onRequestClose}>닫기 </ModalButton>
+        <Button onClick={handleEditSubmit}>수정 </Button>
+        <Button onClick={onRequestClose}>닫기 </Button>
       </ModalButtonContainer>
     </Modal>
   );

@@ -106,8 +106,6 @@ const WriteBoardPost = () => {
     const [selectedBoard, setSelectedBoard] = useState('게시판을 선택해주세요'); // 선택된 게시판 종류를 저장하는 state
     const navigate = useNavigate();
 
-    console.log("현재 사용자 ID:", userId);
-
     const handleTitleChange = (e) => {
       setTitle(e.target.value);
     };
@@ -143,7 +141,6 @@ const WriteBoardPost = () => {
   
       try {
         const response = await axios.post('http://localhost:4000/api/post/write', postData);
-        console.log('Response:', response.data);
         alert('글 작성이 완료되었습니다.');
         navigate('/'); // 글 작성 후 Main 페이지로 이동
       } catch (error) {

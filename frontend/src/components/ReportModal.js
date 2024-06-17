@@ -3,22 +3,41 @@ import Modal from 'react-modal';
 import styled from 'styled-components';
 import axios from 'axios';
 
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: '600px',
+    width: '80%',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+    border: 'none',
+  },
+};
+
 const ReportInput = styled.textarea`
   width: calc(100% - 20px);
-  margin-top: 10px;
+  height: 150px;
+  margin-bottom: 10px;
   padding: 10px;
   font-size: 1em;
   border: 1px solid #ddd;
   border-radius: 4px;
+  resize: vertical;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  justify-content: center;
 `;
 
 const Button = styled.button`
+  margin-top: 10px;
   padding: 8px 16px;
   font-size: 1em;
   cursor: pointer;
@@ -28,7 +47,7 @@ const Button = styled.button`
   border-radius: 4px;
   margin-right: 10px;
   &:hover {
-    background-color: ${({ hoverColor }) => hoverColor || '#0056b3'};
+    background-color: #0056b3;
   }
 `;
 
@@ -62,23 +81,9 @@ const ReportModal = ({ isOpen, onRequestClose, postId }) => {
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel="신고 모달"
+      style={customStyles}
       appElement={document.getElementById('root')}
-      style={{
-        content: {
-          top: '50%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
-          width: '500px',
-          height: '400px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-      }}
+      
     >
       <h2>신고 내용</h2>
       <ReportInput

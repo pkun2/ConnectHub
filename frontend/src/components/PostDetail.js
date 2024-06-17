@@ -10,6 +10,7 @@ import { AuthContext } from './AuthContext';
 import { useParams } from 'react-router-dom';
 import ReportModal from './ReportModal';
 import EditModal from './EditModal';
+import CommentReportModal from './CommentReportModal';
 import { useNavigate } from 'react-router-dom';
 
 const MainContainer = styled.div`
@@ -124,15 +125,32 @@ const CommentButton = styled(Button)`
   }
 `;
 
+const CommentOptionsButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5em;
+`;
+
+const CommentContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+`;
+
 const PostDetail = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체게시판');
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
+  const [selectedCommentId, setSelectedCommentId] = useState(null); // 선택된 댓글 ID
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isCommentReportModalOpen, setIsCommentReportModalOpen] = useState(false);
   const { postId } = useParams();
-  const { userId } = useContext(AuthContext);
+  const { userId, nickname } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -178,6 +196,11 @@ const PostDetail = () => {
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
+
+  const handleCommentReport = (commentId) => {
+    setSelectedCommentId(commentId);
+    setIsCommentReportModalOpen(true);
+  }
 
   const handleGoMain = () => {
     navigate('/');
@@ -233,9 +256,10 @@ const PostDetail = () => {
             <CommentSection>
               <h2>댓글</h2>
               {comments.map((comment, index) => (
-                <div key={index}>
-                  <p><strong>{comment.nickname} : </strong> {comment.content}</p>
-                </div>
+                <CommentContainer key={index}>
+                  <p><strong>{nickname} : </strong> {comment.content}</p>
+                  <CommentOptionsButton onClick={() => handleCommentReport(comment.commentId)}>⋮</CommentOptionsButton>
+                </CommentContainer>
               ))}
               <CommentInput 
                 type="text" 
@@ -271,6 +295,13 @@ const PostDetail = () => {
       <EditModal
         isOpen={isEditModalOpen}
         onRequestClose={() => setIsEditModalOpen(false)}
+        postId={postId}
+      />
+
+      <CommentReportModal
+        isOpen={isCommentReportModalOpen}
+        onRequestClose={() => setIsCommentReportModalOpen(false)}
+        commentId={selectedCommentId}
         postId={postId}
       />
     </>
