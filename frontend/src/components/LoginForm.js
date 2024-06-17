@@ -38,7 +38,6 @@ function LoginForm() {
         try { // 서버에 POST 요청 보냄
             const response = await axios.post("http://localhost:4000/api/user/login", formData);
             const { token, userId, nickname } = response.data;
-            console.log(" 로그인 폼에서의: ",response.data);
             login(token, userId, nickname);
 
             const successMessage = '로그인에 성공하였습니다.';

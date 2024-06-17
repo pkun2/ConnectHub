@@ -155,7 +155,7 @@ const EditModal = ({ isOpen, onRequestClose, postId }) => {
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={customStyles}
-      contentLabel="Edit Modal"
+      contentLabel="수정 모달"
     >
       <ModalTitle tabIndex="0" onFocus={() => speak('게시글 수정', { lang: 'ko-KR' })}>
         게시글 수정
