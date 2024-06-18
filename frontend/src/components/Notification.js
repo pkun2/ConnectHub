@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-modal';
 import ToggleSwitch from './ToggleSwitch';
+import { speak } from '../speech/speechUtils';
 
 // 알림아이콘
 const NotificationIcon = styled.img`
