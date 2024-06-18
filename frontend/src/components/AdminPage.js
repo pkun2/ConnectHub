@@ -7,7 +7,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding-top: 0px;
-  margin: 90px 200px 176px 200px; 
+  margin: 90px 200px 176px 200px;
 `;
 
 const Header = styled.div`
@@ -22,10 +22,7 @@ const Header = styled.div`
 `;
 
 const HeaderItem = styled.div`
-  flex: ${({ isSection, isTitle }) => (
-    isSection ? 1.5 : 
-    isTitle ? 1 : 0.5
-  )};
+  flex: ${({ isSection, isTitle }) => (isSection ? 1.5 : isTitle ? 1 : 0.5)};
   text-align: left;
   font-weight: bold;
   text-align: center;
@@ -43,11 +40,7 @@ const SectionHeader = styled.div`
 `;
 
 const SectionHeaderItem = styled.div`
-  flex: ${({ isSection, isTitle }) => (
-    isSection ? 1.5 : 
-    isTitle ? 1 : 
-    0.5
-  )};
+  flex: ${({ isSection, isTitle }) => (isSection ? 1.5 : isTitle ? 1 : 0.5)};
   text-align: left;
   text-align: center;
   white-space: nowrap;
@@ -140,17 +133,25 @@ const AdminPage = () => {
   const [comments, setComments] = useState([]);
   const [reports, setReports] = useState([]);
   const [currentDate, setCurrentDate] = useState('');
-  const [todayVisitors, setTodayVisitors] = useState(0); // 초기값 수정
-  const [totalVisitors, setTotalVisitors] = useState(0); // 초기값 수정
-
-  console.log(todayVisitors.visitId)
+  const [todayVisitors, setTodayVisitors] = useState({ visitDate: '', count: 0 });
+  const [totalVisitors, setTotalVisitors] = useState({ count: 0 });
 
   useEffect(() => {
     fetchPosts();
     fetchComments();
     fetchReports();
     fetchStatistics();
+    getCurrentDate();  // 현재 날짜 가져오는 함수 호출
   }, []);
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+    const dd = String(today.getDate()).padStart(2, '0');
+    const formattedDate = `${yyyy}-${mm}-${dd}`;
+    setCurrentDate(formattedDate);
+  };
 
   const fetchPosts = async () => {
     try {
@@ -182,11 +183,9 @@ const AdminPage = () => {
   const fetchStatistics = async () => {
     try {
       const todayResponse = await axios.get('http://localhost:4000/api/admin/visit/today');
-      console.log(todayResponse.data)
       setTodayVisitors(todayResponse.data); 
       
       const totalResponse = await axios.get('http://localhost:4000/api/admin/visit/total');
-      console.log(totalResponse.data)
       setTotalVisitors(totalResponse.data);
     } catch (error) {
       console.error('방문자 수를 가져오는 중 오류 발생:', error);
@@ -196,8 +195,7 @@ const AdminPage = () => {
   const handleDeletePost = async (postId) => {
     try {
       const response = await axios.delete(`http://localhost:4000/api/admin/delete/post/${postId}`);
-      console.log(response.data); 
-      fetchPosts(); 
+      fetchPosts();
     } catch (error) {
       console.error('게시글 삭제 중 오류 발생:', error);
     }
@@ -206,10 +204,9 @@ const AdminPage = () => {
   const handleDeleteComment = async (commentId) => {
     try {
       const response = await axios.delete(`http://localhost:4000/api/admin/delete/comment/${commentId}`);
-      console.log(response.data); 
       fetchComments();
     } catch (error) {
-      console.error('게시글 삭제 중 오류 발생:', error);
+      console.error('댓글 삭제 중 오류 발생:', error);
     }
   };
 
@@ -255,29 +252,29 @@ const AdminPage = () => {
             {reports.map(report => (
               <SectionHeader key={report.reportId}>
                 <SectionHeaderItem>{report.type}</SectionHeaderItem>
-                <SectionHeaderItem isSection>{report.title}</SectionHeaderItem>
+                <SectionHeaderItem isTitle>{report.title}</SectionHeaderItem>
                 <SectionHeaderItem>{report.content}</SectionHeaderItem>
               </SectionHeader>
             ))}
           </UserManagementContainer>
           <StatisticContainer>
             <Header>
-              <HeaderItem>날짜</HeaderItem>
-              <HeaderItem>방문자 수</HeaderItem>
+              <HeaderItem>현재 날짜</HeaderItem>
+              <HeaderItem>오늘 방문자 수</HeaderItem>
+              <HeaderItem>총 방문자 수</HeaderItem>
             </Header>
             <SectionHeader>
-              <SectionHeaderItem>{todayVisitors.visitDate}</SectionHeaderItem>
-              <SectionHeaderItem>{todayVisitors.count  || "...로딩중" }</SectionHeaderItem>
+              <SectionHeaderItem>{currentDate}</SectionHeaderItem>
+              <SectionHeaderItem>{todayVisitors.count || '...로딩중'}</SectionHeaderItem>
+              <SectionHeaderItem>{totalVisitors.count || '...로딩중'}</SectionHeaderItem>
             </SectionHeader>
-            <VisitorContainer>
-              <HeaderItem isTitle>총 방문자 수</HeaderItem>
-              <HeaderItem>{totalVisitors.count || "...로딩중" }</HeaderItem>
-            </VisitorContainer>
           </StatisticContainer>
         </Container>
       </MainContainer>
     </>
   );
-};
+  
+  
+}  
 
 export default AdminPage;

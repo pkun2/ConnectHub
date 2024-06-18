@@ -69,19 +69,24 @@ export const deleteCommentController = async (req, res) => {
 export const getTotalVisitController = async (req, res) => {
     try {
         const result = await Admin.getTotalVisiter();
-        console.log("total",result)
-        res.status(200).json(result);
+        const totalVisitors = result[0]['SUM(count)'];
+        res.status(200).json({ count: totalVisitors });
     } catch (err) {
         res.status(500).send('방문자 수 조회 중 오류 발생: ' + err.message);
     }
-
 };
+
+
 export const getTodayVisitController = async (req, res) => {
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식의 현재 날짜
     try {
         const result = await Admin.getCountVisiter(today);
-        console.log("today",result)
-        res.status(200).json(result);
+        console.log("today", result);
+        if (result.length > 0) {
+            res.status(200).json(result[0]); // 첫 번째 요소를 반환
+        } else {
+            res.status(200).json({ count: 0 }); // 결과가 없는 경우 기본값 반환
+        }
     }
     catch (err) {
         res.status(500).send('방문자 수 조회 중 오류 발생: ' + err.message);
