@@ -11,6 +11,7 @@
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.7",
+    "react-speech-recognition": "^3.10.0",
     "twilio": "^5.0.4",
     "winston": "^3.13.0"
   },

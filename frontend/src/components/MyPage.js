@@ -102,18 +102,19 @@ const ExitButton = styled.button`
 `;
 
 const MyPage = () => {
-  const [nickname, setNickname] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [nickname, setNickname] = useState('')
 
   const handleNicknameChange = async () => {
     try {
-      const response = await axios.post('/api/user/changeNickname', {
-        email: "yyy@naver.com",  // 실제 사용자 이메일로 변경
+      const response = await axios.post('http://localhost:4000/api/user/changeNickname', {
+        userId: localStorage.getItem("userId"),
         currentPassword,
         newNickname: nickname
       });
-      alert(response.data);
+      console.log(response.data);
+      alert('닉네임 변경 되었습니다.');
     } catch (error) {
       console.error('닉네임 변경 오류:', error);
       alert('닉네임 변경에 실패했습니다.');
@@ -122,10 +123,10 @@ const MyPage = () => {
 
   const handlePasswordChange = async () => {
     try {
-      const response = await axios.post('/api/user/changePassword', {
-        email: "yyy@naver.com",  // 실제 사용자 이메일로 변경
+      const response = await axios.post('http://localhost:4000/api/user/changePassword', {
+        userId: localStorage.getItem("userId"),
         currentPassword,
-        newPassword
+        newPassword: newPassword
       });
       alert(response.data);
     } catch (error) {
