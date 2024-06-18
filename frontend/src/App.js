@@ -1,8 +1,9 @@
-
+import React from 'react';
 import GotoTop from './components/GotoTop';
 import Foot from './components/Foot';
 import Main from './components/Main';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import MyPage from './components/MyPage';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import PasswordResetRequestForm from './components/PasswordResetRequestForm';
@@ -29,6 +30,7 @@ function App() {
             <Route path="/reset" element={<PasswordResetForm />} />
             <Route path="/email" element={<PhoneToEmailForm />} />
             <Route path='/write' element={<WriteBoardPost/>} />
+            <Route path="/mypage" element={<MyPage />} />
             <Route path='/post/:postId' element={<PostDetail/>} />
           </Routes>
 
@@ -38,6 +40,6 @@ function App() {
       </Router>
     </AuthProvider>
   );
-}
+};
 
 export default App;
