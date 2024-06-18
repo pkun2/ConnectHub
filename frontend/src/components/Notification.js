@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-modal';
 import ToggleSwitch from './ToggleSwitch';
@@ -121,11 +121,25 @@ function Notification() {
     setNotification_3(prevState => !prevState);
   };
 
+  const handleKeyDownToggleSwitch = (event, toggleFunction) => {
+    if (event.key === 'Enter') {
+      toggleFunction();
+    }
+  };
+
   return (
     <div>
       <NotificationIcon
         onClick={handleOpenModal}
-        src='https://cdn.icon-icons.com/icons2/1993/PNG/512/alarm_alert_attention_bell_clock_notification_ring_icon_123203.png'
+        src="https://cdn.icon-icons.com/icons2/1993/PNG/512/alarm_alert_attention_bell_clock_notification_ring_icon_123203.png"
+        tabIndex="0"
+        alt="알림"
+        onFocus={() => speak("알림", { lang: 'ko-KR' })}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            handleOpenModal();  // Enter 키로 모달 열기
+          }
+        }}
       />
       <Modal
         isOpen={showModal}
@@ -156,8 +170,15 @@ function Notification() {
 
       <NotificationOptionIcon
         onClick={handleOpenOption}
-        src='https://cdn.icon-icons.com/icons2/3106/PNG/512/gear_settings_options_icon_191642.png'
-        alt='옵션'
+        src="https://cdn.icon-icons.com/icons2/3106/PNG/512/gear_settings_options_icon_191642.png"
+        tabIndex="0"
+        alt="옵션"
+        onFocus={() => speak("옵션", { lang: 'ko-KR' })}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            handleOpenOption();  // Enter 키로 모달 열기
+          }
+        }}
       />
       <Modal
         isOpen={showOption}

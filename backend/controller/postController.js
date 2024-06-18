@@ -34,6 +34,7 @@ export const postUpdateController = async (req, res) => {
     }
 };
 
+// 게시글 전체 조회 컨트롤러
 export const postViewController = async (req, res) => {
     const { categoryId, limit } = req.query;
     try {
@@ -108,15 +109,15 @@ export const getCommentsByPostController = async (req, res) => {
 };
 // 게시글 삭제 컨트롤러
 export const deletePostController = async (req, res) => {
-    const { userId, postId } = req.body; // Request Body에서 userId와 postId 추출
-
+    const { userId, postId } = req.body; // Request Body에서 userId 추출
+    
     try {
         const postUserId = await Post.getUserIdByPostId(postId); // 게시글 작성자 조회
         if (postUserId === null) {
             res.status(404).send('삭제할 게시글을 찾을 수 없습니다.');
             return;
         }
-        if (userId !== postUserId) {
+        if (userId != postUserId) {
             res.status(403).send('삭제 권한이 없습니다.');
             return;
         }
