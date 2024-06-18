@@ -271,7 +271,6 @@ const AdminPage = () => {
           </StatisticContainer>
         </Container>
       </MainContainer>
-      <Foot />
     </>
   );
 };

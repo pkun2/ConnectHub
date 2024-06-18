@@ -22,7 +22,7 @@ const GotoAdminButton = styled.div`
   z-index: 1000;
 `;
 
-function GotoAdmin() {
+function GotoAdmin({autht}) {
   const navigate = useNavigate();
   const location = useLocation();
 

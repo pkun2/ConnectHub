@@ -38,7 +38,7 @@ function App() {
             <Route path="/admin" element={<AdminPage />} />
             <Route path='/post/:postId' element={<PostDetail/>} />
           </Routes>
-
+          <Foot/>
         </div>
       </Router>
     </AuthProvider>
