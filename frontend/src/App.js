@@ -1,9 +1,11 @@
 import React from 'react';
 import GotoTop from './components/GotoTop';
+import GotoAdmin from './components/GotoAdmin';
 import Foot from './components/Foot';
 import Main from './components/Main';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MyPage from './components/MyPage';
+import AdminPage from './components/AdminPage';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import PasswordResetRequestForm from './components/PasswordResetRequestForm';
@@ -20,7 +22,7 @@ function App() {
         <div>
           {/* 맨 위로 가기 */}
           <GotoTop />
-
+          <GotoAdmin/>
           {/* 라우팅 설정 */}
           <Routes>
             <Route path="/" element={<Main />} />
@@ -32,6 +34,7 @@ function App() {
             <Route path='/write' element={<WriteBoardPost/>} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path='/post/:postId' element={<PostDetail/>} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
 
           {/* 하단바 */}
