@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
+import { speak } from '../speech/speechUtils'; // tts, 음성 출력을 위한 함수 import
 
 const BoardContainer = styled.div`
   flex: 1;
@@ -23,14 +24,14 @@ const BoardTitle = styled.h2`
 const BoardTitleWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between; // 변경된 코드: 제목과 드롭다운 사이에 공간 분배
+  justify-content: space-between;
   width: 100%;
 `;
 
 const DropdownMenu = styled.select`
   font-size: 16px;
   padding: 8px 12px;
-  position: relative; // 위치를 고정하기 위해 position 사용
+  position: relative;
   top: 0;
   right: 0;
 `;
@@ -48,7 +49,6 @@ const TableHeader = styled.div`
   padding: 10px 0;
   border-top: 2px solid #000;
   border-bottom: 2px solid #ccc;
-  margin-bottom: 10px;
   margin-bottom: 0px;
 `;
 
@@ -71,6 +71,7 @@ const TableRowItem = styled.div`
   flex: ${({ isTitle }) => (isTitle ? 2 : 1)};
   text-align: left;
   padding-left: 50px;
+  outline: none; // 포커스 시 외곽선이 표시되지 않도록 설정
 `;
 
 const StyledLink = styled(Link)`
@@ -86,11 +87,14 @@ const StyledLink = styled(Link)`
   }
 `;
 
+
+
 const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
   const [contents, setContents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
   const totalPages = Math.ceil(contents.length / itemsPerPage);
+  const titleRef = useRef(null);
 
   useEffect(() => {
     const fetchContents = async () => {
@@ -126,29 +130,50 @@ const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
       const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
       return new Date(dateString).toLocaleDateString('ko-KR', options);
     };
-    
+
+    const handleFocus = (event) => {
+      speak(event.target.innerText, { lang: 'ko-KR' });
+    };
+
     return contents.slice(startIndex, endIndex).map((content) => (
       <StyledLink key={content.postId} to={`/post/${content.postId}`}> {/* Link를 사용하여 게시물 상세 페이지로 이동 */}
         <TableRow>
-          <TableRowItem isTitle>{content.categoryName}</TableRowItem>
-          <TableRowItem isTitle>{content.title}</TableRowItem>
-          <TableRowItem>{content.nickname}</TableRowItem>
-          <TableRowItem>{formatDate(content.createdAt)}</TableRowItem>
+          <TableRowItem onFocus={handleFocus} isTitle>{content.categoryName}</TableRowItem>
+          <TableRowItem tabIndex="0" onFocus={handleFocus} isTitle>{content.title}</TableRowItem>
+          <TableRowItem onFocus={handleFocus}>{content.nickname}</TableRowItem>
+          <TableRowItem onFocus={handleFocus}>{formatDate(content.createdAt)}</TableRowItem>
         </TableRow>
       </StyledLink>
     ));
   };
 
+  useEffect(() => {
+    const handleFocus = (event) => {
+      speak(event.target.innerText, { lang: 'ko-KR' });
+    };
+
+    const titleElement = titleRef.current;
+    if (titleElement) {
+      titleElement.addEventListener('focus', handleFocus);
+    }
+
+    return () => {
+      if (titleElement) {
+        titleElement.removeEventListener('focus', handleFocus);
+      }
+    };
+  }, []);
+
   return (
     <BoardContainer>
       <BoardTitleWrapper>
-        <BoardTitle>{title}</BoardTitle>
-        <DropdownMenu value = {selectcategoryNum} onChange={handleCategoryChange}>
-          <option value='0' >전체게시판</option>
-          <option value='1' >자유게시판</option>
-          <option value='2' >공지사항</option>
-          <option value='3' >정부 혜택</option>
-          <option value='4' >정보게시판</option>
+        <BoardTitle ref={titleRef}>{title}</BoardTitle>
+        <DropdownMenu value={selectcategoryNum} onChange={handleCategoryChange}>
+          <option value='0'>전체게시판</option>
+          <option value='1'>자유게시판</option>
+          <option value='2'>공지사항</option>
+          <option value='3'>정부 혜택</option>
+          <option value='4'>정보게시판</option>
         </DropdownMenu>
       </BoardTitleWrapper>
 

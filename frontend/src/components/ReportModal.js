@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
-import Modal from 'react-modal';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import Modal from 'react-modal';
 import axios from 'axios';
+import { speak } from '../speech/speechUtils';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'; // STT 사용을 위한 import
 
 const customStyles = {
   content: {
@@ -20,7 +22,12 @@ const customStyles = {
   },
 };
 
-const ReportInput = styled.textarea`
+const ModalTitle = styled.h2`
+  margin-bottom: 20px;
+  font-size: 1.5em;
+`;
+
+const ModalTextarea = styled.textarea`
   width: calc(100% - 20px);
   height: 150px;
   margin-bottom: 10px;
@@ -31,12 +38,27 @@ const ReportInput = styled.textarea`
   resize: vertical;
 `;
 
-const ButtonContainer = styled.div`
+const ModalButtonContainer = styled.div`
   display: flex;
   justify-content: center;
 `;
 
-const Button = styled.button`
+const ModalButton = styled.button`
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: #add8e6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-right: 10px;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const VoiceInputButton = styled.button`
   margin-top: 10px;
   padding: 8px 16px;
   font-size: 1em;
@@ -53,49 +75,81 @@ const Button = styled.button`
 
 const ReportModal = ({ isOpen, onRequestClose, postId }) => {
   const [reportContent, setReportContent] = useState('');
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (isOpen) {
+      speak('신고 창이 열렸습니다.', { lang: 'ko-KR' });
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!listening && transcript) {
+      setReportContent(transcript);
+      speak('음성 입력이 완료되었습니다.', { lang: 'ko-KR' });
+    }
+  }, [listening, transcript]);
 
   const handleReportChange = (e) => {
     setReportContent(e.target.value);
   };
 
   const handleReportSubmit = async () => {
-    if (reportContent.trim() === '') return;
+    if (reportContent.trim() === '') {
+      speak('신고 내용을 입력해주세요.', { lang: 'ko-KR' });
+      return;
+    }
 
     try {
       const response = await axios.post('http://localhost:4000/api/post/report', {
         postId,
         reportContent: reportContent.trim(),
       });
+      speak('신고가 접수되었습니다.', { lang: 'ko-KR' });
       console.log('신고가 접수되었습니다:', response.data);
       setReportContent(''); // 신고 입력 창 비우기
-      alert('신고가 접수되었습니다.');
-      onRequestClose();
+      setTimeout(() => {
+        onRequestClose(); // 모달 닫기
+      }, 2000); // 2초 지연 (TTS 발화 시간 고려)
     } catch (error) {
       console.error('신고를 등록하는 데 실패했습니다:', error);
-      alert('신고를 등록하는 데 실패했습니다.');
+      speak('신고를 등록하는 데 실패했습니다.', { lang: 'ko-KR' });
     }
+  };
+
+  const handleVoiceInput = () => {
+    resetTranscript();
+    SpeechRecognition.startListening({ continuous: false });
   };
 
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel="신고 모달"
       style={customStyles}
-      appElement={document.getElementById('root')}
-      
+      contentLabel="Report Modal"
     >
-      <h2>신고 내용</h2>
-      <ReportInput
-        rows="4"
+      <ModalTitle tabIndex="0" onFocus={() => speak('신고 내용', { lang: 'ko-KR' })}>
+        신고 내용
+      </ModalTitle>
+      <ModalTextarea
         placeholder="신고 내용을 입력하세요"
         value={reportContent}
         onChange={handleReportChange}
+        tabIndex="0"
+        onFocus={() => speak('신고 내용을 입력하세요', { lang: 'ko-KR' })}
       />
-      <ButtonContainer>
-        <Button onClick={handleReportSubmit}>제출</Button>
-        <Button onClick={onRequestClose}>닫기</Button>
-      </ButtonContainer>
+      <VoiceInputButton onClick={handleVoiceInput} tabIndex="0" onFocus={() => speak('내용 음성 입력', { lang: 'ko-KR' })}>
+        내용 음성 입력
+      </VoiceInputButton>
+      <ModalButtonContainer>
+        <ModalButton tabIndex="0" onFocus={() => speak('제출', { lang: 'ko-KR' })} onClick={handleReportSubmit}>
+          제출
+        </ModalButton>
+        <ModalButton tabIndex="0" onFocus={() => speak('닫기', { lang: 'ko-KR' })} onClick={onRequestClose}>
+          닫기
+        </ModalButton>
+      </ModalButtonContainer>
     </Modal>
   );
 };

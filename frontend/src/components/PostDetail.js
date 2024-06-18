@@ -9,9 +9,11 @@ import axios from 'axios';
 import { AuthContext } from './AuthContext';
 import { useParams } from 'react-router-dom';
 import ReportModal from './ReportModal';
+import { speak } from '../speech/speechUtils'; // TTS 함수 import
 import EditModal from './EditModal';
 import CommentReportModal from './CommentReportModal';
 import { useNavigate } from 'react-router-dom';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'; // STT 사용을 위한 import
 
 const MainContainer = styled.div`
   display: flex;
@@ -152,6 +154,7 @@ const PostDetail = () => {
   const { postId } = useParams();
   const { userId, nickname } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -185,7 +188,7 @@ const PostDetail = () => {
     try {
       const response = await axios.post('http://localhost:4000/api/post/comment', newComment);
       console.log('댓글이 작성되었습니다:', response.data);
-      setComments([...comments, newComment ]); // 새로운 댓글을 기존 댓글 목록에 추가
+      setComments([...comments, newComment]); // 새로운 댓글을 기존 댓글 목록에 추가
       setComment(''); // 댓글 입력 창 비우기
     } catch (error) {
       console.error('댓글을 등록하는 데 실패했습니다:', error);
@@ -212,20 +215,88 @@ const PostDetail = () => {
 
   const handleReport = () => {
     setIsReportModalOpen(true);
-  }
+  };
 
   const handleDelete = async () => {
     try {
       const response = await axios.delete(`http://localhost:4000/api/post/`, {
-        data: { userId: userId , postId: postId}
+        data: { userId: userId, postId: postId }
       });
       console.log('게시글이 삭제되었습니다:', response.data);
-      alert('게시글이 삭제되었습니다.');
+      speak('게시글이 삭제되었습니다.', { lang: 'ko-KR' });
       navigate('/');
     } catch (error) {
       console.error('게시글을 삭제하는 데 실패했습니다:', error);
+      speak('게시글을 삭제하는 데 실패했습니다.', { lang: 'ko-KR' });
       // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
     }
+  };
+
+  const handleVoiceCommentInput = () => {
+    resetTranscript();
+    SpeechRecognition.startListening({ continuous: false });
+  };
+
+  useEffect(() => {
+    if (!listening) {
+      if (transcript) {
+        setComment(transcript);
+        speak('댓글이 입력되었습니다.', { lang: 'ko-KR' });
+      }
+    }
+  }, [listening, transcript]);
+
+  useEffect(() => {
+    const handleFocus = (event) => {
+      const text = event.target.placeholder || event.target.textContent || '';
+      speak(text, { lang: 'ko-KR' });
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        event.target.click();
+      }
+    };
+
+    const elements = document.querySelectorAll('[tabindex]');
+
+    elements.forEach(element => {
+      element.addEventListener('focus', handleFocus);
+      element.addEventListener('keydown', handleKeyDown);
+    });
+
+    return () => {
+      elements.forEach(element => {
+        element.removeEventListener('focus', handleFocus);
+        element.removeEventListener('keydown', handleKeyDown);
+      });
+    };
+  }, []);
+
+  // 댓글 요소에 포커스 이벤트 리스너 추가
+  useEffect(() => {
+    const commentsElements = document.querySelectorAll('.comment');
+
+    const handleFocus = (event) => {
+      const text = event.target.textContent || '';
+      speak(text, { lang: 'ko-KR' });
+    };
+
+    commentsElements.forEach((comment) => {
+      comment.addEventListener('focus', handleFocus);
+    });
+
+    return () => {
+      commentsElements.forEach((comment) => {
+        comment.removeEventListener('focus', handleFocus);
+      });
+    };
+  }, [comments]);
+
+  // 댓글 신고 요소에 포커스 이벤트 리스너 추가 
+  const handleFocusCommentOptionsButton = () => {
+    speak('해당 댓글 신고', { lang: 'ko-KR' });
   };
 
   if (!post) {
@@ -241,7 +312,7 @@ const PostDetail = () => {
           <ImageSection />
           <DetailContainer>
             <TitleContainer>
-              <h1>{post.title}</h1>
+              <h1 tabIndex="0">{post.title}</h1>
             </TitleContainer>
             <InfoContainer>
               <ProfileImage src={`${process.env.PUBLIC_URL}/user.png`} alt="Profile"/>
@@ -250,15 +321,19 @@ const PostDetail = () => {
                 <p>{new Date(post.createdAt).toLocaleDateString()}</p>
               </div>
             </InfoContainer>
-            <ContentContainer>
+            <ContentContainer tabIndex="0">
               <p>{post.content}</p>
             </ContentContainer>
             <CommentSection>
               <h2>댓글</h2>
               {comments.map((comment, index) => (
-                <CommentContainer key={index}>
+                <CommentContainer key={index} className="comment" tabIndex="0">
                   <p><strong>{nickname} : </strong> {comment.content}</p>
-                  <CommentOptionsButton onClick={() => handleCommentReport(comment.commentId)}>⋮</CommentOptionsButton>
+                  <CommentOptionsButton
+                    onClick={() => handleCommentReport(comment.commentId)}
+                    onFocus={handleFocusCommentOptionsButton}
+                    tabIndex="0"
+                  >⋮</CommentOptionsButton>
                 </CommentContainer>
               ))}
               <CommentInput 
@@ -266,15 +341,17 @@ const PostDetail = () => {
                 placeholder="댓글을 입력하세요" 
                 value={comment}
                 onChange={handleCommentChange}
+                tabIndex="0"
               />
-              <CommentButton onClick={handleCommentSubmit}>등록</CommentButton>
+              <Button type="button" tabIndex="0" onClick={handleVoiceCommentInput}>음성으로 댓글 입력</Button>
+              <CommentButton onClick={handleCommentSubmit} tabIndex="0">등록</CommentButton>
             </CommentSection>
           </DetailContainer>
           <ButtonContainer>
-            <Button onClick={handleGoMain}>목록</Button>
-            <Button onClick={handleEdit}>수정</Button>
-            <Button onClick={handleReport}>신고</Button>
-            <Button onClick={handleDelete}>삭제</Button>
+            <Button onClick={handleGoMain} tabIndex="0">목록</Button>
+            <Button onClick={handleEdit} tabIndex="0">수정</Button>
+            <Button onClick={handleReport} tabIndex="0">신고</Button>
+            <Button onClick={handleDelete} tabIndex="0">삭제</Button>
           </ButtonContainer>
         </LeftSubContainer>
         <RightSubContainer>

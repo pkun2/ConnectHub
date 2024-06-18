@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Notification from './Notification';
+import { speak } from '../speech/speechUtils'; // TTS 기능을 위한 함수 import
 
 // 네비게이션 바
 const NavContainer = styled.nav`
@@ -14,7 +15,6 @@ const NavContainer = styled.nav`
   align-items: center;
   justify-content: space-around;
   background : linear-gradient(to left top, #ADD8E6, white);
-  z-index: 1000;
   opacity : 80%;
   overflow-x: auto; /* 가로로 내용이 넘칠 경우 가로 스크롤 생성 */
   overflow-y: hidden; /* 세로 스크롤 숨김 */

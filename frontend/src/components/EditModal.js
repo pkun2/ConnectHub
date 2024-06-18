@@ -1,9 +1,9 @@
-// EditModal.js
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-modal';
 import axios from 'axios';
+import { speak } from '../speech/speechUtils';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'; // STT 사용을 위한 import
 
 const customStyles = {
   content: {
@@ -52,8 +52,23 @@ const ModalButtonContainer = styled.div`
   justify-content: center;
 `;
 
-const Button = styled.button`
+const ModalButton = styled.button`
   margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: #add8e6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-right: 10px;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const VoiceInputButton = styled.button`
+  margin-bottom: 20px;
   padding: 8px 16px;
   font-size: 1em;
   cursor: pointer;
@@ -70,6 +85,29 @@ const Button = styled.button`
 const EditModal = ({ isOpen, onRequestClose, postId }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (isOpen) {
+      speak('게시글 수정 창이 열렸습니다.', { lang: 'ko-KR' });
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!listening) {
+      if (transcript) {
+        if (titleInput) {
+          setTitle(transcript);
+        } else if (contentInput) {
+          setContent(transcript);
+        }
+        speak('음성 입력이 완료되었습니다.', { lang: 'ko-KR' });
+      }
+    }
+  }, [listening, transcript]);
+
+  const [titleInput, setTitleInput] = useState(false);
+  const [contentInput, setContentInput] = useState(false);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -81,7 +119,7 @@ const EditModal = ({ isOpen, onRequestClose, postId }) => {
 
   const handleEditSubmit = async () => {
     if (title.trim() === '' || content.trim() === '') {
-      alert('제목과 내용을 모두 입력해주세요.');
+      speak('제목과 내용을 모두 입력해주세요.', { lang: 'ko-KR' });
       return;
     }
 
@@ -91,14 +129,25 @@ const EditModal = ({ isOpen, onRequestClose, postId }) => {
         content: content,
         postId: postId,
       });
+      speak('게시글이 성공적으로 수정되었습니다.', { lang: 'ko-KR' });
       console.log('게시글이 성공적으로 수정되었습니다:', response.data);
-      alert('게시글이 성공적으로 수정되었습니다.');
-      window.location.reload();
-      onRequestClose(); // 모달 닫기
+
+      // TTS 발화 후 페이지 새로 고침
+      setTimeout(() => {
+        window.location.reload();
+        onRequestClose(); // 모달 닫기
+      }, 3000); // 3초 지연 (TTS 발화 시간 고려)
     } catch (error) {
       console.error('게시글 수정 중 오류 발생:', error);
-      alert('게시글 수정 중 오류가 발생했습니다.');
+      speak('게시글 수정 중 오류가 발생했습니다.', { lang: 'ko-KR' });
     }
+  };
+
+  const handleVoiceInput = (inputType) => {
+    resetTranscript();
+    setTitleInput(inputType === 'title');
+    setContentInput(inputType === 'content');
+    SpeechRecognition.startListening({ continuous: false });
   };
 
   return (
@@ -108,21 +157,37 @@ const EditModal = ({ isOpen, onRequestClose, postId }) => {
       style={customStyles}
       contentLabel="수정 모달"
     >
-      <ModalTitle>게시글 수정</ModalTitle>
+      <ModalTitle tabIndex="0" onFocus={() => speak('게시글 수정', { lang: 'ko-KR' })}>
+        게시글 수정
+      </ModalTitle>
       <ModalInput
         type="text"
         placeholder="제목"
         value={title}
         onChange={handleTitleChange}
+        tabIndex="0"
+        onFocus={() => speak('제목', { lang: 'ko-KR' })}
       />
+      <VoiceInputButton onClick={() => handleVoiceInput('title')} tabIndex="0" onFocus={() => speak('제목 음성 입력', { lang: 'ko-KR' })}>
+        제목 음성 입력
+      </VoiceInputButton>
       <ModalTextarea
         placeholder="내용을 입력하세요"
         value={content}
         onChange={handleContentChange}
+        tabIndex="0"
+        onFocus={() => speak('내용을 입력하세요', { lang: 'ko-KR' })}
       />
+      <VoiceInputButton onClick={() => handleVoiceInput('content')} tabIndex="0" onFocus={() => speak('내용 음성 입력', { lang: 'ko-KR' })}>
+        내용 음성 입력
+      </VoiceInputButton>
       <ModalButtonContainer>
-        <Button onClick={handleEditSubmit}>수정 </Button>
-        <Button onClick={onRequestClose}>닫기 </Button>
+        <ModalButton tabIndex="0" onFocus={() => speak('수정', { lang: 'ko-KR' })} onClick={handleEditSubmit}>
+          수정
+        </ModalButton>
+        <ModalButton tabIndex="0" onFocus={() => speak('닫기', { lang: 'ko-KR' })} onClick={onRequestClose}>
+          닫기
+        </ModalButton>
       </ModalButtonContainer>
     </Modal>
   );
