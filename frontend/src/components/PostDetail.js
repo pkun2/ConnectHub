@@ -8,6 +8,12 @@ import MenuSection from './MenuSection';
 import axios from 'axios';
 import { AuthContext } from './AuthContext';
 import { useParams } from 'react-router-dom';
+import ReportModal from './ReportModal';
+import { speak } from '../speech/speechUtils'; // TTS 함수 import
+import EditModal from './EditModal';
+import CommentReportModal from './CommentReportModal';
+import { useNavigate } from 'react-router-dom';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'; // STT 사용을 위한 import
 
 const MainContainer = styled.div`
   display: flex;
@@ -67,7 +73,6 @@ const ProfileImage = styled.img`
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
-  background-image: url('/user.png');
 `;
 
 const ContentContainer = styled.div`
@@ -122,19 +127,43 @@ const CommentButton = styled(Button)`
   }
 `;
 
+const CommentOptionsButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5em;
+`;
+
+const CommentContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+`;
+
 const PostDetail = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체게시판');
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
+  const [selectedCommentId, setSelectedCommentId] = useState(null); // 선택된 댓글 ID
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isCommentReportModalOpen, setIsCommentReportModalOpen] = useState(false);
   const { postId } = useParams();
   const { userId, nickname } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/api/post/${postId}`);
         setPost(response.data);
+        
+        const commentsResponse = await axios.get(`http://localhost:4000/api/post/${postId}/comment`);
+        setComments(commentsResponse.data);
       } catch (error) {
         console.error('게시글을 불러오는 데 실패했습니다.', error);
       }
@@ -159,21 +188,115 @@ const PostDetail = () => {
     try {
       const response = await axios.post('http://localhost:4000/api/post/comment', newComment);
       console.log('댓글이 작성되었습니다:', response.data);
-      setComments([...comments, newComment ]); // 새로운 댓글을 기존 댓글 목록에 추가
+      setComments([...comments, newComment]); // 새로운 댓글을 기존 댓글 목록에 추가
       setComment(''); // 댓글 입력 창 비우기
     } catch (error) {
       console.error('댓글을 등록하는 데 실패했습니다:', error);
       // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
     }
   };
-
-
+  
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
 
+  const handleCommentReport = (commentId) => {
+    setSelectedCommentId(commentId);
+    setIsCommentReportModalOpen(true);
+  }
+
+  const handleGoMain = () => {
+    navigate('/');
+  };
+
   const handleEdit = () => {
-    console.log('수정 버튼 클릭');
+    setIsEditModalOpen(true); // 수정 모달 열기
+  };
+
+  const handleReport = () => {
+    setIsReportModalOpen(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:4000/api/post/`, {
+        data: { userId: userId, postId: postId }
+      });
+      console.log('게시글이 삭제되었습니다:', response.data);
+      speak('게시글이 삭제되었습니다.', { lang: 'ko-KR' });
+      navigate('/');
+    } catch (error) {
+      console.error('게시글을 삭제하는 데 실패했습니다:', error);
+      speak('게시글을 삭제하는 데 실패했습니다.', { lang: 'ko-KR' });
+      // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
+    }
+  };
+
+  const handleVoiceCommentInput = () => {
+    resetTranscript();
+    SpeechRecognition.startListening({ continuous: false });
+  };
+
+  useEffect(() => {
+    if (!listening) {
+      if (transcript) {
+        setComment(transcript);
+        speak('댓글이 입력되었습니다.', { lang: 'ko-KR' });
+      }
+    }
+  }, [listening, transcript]);
+
+  useEffect(() => {
+    const handleFocus = (event) => {
+      const text = event.target.placeholder || event.target.textContent || '';
+      speak(text, { lang: 'ko-KR' });
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        event.target.click();
+      }
+    };
+
+    const elements = document.querySelectorAll('[tabindex]');
+
+    elements.forEach(element => {
+      element.addEventListener('focus', handleFocus);
+      element.addEventListener('keydown', handleKeyDown);
+    });
+
+    return () => {
+      elements.forEach(element => {
+        element.removeEventListener('focus', handleFocus);
+        element.removeEventListener('keydown', handleKeyDown);
+      });
+    };
+  }, []);
+
+  // 댓글 요소에 포커스 이벤트 리스너 추가
+  useEffect(() => {
+    const commentsElements = document.querySelectorAll('.comment');
+
+    const handleFocus = (event) => {
+      const text = event.target.textContent || '';
+      speak(text, { lang: 'ko-KR' });
+    };
+
+    commentsElements.forEach((comment) => {
+      comment.addEventListener('focus', handleFocus);
+    });
+
+    return () => {
+      commentsElements.forEach((comment) => {
+        comment.removeEventListener('focus', handleFocus);
+      });
+    };
+  }, [comments]);
+
+  // 댓글 신고 요소에 포커스 이벤트 리스너 추가 
+  const handleFocusCommentOptionsButton = () => {
+    speak('해당 댓글 신고', { lang: 'ko-KR' });
   };
 
   if (!post) {
@@ -186,40 +309,49 @@ const PostDetail = () => {
       <Option />
       <MainContainer>
         <LeftSubContainer>
-          <ImageSection imageUrl="https://img.freepik.com/free-vector/men-women-welcoming-people-with-disabilities-group-people-meeting-blind-female-character-male-wheelchair_74855-18436.jpg?t=st=1715345864~exp=1715349464~hmac=174d5e762b369d4beba592670b688d3510807248c829290eee0a091388aae385&w=826" />
+          <ImageSection />
           <DetailContainer>
             <TitleContainer>
-              <h1>{post.title}</h1>
+              <h1 tabIndex="0">{post.title}</h1>
             </TitleContainer>
             <InfoContainer>
-              <ProfileImage/>
+              <ProfileImage src={`${process.env.PUBLIC_URL}/user.png`} alt="Profile"/>
               <div>
                 <p>{post.nickname}</p>
                 <p>{new Date(post.createdAt).toLocaleDateString()}</p>
               </div>
             </InfoContainer>
-            <ContentContainer>
+            <ContentContainer tabIndex="0">
               <p>{post.content}</p>
             </ContentContainer>
             <CommentSection>
               <h2>댓글</h2>
               {comments.map((comment, index) => (
-                <div key={index}>
+                <CommentContainer key={index} className="comment" tabIndex="0">
                   <p><strong>{nickname} : </strong> {comment.content}</p>
-                </div>
+                  <CommentOptionsButton
+                    onClick={() => handleCommentReport(comment.commentId)}
+                    onFocus={handleFocusCommentOptionsButton}
+                    tabIndex="0"
+                  >⋮</CommentOptionsButton>
+                </CommentContainer>
               ))}
               <CommentInput 
                 type="text" 
                 placeholder="댓글을 입력하세요" 
                 value={comment}
                 onChange={handleCommentChange}
+                tabIndex="0"
               />
-              <CommentButton onClick={handleCommentSubmit}>등록</CommentButton>
+              <Button type="button" tabIndex="0" onClick={handleVoiceCommentInput}>음성으로 댓글 입력</Button>
+              <CommentButton onClick={handleCommentSubmit} tabIndex="0">등록</CommentButton>
             </CommentSection>
           </DetailContainer>
           <ButtonContainer>
-            <Button onClick={handleEdit}>수정</Button>
-            <Button>신고</Button>
+            <Button onClick={handleGoMain} tabIndex="0">목록</Button>
+            <Button onClick={handleEdit} tabIndex="0">수정</Button>
+            <Button onClick={handleReport} tabIndex="0">신고</Button>
+            <Button onClick={handleDelete} tabIndex="0">삭제</Button>
           </ButtonContainer>
         </LeftSubContainer>
         <RightSubContainer>
@@ -230,6 +362,25 @@ const PostDetail = () => {
           />
         </RightSubContainer>
       </MainContainer>
+
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onRequestClose={() => setIsReportModalOpen(false)}
+        postId={postId}
+      />
+
+      <EditModal
+        isOpen={isEditModalOpen}
+        onRequestClose={() => setIsEditModalOpen(false)}
+        postId={postId}
+      />
+
+      <CommentReportModal
+        isOpen={isCommentReportModalOpen}
+        onRequestClose={() => setIsCommentReportModalOpen(false)}
+        commentId={selectedCommentId}
+        postId={postId}
+      />
     </>
   );
 };

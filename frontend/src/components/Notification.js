@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'; // useEffect와 useRef 추가
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ToggleSwitch from './ToggleSwitch';
 import { speak } from '../speech/speechUtils'; // TTS 기능 import
@@ -169,34 +169,25 @@ function Notification() {
     speak(`메시지 알림이 ${!Notification_3 ? '활성화' : '비활성화'}되었습니다.`, { lang: 'ko-KR' });
   };
 
-  useEffect(() => {
-    const handleFocusNotificationIcon = () => {
-      speak("알림", { lang: 'ko-KR' });
-    };
-
-    const handleFocusNotificationOptionIcon = () => {
-      speak("설정", { lang: 'ko-KR' });
-    };
-
-    const notificationIcon = notificationIconRef.current;
-    const notificationOptionIcon = notificationOptionIconRef.current;
-
-    notificationIcon.addEventListener('focus', handleFocusNotificationIcon);
-    notificationOptionIcon.addEventListener('focus', handleFocusNotificationOptionIcon);
-
-    return () => {
-      notificationIcon.removeEventListener('focus', handleFocusNotificationIcon);
-      notificationOptionIcon.removeEventListener('focus', handleFocusNotificationOptionIcon);
-    };
-  }, []);
+  const handleKeyDownToggleSwitch = (event, toggleFunction) => {
+    if (event.key === 'Enter') {
+      toggleFunction();
+    }
+  };
 
   return (
     <div>
       <NotificationIcon
-        ref={notificationIconRef}
         onClick={handleOpenModal}
         src="https://cdn.icon-icons.com/icons2/1993/PNG/512/alarm_alert_attention_bell_clock_notification_ring_icon_123203.png"
         tabIndex="0"
+        alt="알림"
+        onFocus={() => speak("알림", { lang: 'ko-KR' })}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            handleOpenModal();  // Enter 키로 모달 열기
+          }
+        }}
       />
       {showModal && (
         <>
@@ -212,11 +203,16 @@ function Notification() {
         </>
       )}
       <NotificationOptionIcon
-        ref={notificationOptionIconRef}
         onClick={handleOpenOption}
         src="https://cdn.icon-icons.com/icons2/3106/PNG/512/gear_settings_options_icon_191642.png"
-        alt="옵션"
         tabIndex="0"
+        alt="옵션"
+        onFocus={() => speak("옵션", { lang: 'ko-KR' })}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            handleOpenOption();  // Enter 키로 모달 열기
+          }
+        }}
       />
       {showOption && (
         <>
@@ -226,30 +222,52 @@ function Notification() {
               <OptionHeaderItem>옵션</OptionHeaderItem>
             </OptionHeader>
             <OptionContainer isFirst>
-              <OptionItem tabIndex="0">새 게시글 알림</OptionItem>
+              <OptionItem
+                tabIndex="0"
+                onFocus={() => speak("새 게시글 알림", { lang: 'ko-KR' })}
+              >
+                새 게시글 알림
+              </OptionItem>
               <ToggleSwitch
                 checked={Notification_1}
                 onChange={handleToggleNotification_1}
                 tabIndex="0"
+                onKeyDown={(event) => handleKeyDownToggleSwitch(event, handleToggleNotification_1)}
               />
             </OptionContainer>
             <OptionContainer>
-              <OptionItem tabIndex="0">댓글 알림</OptionItem>
+              <OptionItem
+                tabIndex="0"
+                onFocus={() => speak("댓글 알림", { lang: 'ko-KR' })}
+              >
+                댓글 알림
+              </OptionItem>
               <ToggleSwitch
                 checked={Notification_2}
                 onChange={handleToggleNotification_2}
                 tabIndex="0"
+                onKeyDown={(event) => handleKeyDownToggleSwitch(event, handleToggleNotification_2)}
               />
             </OptionContainer>
             <OptionContainer>
-              <OptionItem tabIndex="0">메시지 알림</OptionItem>
+              <OptionItem
+                tabIndex="0"
+                onFocus={() => speak("메시지 알림", { lang: 'ko-KR' })}
+              >
+                메시지 알림
+              </OptionItem>
               <ToggleSwitch
                 checked={Notification_3}
                 onChange={handleToggleNotification_3}
                 tabIndex="0"
+                onKeyDown={(event) => handleKeyDownToggleSwitch(event, handleToggleNotification_3)}
               />
             </OptionContainer>
-            <ExitButton onClick={handleCloseOption} tabIndex="0">닫기</ExitButton>
+            <ExitButton 
+              onClick={handleCloseOption} 
+              tabIndex="0"
+              onFocus={() => speak("닫기", { lang: 'ko-KR' })}
+            >닫기</ExitButton>
           </ModalOption>
         </>
       )}

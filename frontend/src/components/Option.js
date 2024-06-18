@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';       
+import React, { useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import { speak } from '../speech/speechUtils'; // tts, 음성 출력을 위한 함수 import
 
 const OptionContainer = styled.div`
@@ -58,9 +58,9 @@ const TTSButton = styled.div`
   }
 `;
 
-
 const Option = () => {
   const [ttsEnabled, setTtsEnabled] = useState(false);
+  const searchInputRef = useRef(null);
 
   const handleTTSOn = () => {
     setTtsEnabled(true);
@@ -73,11 +73,11 @@ const Option = () => {
   };
 
   useEffect(() => {
-    const searchInput = document.querySelector('#search-input');
+    const searchInput = searchInputRef.current;
 
     const handleFocus = (event) => {
       if (ttsEnabled) {
-        const text = event.target.placeholder || event.target.value || '';
+        const text = event.target.placeholder || event.target.value || '검색어 입력';
         speak(text, { lang: 'ko-KR' });
       }
     };
@@ -97,8 +97,16 @@ const Option = () => {
     <OptionContainer>
       <div /> <div />
       <SearchWrapper>
-        <SearchInput id="search-input" type="text" placeholder="검색어 입력"/>
-        <SearchIcon src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" alt="Search Icon" />
+        <SearchInput
+          ref={searchInputRef}
+          type="text"
+          placeholder="검색어 입력"
+          tabIndex="0"
+        />
+        <SearchIcon
+          src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
+          alt="Search Icon"
+        />
       </SearchWrapper>
       <div /> <div /> <div />
       <TTSButton onClick={handleTTSOn} tabIndex="0">TTS On</TTSButton>

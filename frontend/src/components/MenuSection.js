@@ -84,28 +84,28 @@ const MenuSection = ({ onCategoryChange, selectedCategory }) => {
         &nbsp;&nbsp;전체게시판
       </MenuSelect>
       <MenuSelect
-        tabIndex="1"
+        tabIndex="0"
         onClick={() => handleCategoryClick('1')}
         style={{ background: selectedCategory === '자유게시판' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
       >
         &nbsp;&nbsp;자유게시판
       </MenuSelect>
       <MenuSelect
-        tabIndex="2"
+        tabIndex="0"
         onClick={() => handleCategoryClick('2')}
         style={{ background: selectedCategory === '공지사항' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
       >
         &nbsp;&nbsp;공지사항
       </MenuSelect>
       <MenuSelect
-        tabIndex="3"
+        tabIndex="0"
         onClick={() => handleCategoryClick('3')}
         style={{ background: selectedCategory === '정부 혜택' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
       >
         &nbsp;&nbsp;정부 혜택
       </MenuSelect>
       <MenuSelect
-        tabIndex="4"
+        tabIndex="0"
         onClick={() => handleCategoryClick('4')}
         style={{ background: selectedCategory === '정보게시판' ? 'linear-gradient(to left top, #add8e6, white)' : 'initial' }}
       >
