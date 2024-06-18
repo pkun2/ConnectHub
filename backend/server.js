@@ -1,7 +1,11 @@
+// server.js
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
+import postRouter from "./router/postRouter";
+import adminRouter from "./router/adminRouter";
+import visitorCounter from "./middleware/visitorCounter";
 import pool from "./config/db.js";
 import cookieParser from "cookie-parser";
 import session from "express-session"
@@ -15,7 +19,7 @@ import authenticateJWT from "./middleware/jwtController.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT; // 포트 번호 설정
+const PORT = process.env.PORT;
 
 app.use(cors({
     origin: 'http://localhost:3000', // 리액트 앱의 주소
@@ -46,7 +50,6 @@ app.use('/api/notifications', notificationRouter);
 
 const checkConnectDB = async () => {
     try {
-        // DB 연결 확인
         await pool.getConnection();
         console.log("DB 연결 성공");
     } catch (err) {
@@ -57,7 +60,6 @@ const checkConnectDB = async () => {
 
 checkConnectDB();
 
-// 서버 시작
 app.listen(PORT, () => {
     console.log(`서버가 해당 주소로 실행중: http://localhost:${PORT}`);
 });

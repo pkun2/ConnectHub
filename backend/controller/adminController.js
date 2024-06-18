@@ -1,9 +1,3 @@
-// 해야할일
-/*
-    11.5 게시글 관리 기능 구현
-    11.6 댓글 관리 기능 구현
-    11.7 통계 기능 구현
-*/
 import Post from "../model/Post"
 import Comment from "../model/Comment";
 import Admin from "../model/Admin";
