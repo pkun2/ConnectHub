@@ -1,9 +1,16 @@
-import express from 'express';
-import { getPostById, getCommentsByPostId } from '../controller/postController';
+import express from "express";
+import { postWriteController, postViewController, getPostDetailController, deletePostController, postCommentController, getCommentsByPostController, postUpdateController, reportPostController, reportCommentController} from "../controller/postController";
 
 const postRouter = express.Router();
 
-postRouter.get('/:id', getPostById);
-postRouter.get('/:id/comment', getCommentsByPostId);
+postRouter.route("/write").post(postWriteController);
+postRouter.get("/", postViewController)
+postRouter.delete("/", deletePostController);
+postRouter.get("/:id", getPostDetailController);
+postRouter.put("/update/:id", postUpdateController);  // 게시글 변경 기능
+postRouter.get("/:id/comment", getCommentsByPostController);
+postRouter.post("/comment", postCommentController);
+postRouter.post('/report', reportPostController);
+postRouter.post("/:id/comment/report", reportCommentController); // 댓글 신고 기능
 
 export default postRouter;

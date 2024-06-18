@@ -69,17 +69,39 @@ export const getPostDetailController = async (req, res) => {
     const postId = req.params.id;
     try {
         const post = await Post.getPostDetail(postId);
-        res.status(200).json(post);
+        if (post) {
+            res.status(200).json(post);
+            logger.info(`게시글 상세 조회 성공: ${postId}`);
+        } else {
+            res.status(404).send('해당하는 게시글을 찾을 수 없습니다.');
+            logger.warn(`게시글을 찾을 수 없음: ${postId}`);
+        }
     } catch (err) {
         res.status(500).send('게시글 조회 중 오류 발생: ' + err.message);
+        logger.error(`게시글 조회 중 오류 발생: ${err.message}`);
     }
 };
 
-export const getCommentsByPostId = async (req, res) => {
+// 댓글 작성 컨트롤러
+export const postCommentController = async (req, res) => {
+    const { postId, userId, content } = req.body;
+    try {
+        const result = await Comment.insertComment(postId, userId, content);
+        res.status(200).json(result);
+        logger.info(`댓글 생성 성공: ${content}`);
+    } catch (err) {
+        res.status(500).send('댓글 생성 중 오류 발생: ' + err.message);
+        logger.error(`댓글 생성 중 오류 발생: ${err.message}`);
+    }
+};
+
+// 댓글 조회 컨트롤러
+export const getCommentsByPostController = async (req, res) => {
     const postId = req.params.id;
     try {
         const comments = await Comment.getCommentsByPostId(postId);
         res.status(200).json(comments);
+        logger.info(`댓글 조회 성공: ${postId}`);
     } catch (err) {
         res.status(500).send('댓글 조회 중 오류 발생: ' + err.message);
         logger.error(`댓글 조회 중 오류 발생: ${err.message}`);
@@ -87,15 +109,15 @@ export const getCommentsByPostId = async (req, res) => {
 };
 // 게시글 삭제 컨트롤러
 export const deletePostController = async (req, res) => {
-    const { userId, postId } = req.body; // Request Body에서 userId와 postId 추출
-
+    const { userId, postId } = req.body; // Request Body에서 userId 추출
+    
     try {
         const postUserId = await Post.getUserIdByPostId(postId); // 게시글 작성자 조회
         if (postUserId === null) {
             res.status(404).send('삭제할 게시글을 찾을 수 없습니다.');
             return;
         }
-        if (userId !== postUserId) {
+        if (userId != postUserId) {
             res.status(403).send('삭제 권한이 없습니다.');
             return;
         }
