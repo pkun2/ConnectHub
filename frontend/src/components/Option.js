@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { speak } from '../speech/speechUtils'; // tts, 음성 출력을 위한 함수 import
+import { speak, cancelSpeech, setTtsEnabled } from '../speech/speechUtils'; // tts, 음성 출력을 위한 함수 import
 
 const OptionContainer = styled.div`
   position: relative;
@@ -59,17 +59,20 @@ const TTSButton = styled.div`
 `;
 
 const Option = () => {
-  const [ttsEnabled, setTtsEnabled] = useState(false);
+  const [ttsEnabled, setTtsEnabledState] = useState(false);
   const searchInputRef = useRef(null);
 
   const handleTTSOn = () => {
+    setTtsEnabledState(true);
     setTtsEnabled(true);
     speak('TTS가 켜졌습니다.', { lang: 'ko-KR' });
   };
 
   const handleTTSOff = () => {
+    setTtsEnabledState(false);
     setTtsEnabled(false);
-    speak('TTS가 꺼졌습니다.', { lang: 'ko-KR' });
+    cancelSpeech();
+    // TTS Off 상태에서는 음성을 출력하지 않도록 speak 호출을 생략합니다.
   };
 
   useEffect(() => {
