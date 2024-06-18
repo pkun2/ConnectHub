@@ -4,6 +4,8 @@ import GotoTop from './components/GotoTop';
 import GotoAdmin from './components/GotoAdmin';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MyPage from './components/MyPage';
+import Main from './components/Main';
+import Foot from './components/Foot';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import PasswordResetRequestForm from './components/PasswordResetRequestForm';
@@ -37,8 +39,6 @@ function App() {
             <Route path='/post/:postId' element={<PostDetail/>} />
           </Routes>
 
-          {/* 하단바 */}
-          <Foot />
         </div>
       </Router>
     </AuthProvider>
