@@ -18,6 +18,7 @@ import visitorCounter from "./middleware/visitorCounter.js"
 import postRouter from "./router/postRouter.js"
 import userRouter from "./router/userRouter.js";
 import notificationRouter from './router/notificationRouter.js';
+import authenticateJWT from "./middleware/jwtController.js";
 
 dotenv.config();
 
@@ -42,8 +43,9 @@ app.use(session({
     }
 
 }));
-
+app.use(visitorCounter); // 방문자 수 카운트 미들웨어
 app.use("/", homeRouter);
+app.use("/api/user", userRouter);          
 app.use("/api/post", postRouter);
 app.use("/api/signup", signUpRouter);
 app.use("/api/login", loginRouter);
@@ -53,7 +55,6 @@ app.use("/api/findEmail", emailFindRouter);
 app.use('/api/user/changePassword', passwordChangeRouter);
 app.use('/api/user/changeNickname', nicknameChangeRouter);
 app.use("/api/admin", adminRouter);
-app.use("/api/user", userRouter);          
 app.use('/api/notifications', notificationRouter);
 
 const checkConnectDB = async () => {

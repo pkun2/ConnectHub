@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { speak } from '../speech/speechUtils';  // tts, 음성 출력을 위한 함수 import
 
 // 로그인 아이디 비밀번호 찾기 회원가입 버튼 컨테이너
 const LoginRegisterContainer = styled.div`
@@ -49,7 +50,6 @@ const Register = styled.div`
       }
 `;
 
-
 const NonLogin = () => {
   const navigate = useNavigate();
 
@@ -59,15 +59,36 @@ const NonLogin = () => {
 
   const handleSignUpClick = () =>{
     navigate('/signup');
-}
+  };
+
+  // tts, 음성 출력 및 탭으로 포커싱
+  useEffect(() => {
+    const buttons = document.querySelectorAll('.non-login-button');
+
+    const handleFocus = (event) => {
+      const text = event.target.textContent.trim();
+      speak(text);
+    };
+
+    buttons.forEach(button => {
+      button.addEventListener('focus', handleFocus);
+    });
+
+    return () => {
+      buttons.forEach(button => {
+        button.removeEventListener('focus', handleFocus);
+      });
+    };
+  }, []);
+
 
   return (
     <LoginRegisterContainer>
-      <Login onClick={handleLoginClick}> 로그인 </Login>
+      <Login onClick={handleLoginClick} className="non-login-button" tabIndex="0"> 로그인 </Login>
       <RegisterContainer>
-        <Register> 아이디 찾기 </Register>
-        <Register> 비밀번호 찾기 </Register>
-        <Register onClick={handleSignUpClick}> 회원가입 </Register>
+        <Register className="non-login-button" tabIndex="0"> 아이디 찾기 </Register>
+        <Register className="non-login-button" tabIndex="0"> 비밀번호 찾기 </Register>
+        <Register onClick={handleSignUpClick} className="non-login-button" tabIndex="0"> 회원가입 </Register>
       </RegisterContainer>
     </LoginRegisterContainer>
   );
