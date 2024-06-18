@@ -31,18 +31,34 @@ export const Subtitle = styled.h2`
 export const Input = styled.input`
     width: 100%;
     padding: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 1px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
 `;
 
 export const Button = styled.button`
+    width: 40%;
+    background-color: ${(props) => props.backgroundColor || '#ADD8E6'};
+    color: #fff;
+    border: none;
+    padding: 5px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    &:hover {
+        background-color: ${(props) => props.hoverColor || '#7BB7D3'};
+    }
+`;
+
+export const Button2 = styled.button`
     width: 100%;
     background-color: ${(props) => props.backgroundColor || '#ADD8E6'};
     color: #fff;
     border: none;
     padding: 15px;
+    margin-bottom: 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
