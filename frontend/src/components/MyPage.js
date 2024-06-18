@@ -183,6 +183,7 @@ const MyPage = () => {
           <ExitButton onClick={() => { setNickname(''); setCurrentPassword(''); setNewPassword(''); }}>취소</ExitButton>
         </ButtonContainer>
       </MainContainer>
+      <Foot />
     </>
   );
 }
