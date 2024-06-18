@@ -102,18 +102,17 @@ export const findEmailByPhoneNum = async (req, res) => {
 
 // 프로필: 닉네임 변경
 export const changeNicknameController = async (req, res) => {
-    const { email, currentPassword, newNickname } = req.body;
-
-    if (!email || !currentPassword || !newNickname) {
+    const { userId, currentPassword, newNickname } = req.body;
+    if (!userId || !currentPassword || !newNickname) {
         return res.status(400).send('필수 필드가 누락되었습니다.');
     }
 
     try {
-        const sql = 'SELECT * FROM users WHERE email = ?';
-        const [result] = await db.query(sql, [email]);
+        const sql = 'SELECT * FROM users WHERE userId = ?';
+        const [result] = await db.query(sql, [userId]);
 
         if (result.length === 0) {
-            return res.status(404).send('해당 이메일을 찾을 수 없습니다.');
+            return res.status(404).send('해당 사용자를 찾을 수 없습니다.');
         }
 
         const user = result[0];
@@ -122,8 +121,8 @@ export const changeNicknameController = async (req, res) => {
             return res.status(401).send('현재 비밀번호가 일치하지 않습니다.');
         }
 
-        const updateSql = 'UPDATE users SET nickname = ? WHERE email = ?';
-        await db.query(updateSql, [newNickname, email]);
+        const updateSql = 'UPDATE users SET nickname = ? WHERE userId = ?';
+        await db.query(updateSql, [newNickname, userId]);
 
         res.status(200).send('닉네임이 성공적으로 변경되었습니다.');
     } catch (error) {
@@ -134,15 +133,15 @@ export const changeNicknameController = async (req, res) => {
 
 // 프로필: 비밀번호 변경
 export const changePasswordController = async (req, res) => {
-    const { email, currentPassword, newPassword } = req.body;
+    const { userId, currentPassword, newPassword } = req.body;
 
-    if (!email || !currentPassword || !newPassword) {
+    if (!userId || !currentPassword || !newPassword) {
         return res.status(400).send('필수 필드가 누락되었습니다.');
     }
 
     try {
-        const sql = 'SELECT * FROM users WHERE email = ?';
-        const [result] = await db.query(sql, [email]);
+        const sql = 'SELECT * FROM users WHERE userId = ?';
+        const [result] = await db.query(sql, [userId]);
 
         if (result.length === 0) {
             return res.status(404).send('해당 이메일을 찾을 수 없습니다.');
@@ -155,8 +154,8 @@ export const changePasswordController = async (req, res) => {
         }
 
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-        const updateSql = 'UPDATE users SET password = ? WHERE email = ?';
-        await db.query(updateSql, [hashedNewPassword, email]);
+        const updateSql = 'UPDATE users SET password = ? WHERE userId = ?';
+        await db.query(updateSql, [hashedNewPassword, userId]);
 
         res.status(200).send('비밀번호가 성공적으로 변경되었습니다.');
     } catch (error) {
