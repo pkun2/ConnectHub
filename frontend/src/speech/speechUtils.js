@@ -1,4 +1,4 @@
-let ttsEnabledGlobal = false;
+let ttsEnabledGlobal = true;
 
 export const setTtsEnabled = (enabled) => {
   ttsEnabledGlobal = enabled;

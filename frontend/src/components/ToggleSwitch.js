@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { speak } from '../speech/speechUtils'; // TTS 기능 import
 
 const Switch = styled.label`
   position: relative;
@@ -42,8 +43,10 @@ const ToggleSwitch = ({ checked, onChange, tabIndex }) => {
     const [isOn, setIsOn] = useState(checked);
 
     const handleToggle = () => {
-        setIsOn(prevIsOn => !prevIsOn);
-        onChange && onChange(!isOn);
+        const newIsOn = !isOn;
+        setIsOn(newIsOn);
+        onChange && onChange(newIsOn);
+        speak(newIsOn ? '켜짐' : '꺼짐', { lang: 'ko-KR' });
     };
 
     const handleKeyDown = (event) => {

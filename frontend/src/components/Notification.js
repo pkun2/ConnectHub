@@ -4,7 +4,6 @@ import Modal from 'react-modal';
 import ToggleSwitch from './ToggleSwitch';
 import { speak } from '../speech/speechUtils';
 
-// 알림아이콘
 const NotificationIcon = styled.img`
   position: absolute;
   width: 50px;
@@ -15,7 +14,6 @@ const NotificationIcon = styled.img`
   cursor: pointer;
 `;
 
-// 알림설정아이콘
 const NotificationOptionIcon = styled.img`
   position: absolute;
   width: 50px;
@@ -34,7 +32,6 @@ const ModalHeader = styled.div`
   border-top: 2px solid #000;
   border-bottom: 2px solid #ccc;
   margin-bottom: 10px;
-  margin-bottom: 0px;
 `;
 
 const ModalHeaderItem = styled.div`
@@ -50,7 +47,6 @@ const OptionHeader = styled.div`
   border-top: 2px solid #000;
   border-bottom: 2px solid #ccc;
   margin-bottom: 10px;
-  margin-bottom: 0px;
 `;
 
 const OptionHeaderItem = styled.div`
@@ -96,30 +92,43 @@ function Notification() {
 
   const handleOpenModal = () => {
     setShowModal(true);
+    speak('알림 창이 열렸습니다', { lang: 'ko-KR' });
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+    speak('알림 창이 닫혔습니다', { lang: 'ko-KR' });
   };
 
   const handleOpenOption = () => {
     setShowOption(true);
+    speak('옵션 창이 열렸습니다', { lang: 'ko-KR' });
   };
 
   const handleCloseOption = () => {
     setShowOption(false);
+    speak('옵션 창이 닫혔습니다', { lang: 'ko-KR' });
   };
 
   const handleToggleNotification_1 = () => {
-    setNotification_1(prevState => !prevState);
+    setNotification_1(prevState => {
+      speak(prevState ? '새 게시글 알림 꺼짐' : '새 게시글 알림 켜짐', { lang: 'ko-KR' });
+      return !prevState;
+    });
   };
 
   const handleToggleNotification_2 = () => {
-    setNotification_2(prevState => !prevState);
+    setNotification_2(prevState => {
+      speak(prevState ? '댓글 알림 꺼짐' : '댓글 알림 켜짐', { lang: 'ko-KR' });
+      return !prevState;
+    });
   };
 
   const handleToggleNotification_3 = () => {
-    setNotification_3(prevState => !prevState);
+    setNotification_3(prevState => {
+      speak(prevState ? '메시지 알림 꺼짐' : '메시지 알림 켜짐', { lang: 'ko-KR' });
+      return !prevState;
+    });
   };
 
   const handleKeyDownToggleSwitch = (event, toggleFunction) => {
@@ -138,7 +147,7 @@ function Notification() {
         onFocus={() => speak("알림", { lang: 'ko-KR' })}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
-            handleOpenModal();  // Enter 키로 모달 열기
+            handleOpenModal();
           }
         }}
       />
@@ -177,7 +186,7 @@ function Notification() {
         onFocus={() => speak("옵션", { lang: 'ko-KR' })}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
-            handleOpenOption();  // Enter 키로 모달 열기
+            handleOpenOption();
           }
         }}
       />
@@ -200,25 +209,53 @@ function Notification() {
           },
         }}
       >
-        <OptionHeader>
+       <OptionHeader>
           <OptionHeaderItem>옵션</OptionHeaderItem>
         </OptionHeader>
         <OptionContainer isFirst>
-          <OptionItem>새 게시글 알림</OptionItem>
-          <ToggleSwitch checked={Notification_1} onChange={handleToggleNotification_1} />
+          <OptionItem
+            tabIndex="0"
+            onFocus={() => speak('새 게시글 알림', { lang: 'ko-KR' })}
+          >
+            새 게시글 알림
+          </OptionItem>
+          <ToggleSwitch 
+            checked={Notification_1} 
+            onChange={handleToggleNotification_1} 
+            tabIndex="0" 
+          />
         </OptionContainer>
         <OptionContainer>
-          <OptionItem>댓글 알림</OptionItem>
-          <ToggleSwitch checked={Notification_2} onChange={handleToggleNotification_2} />
+          <OptionItem
+            tabIndex="0"
+            onFocus={() => speak('댓글 알림', { lang: 'ko-KR' })}
+          >
+            댓글 알림
+          </OptionItem>
+          <ToggleSwitch 
+            checked={Notification_2} 
+            onChange={handleToggleNotification_2} 
+            tabIndex="0" 
+          />
         </OptionContainer>
         <OptionContainer>
-          <OptionItem>메시지 알림</OptionItem>
-          <ToggleSwitch checked={Notification_3} onChange={handleToggleNotification_3} />
+          <OptionItem
+            tabIndex="0"
+            onFocus={() => speak('메시지 알림', { lang: 'ko-KR' })}
+          >
+            메시지 알림
+          </OptionItem>
+          <ToggleSwitch 
+            checked={Notification_3} 
+            onChange={handleToggleNotification_3} 
+            tabIndex="0" 
+          />
         </OptionContainer>
         <ExitButton onClick={handleCloseOption}>닫기</ExitButton>
       </Modal>
     </div>
   );
 }
+
 
 export default Notification;
