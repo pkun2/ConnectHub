@@ -2,14 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import homeRouter from "./router/homeRouter";
-import signUpRouter from "./router/signUpRouter";
-import loginRouter from "./router/loginRouter";
-import verificationRouter from "./router/verificationRouter";
-import passwordResetRouter from "./router/passwordResetRouter";
-import emailFindRouter from "./router/emailFindRouter";
 import pool from "./config/db.js";
-import mypageRouter from "./router/mypageRouter.js";
 import cookieParser from "cookie-parser";
 import session from "express-session"
 import adminRouter from "./router/adminRouter.js";
@@ -22,7 +15,7 @@ import authenticateJWT from "./middleware/jwtController.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT; // 포트 번호 설정
 
 app.use(cors({
     origin: 'http://localhost:3000', // 리액트 앱의 주소
@@ -43,21 +36,17 @@ app.use(session({
 
 }));
 app.use(visitorCounter); // 방문자 수 카운트 미들웨어
-app.use("/", homeRouter);
+
+// 라우터 등록
 app.use("/api/user", userRouter);          
+//app.use(authenticateJWT) // JWT 미들웨어 인증
 app.use("/api/post", postRouter);
-app.use("/api/signup", signUpRouter);
-app.use("/api/login", loginRouter);
-app.use("/api", verificationRouter);
-app.use("/api/password", passwordResetRouter);
-app.use("/api/findEmail", emailFindRouter);
-app.use('/api/user/changePassword', mypageRouter);
-app.use('/api/user/changeNickname', mypageRouter);
 app.use("/api/admin", adminRouter);
 app.use('/api/notifications', notificationRouter);
 
 const checkConnectDB = async () => {
     try {
+        // DB 연결 확인
         await pool.getConnection();
         console.log("DB 연결 성공");
     } catch (err) {
@@ -68,6 +57,7 @@ const checkConnectDB = async () => {
 
 checkConnectDB();
 
+// 서버 시작
 app.listen(PORT, () => {
     console.log(`서버가 해당 주소로 실행중: http://localhost:${PORT}`);
 });
