@@ -30,8 +30,7 @@ function App() {
             <Route path="/reset" element={<PasswordResetForm />} />
             <Route path="/email" element={<PhoneToEmailForm />} />
             <Route path='/write' element={<WriteBoardPost/>} />
-            <Route path="/changePassword" element={<MyPage />} />
-            <Route path="/changeNickname" element={<MyPage />} />
+            <Route path="/mypage" element={<MyPage />} />
             <Route path='/post/:postId' element={<PostDetail/>} />
           </Routes>
 

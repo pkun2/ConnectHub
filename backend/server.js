@@ -9,8 +9,7 @@ import verificationRouter from "./router/verificationRouter";
 import passwordResetRouter from "./router/passwordResetRouter";
 import emailFindRouter from "./router/emailFindRouter";
 import pool from "./config/db.js";
-import passwordChangeRouter from './router/passwordChangeRouter';
-import nicknameChangeRouter from './router/nicknameChangeRouter';
+import mypageRouter from "./router/mypageRouter.js";
 import cookieParser from "cookie-parser";
 import session from "express-session"
 import adminRouter from "./router/adminRouter.js";
@@ -52,8 +51,8 @@ app.use("/api/login", loginRouter);
 app.use("/api", verificationRouter);
 app.use("/api/password", passwordResetRouter);
 app.use("/api/findEmail", emailFindRouter);
-app.use('/api/user/changePassword', passwordChangeRouter);
-app.use('/api/user/changeNickname', nicknameChangeRouter);
+app.use('/api/user/changePassword', mypageRouter);
+app.use('/api/user/changeNickname', mypageRouter);
 app.use("/api/admin", adminRouter);
 app.use('/api/notifications', notificationRouter);
 
