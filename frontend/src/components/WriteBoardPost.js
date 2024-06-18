@@ -214,32 +214,43 @@ const WriteBoardPost = () => {
   }, [listening, transcript, isListeningForTitle]);
 
   const handleSubmit = async (e) => {
-      e.preventDefault();
-      if (selectedBoard === '' || selectedBoard === '게시판을 선택해주세요') {
-          speak('게시판을 선택해주세요.', { lang: 'ko-KR' });
-          return;
-      }
-      if (!title || !content) {
-          speak('제목과 내용을 입력해주세요.', { lang: 'ko-KR' });
-          return;
-      }
-      const postData = {
-          userId: userId,
-          categoryId: selectedBoard,
-          title: title,
-          content: content,
-          nickname: nickname,
-      };
-      try {
-          const response = await axios.post('http://localhost:4000/api/post/write', postData);
-          console.log('Response:', response.data);
-          speak('글 작성이 완료되었습니다.', { lang: 'ko-KR' });
-          navigate('/'); // 글 작성 후 Main 페이지로 이동
-      } catch (error) {
-          console.error('게시글을 작성할 수 없습니다.', error);
-          speak('게시글 작성에 실패했습니다.', { lang: 'ko-KR' });
-      }
+    e.preventDefault();
+    if (selectedBoard === '' || selectedBoard === '게시판을 선택해주세요') {
+        speak('게시판을 선택해주세요.', { lang: 'ko-KR' });
+        return;
+    }
+    if (!title || !content) {
+        speak('제목과 내용을 입력해주세요.', { lang: 'ko-KR' });
+        return;
+    }
+    const postData = {
+        userId: userId,
+        categoryId: selectedBoard,
+        title: title,
+        content: content,
+        nickname: nickname,
+    };
+    try {
+        const response = await axios.post('http://localhost:4000/api/post/write', postData);
+        console.log('Response:', response.data);
+        speak('글 작성이 완료되었습니다.', { lang: 'ko-KR' });
+        
+        // 알림 생성 API 호출
+        await axios.post('http://localhost:4000/api/notifications', {
+          userId: userId, // 글 작성자의 userId
+          message: `${nickname}님이 새로운 글을 작성했습니다.`,
+          notificationType: 'post',
+          sourceId: response.data.postId, // 생성된 글의 ID
+        });
+        console.log('알림이 생성되었습니다');
+        
+        navigate('/'); // 글 작성 후 Main 페이지로 이동
+    } catch (error) {
+        console.error('게시글을 작성할 수 없습니다.', error);
+        speak('게시글 작성에 실패했습니다.', { lang: 'ko-KR' });
+    }
   };
+  
 
   return (
     <>

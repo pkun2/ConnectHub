@@ -46,7 +46,6 @@ const ToggleSwitch = ({ checked, onChange, tabIndex }) => {
         const newIsOn = !isOn;
         setIsOn(newIsOn);
         onChange && onChange(newIsOn);
-        speak(newIsOn ? '켜짐' : '꺼짐', { lang: 'ko-KR' });
     };
 
     const handleKeyDown = (event) => {

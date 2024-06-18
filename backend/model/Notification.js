@@ -52,6 +52,18 @@ class Notification {
             throw err;
         }
     }
+
+    static async delete(notificationId) {
+        const sql = 'DELETE FROM notifications WHERE notificationId = ?';
+
+        try {
+            const [result] = await db.query(sql, [notificationId]);
+            return result.affectedRows;
+        } catch (err) {
+            console.error('Notification deletion error:', err);
+            throw err;
+        }
+    }
 }
 
 export default Notification;

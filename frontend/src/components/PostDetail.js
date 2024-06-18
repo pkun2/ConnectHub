@@ -178,18 +178,27 @@ const PostDetail = () => {
 
   const handleCommentSubmit = async () => {
     if (comment.trim() === '') return;
-
+  
     const newComment = {
       postId: postId, 
       userId: userId, 
       content: comment.trim(),
     };
-
+  
     try {
       const response = await axios.post('http://localhost:4000/api/post/comment', newComment);
       console.log('댓글이 작성되었습니다:', response.data);
       setComments([...comments, newComment]); // 새로운 댓글을 기존 댓글 목록에 추가
       setComment(''); // 댓글 입력 창 비우기
+  
+      // 알림 생성 API 호출
+      await axios.post('http://localhost:4000/api/notifications', {
+        userId: post.userId, // 게시글 작성자의 userId
+        message: `${nickname}님이 게시글에 댓글을 남겼습니다.`,
+        notificationType: 'comment',
+        sourceId: postId,
+      });
+      console.log('알림이 생성되었습니다');
     } catch (error) {
       console.error('댓글을 등록하는 데 실패했습니다:', error);
       // 실패한 경우에 대한 처리 작업을 추가할 수 있습니다.
