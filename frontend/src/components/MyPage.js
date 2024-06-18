@@ -122,18 +122,18 @@ const VoiceButton = styled.button`
 
 
 const MyPage = () => {
-  const [nickname, setNickname] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [isListeningForField, setIsListeningForField] = useState('');
 
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+  const [nickname, setNickname] = useState('')
 
   const handleNicknameChange = async () => {
     try {
-      const response = await axios.post('/api/user/changeNickname', {
-        email: "yyy@naver.com",  // 실제 사용자 이메일로 변경
+      const response = await axios.post('http://localhost:4000/api/user/changeNickname', {
+        userId: localStorage.getItem("userId"),
         currentPassword,
         newNickname: nickname
       });
@@ -149,10 +149,10 @@ const MyPage = () => {
 
   const handlePasswordChange = async () => {
     try {
-      const response = await axios.post('/api/user/changePassword', {
-        email: "yyy@naver.com",  // 실제 사용자 이메일로 변경
+      const response = await axios.post('http://localhost:4000/api/user/changePassword', {
+        userId: localStorage.getItem("userId"),
         currentPassword,
-        newPassword
+        newPassword: newPassword
       });
       setAlertMessage(response.data);
       speak(response.data, { lang: 'ko-KR' });
