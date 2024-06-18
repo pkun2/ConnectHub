@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // useEffect와 useRef 추가
 import styled from 'styled-components';
 import ToggleSwitch from './ToggleSwitch';
+import { speak } from '../speech/speechUtils'; // TTS 기능 import
 
 // 알림아이콘
 const NotificationIcon = styled.img`
@@ -25,7 +26,7 @@ const NotificationOptionIcon = styled.img`
 `;
 
 // 전체 화면을 흐리게 만드는 오버레이
-const Modal_Overlay = styled.div`
+const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -51,7 +52,7 @@ const Modal = styled.div`
 `;
 
 // 알림설정창
-const Modal_Option = styled.div`
+const ModalOption = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -118,93 +119,142 @@ const ExitButton = styled.button`
   font-size: 11pt;
   font-weight: 550;
   width: 60px;
-  hegiht: 40px;
+  height: 40px;
   background-color: white;
   cursor: pointer;
   border: 1.5px solid #BDBDBD;
 `;
 
 function Notification() {
+  const [showModal, setShowModal] = useState(false);
+  const [showOption, setShowOption] = useState(false);
+  const [Notification_1, setNotification_1] = useState(false);
+  const [Notification_2, setNotification_2] = useState(false);
+  const [Notification_3, setNotification_3] = useState(false);
+  const notificationIconRef = useRef(null); // 알림 아이콘을 위한 ref 추가
+  const notificationOptionIconRef = useRef(null); // 알림 설정 아이콘을 위한 ref 추가
 
-    const [showModal, setShowModal] = useState(false);
-    const [showOption, setShowOption] = useState(false);
-    const [Notification_1, setNotification_1] = useState(false);
-    const [Notification_2, setNotification_2] = useState(false);
-    const [Notification_3, setNotification_3] = useState(false);
-  
-    const handleOpenModal = () => {
-      setShowModal(true);
+  const handleOpenModal = () => {
+    setShowModal(true);
+    speak("알림창이 열렸습니다.", { lang: 'ko-KR' });
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    speak("알림창이 닫혔습니다.", { lang: 'ko-KR' });
+  };
+
+  const handleOpenOption = () => {
+    setShowOption(true);
+    speak("알림 설정이 열렸습니다.", { lang: 'ko-KR' });
+  };
+
+  const handleCloseOption = () => {
+    setShowOption(false);
+    speak("알림 설정이 닫혔습니다.", { lang: 'ko-KR' });
+  };
+
+  const handleToggleNotification_1 = () => {
+    setNotification_1((prevState) => !prevState);
+    speak(`새 게시글 알림이 ${!Notification_1 ? '활성화' : '비활성화'}되었습니다.`, { lang: 'ko-KR' });
+  };
+
+  const handleToggleNotification_2 = () => {
+    setNotification_2((prevState) => !prevState);
+    speak(`댓글 알림이 ${!Notification_2 ? '활성화' : '비활성화'}되었습니다.`, { lang: 'ko-KR' });
+  };
+
+  const handleToggleNotification_3 = () => {
+    setNotification_3((prevState) => !prevState);
+    speak(`메시지 알림이 ${!Notification_3 ? '활성화' : '비활성화'}되었습니다.`, { lang: 'ko-KR' });
+  };
+
+  useEffect(() => {
+    const handleFocusNotificationIcon = () => {
+      speak("알림", { lang: 'ko-KR' });
     };
-  
-    const handleCloseModal = () => {
-      setShowModal(false);
-    };
-  
-    const handleOpenOption = () => {
-      setShowOption(true);
-    };
-  
-    const handleCloseOption = () => {
-      setShowOption(false);
+
+    const handleFocusNotificationOptionIcon = () => {
+      speak("설정", { lang: 'ko-KR' });
     };
 
-    const handleToggleNotification_1 = () => { 
-        setNotification_1(prevState => !prevState);
-      };
+    const notificationIcon = notificationIconRef.current;
+    const notificationOptionIcon = notificationOptionIconRef.current;
 
-    const handleToggleNotification_2 = () => { 
-    setNotification_2(prevState => !prevState);
+    notificationIcon.addEventListener('focus', handleFocusNotificationIcon);
+    notificationOptionIcon.addEventListener('focus', handleFocusNotificationOptionIcon);
+
+    return () => {
+      notificationIcon.removeEventListener('focus', handleFocusNotificationIcon);
+      notificationOptionIcon.removeEventListener('focus', handleFocusNotificationOptionIcon);
     };
+  }, []);
 
-    const handleToggleNotification_3 = () => { 
-    setNotification_3(prevState => !prevState);
-    };
-  
-    return (
-      <div>
-        <NotificationIcon onClick={handleOpenModal} src='https://cdn.icon-icons.com/icons2/1993/PNG/512/alarm_alert_attention_bell_clock_notification_ring_icon_123203.png'/>
-        {showModal && (
-          <>
-            <Modal_Overlay onClick={handleCloseModal} />
-            <Modal>
-              <ModalHeader>
-                <ModalHeaderItem>알림번호</ModalHeaderItem>
-                <ModalHeaderItem>아이디</ModalHeaderItem>
-                <ModalHeaderItem isSection>내용</ModalHeaderItem>
-              </ModalHeader>
-              
-              <ExitButton onClick={handleCloseModal}>닫기</ExitButton>
-            </Modal>
-          </>
-        )}
-        <NotificationOptionIcon onClick={handleOpenOption} src='https://cdn.icon-icons.com/icons2/3106/PNG/512/gear_settings_options_icon_191642.png' alt='옵션' />
-        {showOption && (
-          <>
-            <Modal_Overlay onClick={handleCloseOption} />
-            <Modal_Option>
-              
-              <OptionHeader> <OptionHeaderItem>옵션</OptionHeaderItem> </OptionHeader>
+  return (
+    <div>
+      <NotificationIcon
+        ref={notificationIconRef}
+        onClick={handleOpenModal}
+        src="https://cdn.icon-icons.com/icons2/1993/PNG/512/alarm_alert_attention_bell_clock_notification_ring_icon_123203.png"
+        tabIndex="0"
+      />
+      {showModal && (
+        <>
+          <ModalOverlay onClick={handleCloseModal} />
+          <Modal>
+            <ModalHeader>
+              <ModalHeaderItem>알림번호</ModalHeaderItem>
+              <ModalHeaderItem>아이디</ModalHeaderItem>
+              <ModalHeaderItem isSection>내용</ModalHeaderItem>
+            </ModalHeader>
+            <ExitButton onClick={handleCloseModal} tabIndex="0">닫기</ExitButton>
+          </Modal>
+        </>
+      )}
+      <NotificationOptionIcon
+        ref={notificationOptionIconRef}
+        onClick={handleOpenOption}
+        src="https://cdn.icon-icons.com/icons2/3106/PNG/512/gear_settings_options_icon_191642.png"
+        alt="옵션"
+        tabIndex="0"
+      />
+      {showOption && (
+        <>
+          <ModalOverlay onClick={handleCloseOption} />
+          <ModalOption>
+            <OptionHeader>
+              <OptionHeaderItem>옵션</OptionHeaderItem>
+            </OptionHeader>
+            <OptionContainer isFirst>
+              <OptionItem tabIndex="0">새 게시글 알림</OptionItem>
+              <ToggleSwitch
+                checked={Notification_1}
+                onChange={handleToggleNotification_1}
+                tabIndex="0"
+              />
+            </OptionContainer>
+            <OptionContainer>
+              <OptionItem tabIndex="0">댓글 알림</OptionItem>
+              <ToggleSwitch
+                checked={Notification_2}
+                onChange={handleToggleNotification_2}
+                tabIndex="0"
+              />
+            </OptionContainer>
+            <OptionContainer>
+              <OptionItem tabIndex="0">메시지 알림</OptionItem>
+              <ToggleSwitch
+                checked={Notification_3}
+                onChange={handleToggleNotification_3}
+                tabIndex="0"
+              />
+            </OptionContainer>
+            <ExitButton onClick={handleCloseOption} tabIndex="0">닫기</ExitButton>
+          </ModalOption>
+        </>
+      )}
+    </div>
+  );
+}
 
-              <OptionContainer isFirst>
-                <OptionItem> 새 게시글 알림 </OptionItem>
-                <ToggleSwitch checked={Notification_1} onChange={handleToggleNotification_1} />
-              </OptionContainer>
-
-              <OptionContainer>
-                <OptionItem> 댓글 알림 </OptionItem>
-                <ToggleSwitch checked={Notification_2} onChange={handleToggleNotification_2} />
-              </OptionContainer>
-
-              <OptionContainer>
-                <OptionItem> 메시지 알림 </OptionItem>
-                <ToggleSwitch checked={Notification_3} onChange={handleToggleNotification_3} />
-              </OptionContainer>
-              <ExitButton onClick={handleCloseOption}>닫기</ExitButton>
-            </Modal_Option>
-          </>
-        )}
-      </div>
-    );
-  }
-  
-  export default Notification;
+export default Notification;

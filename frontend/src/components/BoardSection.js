@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import Pagination from './Pagination';
+import { Link } from 'react-router-dom';
 
 const BoardContainer = styled.div`
   flex: 1;
@@ -72,30 +73,32 @@ const TableRowItem = styled.div`
   padding-left: 50px;
 `;
 
-const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
+const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
   const [contents, setContents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
   const totalPages = Math.ceil(contents.length / itemsPerPage);
 
+  console.log(title);
+
   useEffect(() => {
     const fetchContents = async () => {
+      const postData = {
+        categoryId: selectcategoryNum,
+        limit: 20
+      };
+
       try {
-        const response = await axios.get('http://localhost:4000/api/post/', {
-          params: { categoryId: title !== '전체게시판' ? title : undefined }
-        });
+        const response = await axios.get('http://localhost:4000/api/post/', { params: postData });
         setContents(response.data);
+        console.log(response.data);
       } catch (error) {
-        console.error('Failed to fetch posts:', error);
+        console.error('게시글을 가져올 수 없습니다.', error);
       }
     };
 
     fetchContents();
-  }, [title]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [title]);
+  }, [title, selectcategoryNum, currentPage]);
 
   const handleCategoryChange = (e) => {
     onCategoryChange(e.target.value);
@@ -108,15 +111,21 @@ const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
   const renderContents = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
+
+    const formatDate = (dateString) => {
+      const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('ko-KR', options);
+    };
     
     return contents.slice(startIndex, endIndex).map((content) => (
-      <TableRow key={content.id} onClick={() => onPostClick(content.postId)}>
-        <TableRowItem>{content.postId}</TableRowItem>
-        <TableRowItem isTitle>{content.category}</TableRowItem>
-        <TableRowItem isTitle>{content.title}</TableRowItem>
-        <TableRowItem>{content.userId}</TableRowItem>
-        <TableRowItem>{new Date(content.created_at).toLocaleDateString()}</TableRowItem>
-      </TableRow>
+      <Link key={content.postId} to={`/post/${content.postId}`}> {/* Link를 사용하여 게시물 상세 페이지로 이동 */}
+        <TableRow>
+          <TableRowItem isTitle>{content.categoryName}</TableRowItem>
+          <TableRowItem isTitle>{content.title}</TableRowItem>
+          <TableRowItem>{content.nickname}</TableRowItem>
+          <TableRowItem>{formatDate(content.createdAt)}</TableRowItem>
+        </TableRow>
+      </Link>
     ));
   };
 
@@ -124,18 +133,17 @@ const BoardSection = ({ title, onCategoryChange, onPostClick  }) => {
     <BoardContainer>
       <BoardTitleWrapper>
         <BoardTitle>{title}</BoardTitle>
-        <DropdownMenu value={title} onChange={handleCategoryChange}>
-          <option value="전체게시판">전체게시판</option>
-          <option value="자유게시판">자유게시판</option>
-          <option value="공지사항">공지사항</option>
-          <option value="정부 혜택">정부 혜택</option>
-          <option value="정보게시판">정보게시판</option>
+        <DropdownMenu value = {selectcategoryNum} onChange={handleCategoryChange}>
+          <option value='0' >전체게시판</option>
+          <option value='1' >자유게시판</option>
+          <option value='2' >공지사항</option>
+          <option value='3' >정부 혜택</option>
+          <option value='4' >정보게시판</option>
         </DropdownMenu>
       </BoardTitleWrapper>
 
       <BoardContent>
         <TableHeader>
-          <TableHeaderItem>게시판번호</TableHeaderItem>
           <TableHeaderItem isTitle>게시판</TableHeaderItem>
           <TableHeaderItem isTitle>제목</TableHeaderItem>
           <TableHeaderItem>작성자</TableHeaderItem>

@@ -100,12 +100,13 @@ const SelectPicker = styled.select`
 `;
 
 const WriteBoardPost = () => {
-    const { user } = useContext(AuthContext);  // AuthContext에서 user 정보 가져오기
-    const [postId, setPostId] = useState(1);
+    const {userId, nickname} = useContext(AuthContext);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedBoard, setSelectedBoard] = useState('게시판을 선택해주세요'); // 선택된 게시판 종류를 저장하는 state
     const navigate = useNavigate();
+
+    console.log("현재 사용자 ID:", userId);
 
     const handleTitleChange = (e) => {
       setTitle(e.target.value);
@@ -121,10 +122,6 @@ const WriteBoardPost = () => {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-      if (!user) {
-        console.error('로그인이 되어있지 않습니다.');
-        return;
-      }
       
       if (selectedBoard === '' || selectedBoard === '게시판을 선택해주세요') {
         alert('게시판을 선택해주세요.');
@@ -137,25 +134,23 @@ const WriteBoardPost = () => {
       }
 
       const postData = {
-        postId: postId,
-        userId: user.id,
+        userId: userId,
         categoryId: selectedBoard,
         title: title,
         content: content,
-        createdAt: new Date().toISOString(),
+        nickname: nickname,
       };
   
       try {
-      const response = await axios.post('http://localhost:4000/api/post/write', postData);
-      console.log('Response:', response.data);
-      alert('글 작성이 완료되었습니다.');
-      setPostId(postId + 1);
-      navigate('/'); // 글 작성 후 Main 페이지로 이동
-    } catch (error) {
-      console.error('게시글을 작성할 수 없습니다.', error);
-      alert('게시글 작성에 실패했습니다.');
-    }
-    };
+        const response = await axios.post('http://localhost:4000/api/post/write', postData);
+        console.log('Response:', response.data);
+        alert('글 작성이 완료되었습니다.');
+        navigate('/'); // 글 작성 후 Main 페이지로 이동
+      } catch (error) {
+        console.error('게시글을 작성할 수 없습니다.', error);
+        alert('게시글 작성에 실패했습니다.');
+      }
+      };
   
     return (
       <>

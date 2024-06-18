@@ -11,6 +11,7 @@ import PasswordResetForm from './components/PasswordResetForm';
 import PhoneToEmailForm from './components/PhoneToEmailForm';
 import { AuthProvider } from './components/AuthContext';
 import WriteBoardPost from './components/WriteBoardPost';
+import PostDetail from './components/PostDetail';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path='/write' element={<WriteBoardPost/>} />
             <Route path="/changePassword" element={<MyPage />} />
             <Route path="/changeNickname" element={<MyPage />} />
+            <Route path='/post/:postId' element={<PostDetail/>} />
           </Routes>
 
           {/* 하단바 */}
