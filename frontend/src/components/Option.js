@@ -12,7 +12,6 @@ const OptionContainer = styled.div`
   align-items: center;
   justify-content: space-around;
   opacity : 80%;
-  z-index: 900;
   margin: 0 200px; /* 양쪽에 20px의 공백 추가 */
   overflow-x: auto; /* 가로로 내용이 넘칠 경우 가로 스크롤 생성 */
   overflow-y: hidden; /* 세로 스크롤 숨김 */
