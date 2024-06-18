@@ -23,7 +23,7 @@ export const speak = async (text, options = {}) => {
   const utter = new SpeechSynthesisUtterance(text);
 
   const defaultOptions = {
-      rate: 1.5, 
+      rate: 1.7, 
       pitch: 1, 
       volume: 1, 
       lang: 'ko-KR'
@@ -44,3 +44,4 @@ export const speak = async (text, options = {}) => {
 
   synth.speak(utter);
 };
+

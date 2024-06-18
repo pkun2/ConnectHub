@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Notification from './Notification';
+import { speak } from '../speech/speechUtils'; // TTS 기능을 위한 함수 import
 
 // 네비게이션 바
 const NavContainer = styled.nav`

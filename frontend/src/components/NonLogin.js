@@ -61,6 +61,14 @@ const NonLogin = () => {
     navigate('/signup');
   };
 
+  const handlePasswordResetClick = () =>{
+    navigate('/request-reset');
+  }
+
+  const handlePhoneToEmailClick = () =>{
+    navigate('/email');
+  }
+
   // tts, 음성 출력 및 탭으로 포커싱
   useEffect(() => {
     const buttons = document.querySelectorAll('.non-login-button');
@@ -86,8 +94,8 @@ const NonLogin = () => {
     <LoginRegisterContainer>
       <Login onClick={handleLoginClick} className="non-login-button" tabIndex="0"> 로그인 </Login>
       <RegisterContainer>
-        <Register className="non-login-button" tabIndex="0"> 아이디 찾기 </Register>
-        <Register className="non-login-button" tabIndex="0"> 비밀번호 찾기 </Register>
+        <Register onClick={handlePhoneToEmailClick} className="non-login-button" tabIndex="0"> 아이디 찾기 </Register>
+        <Register onClick={handlePasswordResetClick} className="non-login-button" tabIndex="0"> 비밀번호 찾기 </Register>
         <Register onClick={handleSignUpClick} className="non-login-button" tabIndex="0"> 회원가입 </Register>
       </RegisterContainer>
     </LoginRegisterContainer>

@@ -38,7 +38,7 @@ const Slider = styled.span`
   }
 `;
 
-const ToggleSwitch = ({ checked, onChange }) => {
+const ToggleSwitch = ({ checked, onChange, tabIndex }) => {
     const [isOn, setIsOn] = useState(checked);
 
     const handleToggle = () => {
@@ -46,8 +46,18 @@ const ToggleSwitch = ({ checked, onChange }) => {
         onChange && onChange(!isOn);
     };
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handleToggle();
+        }
+    };
+
     return (
-        <Switch>
+        <Switch
+            tabIndex={tabIndex}
+            onKeyDown={handleKeyDown}
+            onClick={handleToggle}
+        >
             <Checkbox type="checkbox" checked={isOn} onChange={handleToggle} />
             <Slider isOn={isOn}></Slider>
         </Switch>
