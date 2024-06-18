@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import Pagination from './Pagination';
+import { Link } from 'react-router-dom';
+import { speak } from '../speech/speechUtils'; // tts, 음성 출력을 위한 함수 import
 
 const BoardContainer = styled.div`
   flex: 1;
@@ -21,14 +24,14 @@ const BoardTitle = styled.h2`
 const BoardTitleWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between; // 변경된 코드: 제목과 드롭다운 사이에 공간 분배
+  justify-content: space-between;
   width: 100%;
 `;
 
 const DropdownMenu = styled.select`
   font-size: 16px;
   padding: 8px 12px;
-  position: relative; // 위치를 고정하기 위해 position 사용
+  position: relative;
   top: 0;
   right: 0;
 `;
@@ -46,7 +49,6 @@ const TableHeader = styled.div`
   padding: 10px 0;
   border-top: 2px solid #000;
   border-bottom: 2px solid #ccc;
-  margin-bottom: 10px;
   margin-bottom: 0px;
 `;
 
@@ -57,21 +59,60 @@ const TableHeaderItem = styled.div`
   padding-left: 50px;
 `;
 
-const EmptyBoardContent = styled.div`
+const TableRow = styled.div`
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-  height: 50px;
-  border-top: 0.5px solid #ccc;
-  margin-bottom: 0px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
 `;
 
-const BoardSection = ({ title, contents, onCategoryChange }) => {
+const TableRowItem = styled.div`
+  flex: ${({ isTitle }) => (isTitle ? 2 : 1)};
+  text-align: left;
+  padding-left: 50px;
+  outline: none; // 포커스 시 외곽선이 표시되지 않도록 설정
+`;
+
+const StyledLink = styled(Link)`
+  color: black;
+  text-decoration: none;
+
+  &:visited {
+    color: black;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+
+
+const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
+  const [contents, setContents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
   const totalPages = Math.ceil(contents.length / itemsPerPage);
+  const titleRef = useRef(null);
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [title]);
+    const fetchContents = async () => {
+      const postData = {
+        categoryId: selectcategoryNum,
+        limit: 20
+      };
+
+      try {
+        const response = await axios.get('http://localhost:4000/api/post/', { params: postData });
+        setContents(response.data);
+      } catch (error) {
+        console.error('게시글을 가져올 수 없습니다.', error);
+      }
+    };
+
+    fetchContents();
+  }, [title, selectcategoryNum, currentPage]);
 
   const handleCategoryChange = (e) => {
     onCategoryChange(e.target.value);
@@ -84,39 +125,55 @@ const BoardSection = ({ title, contents, onCategoryChange }) => {
   const renderContents = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const getCategoryDescription = () => {
-      switch (title) {
-        case '전체게시판':
-          return '전체게시판입니다.';
-        case '자유게시판':
-          return '자유게시판입니다.';
-        case '공지사항':
-          return '공지사항입니다.';
-        case '정부 혜택':
-          return '정부 혜택입니다.';
-        case '정보게시판':
-          return '정보게시판입니다.';
-        default:
-          return '';
-      }
+
+    const formatDate = (dateString) => {
+      const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('ko-KR', options);
     };
+
+    const handleFocus = (event) => {
+      speak(event.target.innerText, { lang: 'ko-KR' });
+    };
+
     return contents.slice(startIndex, endIndex).map((content) => (
-      <EmptyBoardContent key={content.id}>
-        {getCategoryDescription()}
-      </EmptyBoardContent>
+      <StyledLink key={content.postId} to={`/post/${content.postId}`}> {/* Link를 사용하여 게시물 상세 페이지로 이동 */}
+        <TableRow>
+          <TableRowItem onFocus={handleFocus} isTitle>{content.categoryName}</TableRowItem>
+          <TableRowItem tabIndex="0" onFocus={handleFocus} isTitle>{content.title}</TableRowItem>
+          <TableRowItem onFocus={handleFocus}>{content.nickname}</TableRowItem>
+          <TableRowItem onFocus={handleFocus}>{formatDate(content.createdAt)}</TableRowItem>
+        </TableRow>
+      </StyledLink>
     ));
   };
+
+  useEffect(() => {
+    const handleFocus = (event) => {
+      speak(event.target.innerText, { lang: 'ko-KR' });
+    };
+
+    const titleElement = titleRef.current;
+    if (titleElement) {
+      titleElement.addEventListener('focus', handleFocus);
+    }
+
+    return () => {
+      if (titleElement) {
+        titleElement.removeEventListener('focus', handleFocus);
+      }
+    };
+  }, []);
 
   return (
     <BoardContainer>
       <BoardTitleWrapper>
-        <BoardTitle>{title}</BoardTitle>
-        <DropdownMenu value={title} onChange={handleCategoryChange}>
-          <option value="전체게시판">전체게시판</option>
-          <option value="자유게시판">자유게시판</option>
-          <option value="공지사항">공지사항</option>
-          <option value="정부 혜택">정부 혜택</option>
-          <option value="정보게시판">정보게시판</option>
+        <BoardTitle ref={titleRef}>{title}</BoardTitle>
+        <DropdownMenu value={selectcategoryNum} onChange={handleCategoryChange}>
+          <option value='0'>전체게시판</option>
+          <option value='1'>자유게시판</option>
+          <option value='2'>공지사항</option>
+          <option value='3'>정부 혜택</option>
+          <option value='4'>정보게시판</option>
         </DropdownMenu>
       </BoardTitleWrapper>
 
