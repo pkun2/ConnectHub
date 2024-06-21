@@ -11,6 +11,9 @@
 4. cd frontend
 5. npm i
 
+##
+- 노션 테이블 쿼리문을 복사 붙여넣기(mysql db를 이용함)
+
 ## dotenv 설정 환경 변수: backend 폴더에 .env파일로 생성할 것
 ```
 # mysql
