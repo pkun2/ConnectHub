@@ -112,6 +112,17 @@ class Post {
             throw err;
         }
     }
+
+    static async searchPostsByTitle(title) {
+        const query = 'SELECT * FROM posts WHERE title LIKE ?';
+        const params = [`%${title}%`];
+        try {
+            const [result] = await pool.query(query, params);
+            return result;
+        } catch (err) {
+            throw err;
+        }
+    }
     
 }
 

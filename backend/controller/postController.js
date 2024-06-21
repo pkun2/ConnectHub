@@ -154,3 +154,17 @@ export const reportCommentController = async (req, res) => {
         res.status(500).json({ error: '댓글 신고 중 에러 발생', details: error.message });
     }
 };
+
+export const searchPostController = async (req, res) => {
+    const keyword = req.query.q;
+    
+    if (keyword === undefined || keyword === '') {
+        return res.status(400).send('Search query가 포함되어 있지 않습니다');
+    }
+    try {
+        const posts = await Post.searchPostsByTitle(keyword);
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({ error: '검색 중 에러 발생', details: error.message });
+    }
+};
