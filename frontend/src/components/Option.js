@@ -57,7 +57,7 @@ const TTSButton = styled.div`
   }
 `;
 
-const Option = () => {
+const Option = ({ onSearch }) => {
   const [ttsEnabled, setTtsEnabledState] = useState(false);
   const searchInputRef = useRef(null);
 
@@ -72,6 +72,19 @@ const Option = () => {
     setTtsEnabled(false);
     cancelSpeech();
     // TTS Off 상태에서는 음성을 출력하지 않도록 speak 호출을 생략합니다.
+  };
+
+  const handleSearch = async () => {
+    const keyword = searchInputRef.current.value;
+    if (keyword) {
+      try {
+        const response = await fetch(`http://localhost:4000/api/post/search?q=${keyword}`);
+        const data = await response.json();
+        onSearch(data);
+      } catch (error) {
+        console.error('검색 요청 중 에러 발생:', error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -108,6 +121,7 @@ const Option = () => {
         <SearchIcon
           src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
           alt="Search Icon"
+          onClick={handleSearch}
         />
       </SearchWrapper>
       <div /> <div /> <div />

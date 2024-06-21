@@ -89,7 +89,7 @@ const StyledLink = styled(Link)`
 
 
 
-const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
+const BoardSection = ({ title, onCategoryChange, selectcategoryNum, searchResults}) => {
   const [contents, setContents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
@@ -110,9 +110,17 @@ const BoardSection = ({ title, onCategoryChange, selectcategoryNum }) => {
         console.error('게시글을 가져올 수 없습니다.', error);
       }
     };
+    if (!searchResults) {
+      fetchContents();
+    }
 
-    fetchContents();
-  }, [title, selectcategoryNum, currentPage]);
+  }, [title, selectcategoryNum, currentPage, searchResults]);
+
+  useEffect(() => {
+    if (searchResults) {
+      setContents(searchResults);
+    }
+  }, [searchResults]);
 
   const handleCategoryChange = (e) => {
     onCategoryChange(e.target.value);

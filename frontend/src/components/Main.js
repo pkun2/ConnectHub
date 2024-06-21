@@ -40,8 +40,13 @@ const RightSubContainer = styled.div`
 
 const Main = () => {
   const [selectedCategory, setSelectedCategory] = useState("전체게시판");
+  const [searchResults, setSearchResults] = useState(null);
   const [selectcategoryNum, setSelectcategoryNum] = useState(null);
   const { authToken } = useContext(AuthContext);
+
+  const handleSearch = (results) => {
+    setSearchResults(results);
+  };
 
   const handleCategoryChange = (value) => {
     switch (value) {
@@ -74,11 +79,11 @@ const Main = () => {
   return (
     <>
       <Navigation />
-      <Option />
+      <Option onSearch={handleSearch}/>
       <MainContainer>
         <LeftSubContainer>
           <ImageSection />
-          <BoardSection title={selectedCategory} onCategoryChange={handleCategoryChange} selectcategoryNum = {selectcategoryNum}/>
+          <BoardSection title={selectedCategory} onCategoryChange={handleCategoryChange} selectcategoryNum = {selectcategoryNum} searchResults={searchResults}/>
         </LeftSubContainer>
         <RightSubContainer>
         {authToken ? <ProfileSection /> : <NonLogin /> }
